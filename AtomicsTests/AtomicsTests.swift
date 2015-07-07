@@ -11,7 +11,11 @@ import XCTest
 import Darwin
 import Dispatch
 
-import Atomics
+#if os(OSX)
+  import Atomics
+#elseif os(iOS)
+  import Atomics_iOS
+#endif
 
 class AtomicsTests: XCTestCase
 {
