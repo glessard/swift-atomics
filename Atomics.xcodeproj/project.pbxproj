@@ -11,7 +11,7 @@
 		030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
 		030110FF1B4B896700F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
 		0301110D1B4B89C200F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
-		0301110E1B4B89C200F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0301110A1B4B89C200F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		0301110E1B4B89C200F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0301110A1B4B89C200F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0301110F1B4B89C200F4B44B /* clang-atomics.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.m */; };
 		030111101B4B89C200F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
 		03DB46D41B4C6F4100F4B44B /* Atomics_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DB46D31B4C6F4100F4B44B /* Atomics_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,16 +20,14 @@
 		03DB46EA1B4C6FCE00F4B44B /* clang-atomics.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.m */; };
 		03DB46EB1B4C6FCE00F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
 		03DB46EC1B4C6FCE00F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
-		03DB46EE1B4C716C00F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DB46ED1B4C716C00F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */; };
 		03DB46F81B4C7AFC00F4B44B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F71B4C7AFC00F4B44B /* ViewController.swift */; };
 		03DB46FB1B4C7AFC00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46F91B4C7AFC00F4B44B /* Main.storyboard */; };
 		03DB46FD1B4C7AFC00F4B44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FC1B4C7AFC00F4B44B /* Assets.xcassets */; };
 		03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */; };
-		03DB47131B4C7B1300F4B44B /* Atomics_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; };
-		03DB47141B4C7B5F00F4B44B /* Atomics_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; };
-		03DB47161B4C7B7F00F4B44B /* Atomics_iOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		03DB47171B4C7B9900F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
+		03DB47291B4CED0800F4B44B /* Atomics_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; };
+		03DB472A1B4CED1700F4B44B /* Atomics_iOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		03DB472D1B4CEF2200F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DB46ED1B4C716C00F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +52,14 @@
 			remoteGlobalIDString = 03DB46F21B4C7AFB00F4B44B;
 			remoteInfo = Atomics_TestApp;
 		};
-		03DB47181B4C826A00F4B44B /* PBXContainerItemProxy */ = {
+		03DB47251B4CE8BD00F4B44B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 030110E61B4B896700F4B44B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03DB46F21B4C7AFB00F4B44B;
+			remoteInfo = Atomics_TestApp;
+		};
+		03DB47271B4CECF100F4B44B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 030110E61B4B896700F4B44B /* Project object */;
 			proxyType = 1;
@@ -70,7 +75,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				03DB47161B4C7B7F00F4B44B /* Atomics_iOS.framework in CopyFiles */,
+				03DB472A1B4CED1700F4B44B /* Atomics_iOS.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB47131B4C7B1300F4B44B /* Atomics_iOS.framework in Frameworks */,
+				03DB47291B4CED0800F4B44B /* Atomics_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,7 +152,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB47141B4C7B5F00F4B44B /* Atomics_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03DB46D41B4C6F4100F4B44B /* Atomics_iOS.h in Headers */,
-				03DB46EE1B4C716C00F4B44B /* clang-atomics.h in Headers */,
+				03DB472D1B4CEF2200F4B44B /* clang-atomics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +335,7 @@
 			);
 			dependencies = (
 				03DB46DD1B4C6F4100F4B44B /* PBXTargetDependency */,
+				03DB47261B4CE8BD00F4B44B /* PBXTargetDependency */,
 			);
 			name = Atomics_iOSTests;
 			productName = Atomics_iOSTests;
@@ -349,7 +354,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				03DB47191B4C826A00F4B44B /* PBXTargetDependency */,
+				03DB47281B4CECF100F4B44B /* PBXTargetDependency */,
 			);
 			name = Atomics_TestApp;
 			productName = Atomics_TestApp;
@@ -395,9 +400,11 @@
 					};
 					03DB46D91B4C6F4100F4B44B = {
 						CreatedOnToolsVersion = 7.0;
+						TestTargetID = 03DB46F21B4C7AFB00F4B44B;
 					};
 					03DB46F21B4C7AFB00F4B44B = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = JMB77RELWN;
 					};
 					03DB47051B4C7AFC00F4B44B = {
 						CreatedOnToolsVersion = 7.0;
@@ -526,7 +533,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB47171B4C7B9900F4B44B /* AtomicsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,10 +554,15 @@
 			target = 03DB46F21B4C7AFB00F4B44B /* Atomics_TestApp */;
 			targetProxy = 03DB47071B4C7AFC00F4B44B /* PBXContainerItemProxy */;
 		};
-		03DB47191B4C826A00F4B44B /* PBXTargetDependency */ = {
+		03DB47261B4CE8BD00F4B44B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03DB46F21B4C7AFB00F4B44B /* Atomics_TestApp */;
+			targetProxy = 03DB47251B4CE8BD00F4B44B /* PBXContainerItemProxy */;
+		};
+		03DB47281B4CECF100F4B44B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 03DB46D01B4C6F4100F4B44B /* Atomics_iOS */;
-			targetProxy = 03DB47181B4C826A00F4B44B /* PBXContainerItemProxy */;
+			targetProxy = 03DB47271B4CECF100F4B44B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -611,7 +622,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -652,7 +663,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -732,7 +743,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Atomics_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -752,7 +762,6 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Atomics_iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -768,11 +777,11 @@
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Atomics_iOSTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-iOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
 			};
 			name = Debug;
 		};
@@ -781,11 +790,11 @@
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Atomics_iOSTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-iOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -794,12 +803,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Atomics_TestApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-TestApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -809,12 +820,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Atomics_TestApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-TestApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -889,6 +902,7 @@
 				03DB46E31B4C6F4100F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03DB46E71B4C6F4100F4B44B /* Build configuration list for PBXNativeTarget "Atomics_iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -897,6 +911,7 @@
 				03DB46E51B4C6F4100F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03DB470D1B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestApp" */ = {
 			isa = XCConfigurationList;
@@ -905,6 +920,7 @@
 				03DB470F1B4C7AFC00F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03DB47101B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestAppTests" */ = {
 			isa = XCConfigurationList;
@@ -913,6 +929,7 @@
 				03DB47121B4C7AFC00F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
