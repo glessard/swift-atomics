@@ -31,15 +31,15 @@ int Decrement32(int* var);
 
 // pointer-sized integer
 
-long ReadLong(long *var);
-long SyncReadLong(long *var);
-void StoreLong(long val, long *var);
-void SyncStoreLong(long val, long *var);
-long SwapLong(long val, long* var);
-long AddLong(long increment, long* var);
-long SubLong(long increment, long* var);
-long IncrementLong(long* var);
-long DecrementLong(long* var);
+long ReadWord(long *var);
+long SyncReadWord(long *var);
+void StoreWord(long val, long *var);
+void SyncStoreWord(long val, long *var);
+long SwapWord(long val, long* var);
+long AddWord(long increment, long* var);
+long SubWord(long increment, long* var);
+long IncrementWord(long* var);
+long DecrementWord(long* var);
 
 // 64-bit integer
 

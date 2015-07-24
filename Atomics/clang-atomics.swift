@@ -67,92 +67,92 @@
 
 @inline(__always) public func Read(p: UnsafeMutablePointer<Int>) -> Int
 {
-  return ReadLong(p)
+  return ReadWord(p)
 }
 
 @inline(__always) public func Read(p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: ReadLong(UnsafeMutablePointer(p)))
+  return UInt(bitPattern: ReadWord(UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func SyncRead(p: UnsafeMutablePointer<Int>) -> Int
 {
-  return SyncReadLong(p)
+  return SyncReadWord(p)
 }
 
 @inline(__always) public func SyncRead(p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: SyncReadLong(UnsafeMutablePointer(p)))
+  return UInt(bitPattern: SyncReadWord(UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func Store(v: Int, _ p: UnsafeMutablePointer<Int>)
 {
-  StoreLong(v, p)
+  StoreWord(v, p)
 }
 
 @inline(__always) public func Store(v: UInt, _ p: UnsafeMutablePointer<UInt>)
 {
-  StoreLong(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p))
+  StoreWord(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p))
 }
 
 @inline(__always) public func SyncStore(v: Int, _ p: UnsafeMutablePointer<Int>)
 {
-  SyncStoreLong(v, p)
+  SyncStoreWord(v, p)
 }
 
 @inline(__always) public func SyncStore(v: UInt, _ p: UnsafeMutablePointer<UInt>)
 {
-  SyncStoreLong(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p))
+  SyncStoreWord(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p))
 }
 
 @inline(__always) public func Swap(v: Int, _ p: UnsafeMutablePointer<Int>) -> Int
 {
-  return SwapLong(v, p)
+  return SwapWord(v, p)
 }
 
 @inline(__always) public func Swap(v: UInt, _ p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: SwapLong(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p)))
+  return UInt(bitPattern: SwapWord(unsafeBitCast(v, Int.self), UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func Add(i: Int, to p: UnsafeMutablePointer<Int>) -> Int
 {
-  return AddLong(i, p)
+  return AddWord(i, p)
 }
 
 @inline(__always) public func Add(i: UInt, to p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: AddLong(unsafeBitCast(i, Int.self), UnsafeMutablePointer(p)))
+  return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func Sub(i: Int, from p: UnsafeMutablePointer<Int>) -> Int
 {
-  return SubLong(i, p)
+  return SubWord(i, p)
 }
 
 @inline(__always) public func Sub(i: UInt, from p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: SubLong(unsafeBitCast(i, Int.self), UnsafeMutablePointer(p)))
+  return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func Increment(p: UnsafeMutablePointer<Int>) -> Int
 {
-  return IncrementLong(p)
+  return IncrementWord(p)
 }
 
 @inline(__always) public func Increment(p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: IncrementLong(UnsafeMutablePointer(p)))
+  return UInt(bitPattern: IncrementWord(UnsafeMutablePointer(p)))
 }
 
 @inline(__always) public func Decrement(p: UnsafeMutablePointer<Int>) -> Int
 {
-  return DecrementLong(p)
+  return DecrementWord(p)
 }
 
 @inline(__always) public func Decrement(p: UnsafeMutablePointer<UInt>) -> UInt
 {
-  return UInt(bitPattern: DecrementLong(UnsafeMutablePointer(p)))
+  return UInt(bitPattern: DecrementWord(UnsafeMutablePointer(p)))
 }
 
 // MARK: Int32 and UInt32 Atomics

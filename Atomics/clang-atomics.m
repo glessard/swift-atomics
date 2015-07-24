@@ -38,47 +38,47 @@ const void* SwapVoidPtr(const void* val, void** ptr)
 }
 
 
-long ReadLong(long *ptr)
+long ReadWord(long *ptr)
 {
   return __c11_atomic_load((_Atomic(long)*)ptr, __ATOMIC_RELAXED);
 }
 
-long SyncReadLong(long *ptr)
+long SyncReadWord(long *ptr)
 {
   return __c11_atomic_load((_Atomic(long)*)ptr, __ATOMIC_SEQ_CST);
 }
 
-void StoreLong(long val, long* ptr)
+void StoreWord(long val, long* ptr)
 {
   __c11_atomic_store((_Atomic(long)*)ptr, val, __ATOMIC_RELAXED);
 }
 
-void SyncStoreLong(long val, long* ptr)
+void SyncStoreWord(long val, long* ptr)
 {
   __c11_atomic_store((_Atomic(long)*)ptr, val, __ATOMIC_SEQ_CST);
 }
 
-long SwapLong(long val, long *ptr)
+long SwapWord(long val, long *ptr)
 {
   return __c11_atomic_exchange((_Atomic(long)*)ptr, val, __ATOMIC_SEQ_CST);
 }
 
-long AddLong(long increment, long* ptr)
+long AddWord(long increment, long* ptr)
 {
   return __c11_atomic_fetch_add((_Atomic(long)*)ptr, increment, __ATOMIC_SEQ_CST);
 }
 
-long SubLong(long increment, long* ptr)
+long SubWord(long increment, long* ptr)
 {
   return __c11_atomic_fetch_sub((_Atomic(long)*)ptr, increment, __ATOMIC_SEQ_CST);
 }
 
-long IncrementLong(long* ptr)
+long IncrementWord(long* ptr)
 {
   return __c11_atomic_fetch_add((_Atomic(long)*)ptr, 1, __ATOMIC_SEQ_CST);
 }
 
-long DecrementLong(long* ptr)
+long DecrementWord(long* ptr)
 {
   return __c11_atomic_fetch_sub((_Atomic(long)*)ptr, 1, __ATOMIC_SEQ_CST);
 }
