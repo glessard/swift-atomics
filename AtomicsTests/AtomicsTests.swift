@@ -51,11 +51,11 @@ class AtomicsTests: XCTestCase
     let readUInt64 = Read(&randUInt64)
     XCTAssert(randUInt64 == readUInt64)
 
-    var randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readPtr = Read(&randPtr)
     XCTAssert(randPtr == readPtr)
 
-    var randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readMutPtr = Read(&randMutPtr)
     XCTAssert(randMutPtr == readMutPtr)
   }
@@ -87,11 +87,11 @@ class AtomicsTests: XCTestCase
     let readUInt64 = SyncRead(&randUInt64)
     XCTAssert(randUInt64 == readUInt64)
 
-    var randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readPtr = SyncRead(&randPtr)
     XCTAssert(randPtr == readPtr)
 
-    var randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readMutPtr = SyncRead(&randMutPtr)
     XCTAssert(randMutPtr == readMutPtr)
   }
@@ -129,13 +129,13 @@ class AtomicsTests: XCTestCase
     Store(randUInt64, &storUInt64)
     XCTAssert(randUInt64 == storUInt64)
 
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     Store(randPtr, &storPtr)
     XCTAssert(randPtr == storPtr)
 
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     Store(randMutPtr, &storMutPtr)
     XCTAssert(randMutPtr == storMutPtr)
   }
@@ -173,13 +173,13 @@ class AtomicsTests: XCTestCase
     SyncStore(randUInt64, &storUInt64)
     XCTAssert(randUInt64 == storUInt64)
 
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     SyncStore(randPtr, &storPtr)
     XCTAssert(randPtr == storPtr)
 
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     SyncStore(randMutPtr, &storMutPtr)
     XCTAssert(randMutPtr == storMutPtr)
   }
@@ -223,14 +223,14 @@ class AtomicsTests: XCTestCase
     XCTAssert(readUInt64 != randUInt64)
     XCTAssert(randUInt64 == storUInt64)
 
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readPtr = Swap(randPtr, &storPtr)
     XCTAssert(readPtr != randPtr)
     XCTAssert(randPtr == storPtr)
 
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     let readMutPtr = Swap(randMutPtr, &storMutPtr)
     XCTAssert(readMutPtr != randMutPtr)
     XCTAssert(randMutPtr == storMutPtr)
@@ -275,14 +275,14 @@ class AtomicsTests: XCTestCase
     XCTAssert(CAS(randUInt64, storUInt64, &randUInt64))
     XCTAssert(randUInt64 == storUInt64)
 
-    var randPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    let storPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    let storPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     XCTAssertFalse(CAS(nil, randPtr, &randPtr))
     XCTAssert(CAS(randPtr, storPtr, &randPtr))
     XCTAssert(randPtr == storPtr)
 
-    var randMutPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
-    let storMutPtr = UnsafePointer<CGPoint>(bitPattern: UWord(nzRandom()))
+    var randMutPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    let storMutPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     XCTAssertFalse(CAS(nil, randMutPtr, &randMutPtr))
     XCTAssert(CAS(randMutPtr, storMutPtr, &randMutPtr))
     XCTAssert(randMutPtr == storMutPtr)
