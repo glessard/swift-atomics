@@ -20,6 +20,12 @@ import Darwin.libkern.OSAtomic
   return OSAtomicCompareAndSwapPtrBarrier(UnsafeMutablePointer(o), UnsafeMutablePointer(n), UnsafeMutablePointer(p))
 }
 
+@inline(__always) public func CAS(o: COpaquePointer, _ n: COpaquePointer,
+                                  _ p: UnsafeMutablePointer<COpaquePointer>) -> Bool
+{
+  return OSAtomicCompareAndSwapPtrBarrier(UnsafeMutablePointer(o), UnsafeMutablePointer(n), UnsafeMutablePointer(p))
+}
+
 @inline(__always) public func CAS(o: Int, _ n: Int, _ p: UnsafeMutablePointer<Int>) -> Bool
 {
   return OSAtomicCompareAndSwapLongBarrier(o, n, p)
