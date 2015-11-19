@@ -7,17 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030110F31B4B896700F4B44B /* Atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 030110F21B4B896700F4B44B /* Atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
 		030110FF1B4B896700F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
 		0301110D1B4B89C200F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
-		0301110E1B4B89C200F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0301110A1B4B89C200F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0301110F1B4B89C200F4B44B /* clang-atomics.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.m */; };
+		0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.c */; };
 		030111101B4B89C200F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
-		03DB46D41B4C6F4100F4B44B /* Atomics_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DB46D31B4C6F4100F4B44B /* Atomics_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03DB46DB1B4C6F4100F4B44B /* Atomics_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; };
 		03DB46E81B4C6F9000F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
-		03DB46EA1B4C6FCE00F4B44B /* clang-atomics.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.m */; };
+		03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.c */; };
 		03DB46EB1B4C6FCE00F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
 		03DB46EC1B4C6FCE00F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
 		03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */; };
@@ -27,7 +24,8 @@
 		03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */; };
 		03DB47291B4CED0800F4B44B /* Atomics_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; };
 		03DB472A1B4CED1700F4B44B /* Atomics_iOS.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		03DB472D1B4CEF2200F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DB46ED1B4C716C00F4B44B /* clang-atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		03E4BEEC1BFD9BE700F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0301110A1B4B89C200F4B44B /* clang-atomics.h */; };
+		03E4BEED1BFD9BE900F4B44B /* clang-atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 0301110A1B4B89C200F4B44B /* clang-atomics.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,21 +81,18 @@
 
 /* Begin PBXFileReference section */
 		030110EF1B4B896700F4B44B /* Atomics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Atomics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		030110F21B4B896700F4B44B /* Atomics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Atomics.h; sourceTree = "<group>"; };
 		030110F41B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		030110F91B4B896700F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		030110FE1B4B896700F4B44B /* AtomicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicsTests.swift; sourceTree = "<group>"; };
 		030111001B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		030111091B4B89C200F4B44B /* better-cas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "better-cas.swift"; sourceTree = "<group>"; };
 		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
-		0301110B1B4B89C200F4B44B /* clang-atomics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "clang-atomics.m"; sourceTree = "<group>"; };
+		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "clang-atomics.c"; sourceTree = "<group>"; };
 		0301110C1B4B89C200F4B44B /* clang-atomics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "clang-atomics.swift"; sourceTree = "<group>"; };
 		03DB46D11B4C6F4100F4B44B /* Atomics_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Atomics_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		03DB46D31B4C6F4100F4B44B /* Atomics_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Atomics_iOS.h; sourceTree = "<group>"; };
 		03DB46D51B4C6F4100F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03DB46DA1B4C6F4100F4B44B /* Atomics_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Atomics_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB46E11B4C6F4100F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		03DB46ED1B4C716C00F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
 		03DB46F31B4C7AFB00F4B44B /* Atomics_TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Atomics_TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		03DB46F71B4C7AFC00F4B44B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -107,6 +102,7 @@
 		03DB47011B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Atomics_TestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB470C1B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		03E4BEEB1BFD994D00F4B44B /* module.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.map; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,10 +183,10 @@
 		030110F11B4B896700F4B44B /* Atomics */ = {
 			isa = PBXGroup;
 			children = (
-				030110F21B4B896700F4B44B /* Atomics.h */,
 				030110F41B4B896700F4B44B /* Info.plist */,
+				03E4BEEB1BFD994D00F4B44B /* module.map */,
 				0301110A1B4B89C200F4B44B /* clang-atomics.h */,
-				0301110B1B4B89C200F4B44B /* clang-atomics.m */,
+				0301110B1B4B89C200F4B44B /* clang-atomics.c */,
 				0301110C1B4B89C200F4B44B /* clang-atomics.swift */,
 				030111091B4B89C200F4B44B /* better-cas.swift */,
 			);
@@ -209,8 +205,6 @@
 		03DB46D21B4C6F4100F4B44B /* Atomics_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				03DB46D31B4C6F4100F4B44B /* Atomics_iOS.h */,
-				03DB46ED1B4C716C00F4B44B /* clang-atomics.h */,
 				03DB46D51B4C6F4100F4B44B /* Info.plist */,
 			);
 			path = Atomics_iOS;
@@ -252,8 +246,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030110F31B4B896700F4B44B /* Atomics.h in Headers */,
-				0301110E1B4B89C200F4B44B /* clang-atomics.h in Headers */,
+				03E4BEEC1BFD9BE700F4B44B /* clang-atomics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,8 +254,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB46D41B4C6F4100F4B44B /* Atomics_iOS.h in Headers */,
-				03DB472D1B4CEF2200F4B44B /* clang-atomics.h in Headers */,
+				03E4BEED1BFD9BE900F4B44B /* clang-atomics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,7 +481,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				030111101B4B89C200F4B44B /* clang-atomics.swift in Sources */,
-				0301110F1B4B89C200F4B44B /* clang-atomics.m in Sources */,
+				0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */,
 				0301110D1B4B89C200F4B44B /* better-cas.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -508,7 +500,7 @@
 			files = (
 				03DB46EC1B4C6FCE00F4B44B /* better-cas.swift in Sources */,
 				03DB46EB1B4C6FCE00F4B44B /* clang-atomics.swift in Sources */,
-				03DB46EA1B4C6FCE00F4B44B /* clang-atomics.m in Sources */,
+				03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +680,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.Atomics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -708,6 +701,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.Atomics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
 			};
 			name = Release;
 		};
@@ -748,6 +742,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -767,6 +762,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

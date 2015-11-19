@@ -1,0 +1,5 @@
+module clangatomics [system]
+{
+  header "clang-atomics.h"
+  export *
+}

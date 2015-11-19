@@ -337,9 +337,9 @@ class AtomicsTests: XCTestCase
 
     print(i)
 
-    var j = Read32(&i)
-    let k = Swap32(Int32(nzRandom()), &j)
-    Store32(j, &i)
+    var j = Read(&i)
+    let k = Swap(Int32(nzRandom()), &j)
+    Store(j, &i)
 
     print(j)
     print(k)
@@ -350,9 +350,9 @@ class AtomicsTests: XCTestCase
 
     print(ii)
 
-    var jj = Read64(&ii)
-    let kk = Swap64(numericCast(nzRandom()), &jj)
-    Store64(jj, &ii)
+    var jj = Read(&ii)
+    let kk = Swap(numericCast(nzRandom()), &jj)
+    Store(jj, &ii)
 
     print(jj)
     print(kk)

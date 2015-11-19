@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
 //
 
+import clangatomics
+
 // MARK: Pointer Atomics
 
 @inline(__always) public func Read<T>(p: UnsafeMutablePointer<UnsafePointer<T>>) -> UnsafePointer<T>
