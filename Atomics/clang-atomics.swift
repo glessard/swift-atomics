@@ -20,6 +20,11 @@ import clangatomics
   return UnsafeMutablePointer<T>(ReadVoidPtr(UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
 }
 
+@inline(__always) public func Read(p: UnsafeMutablePointer<COpaquePointer>) -> COpaquePointer
+{
+  return COpaquePointer(ReadVoidPtr(UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
+}
+
 
 @inline(__always) public func SyncRead<T>(p: UnsafeMutablePointer<UnsafePointer<T>>) -> UnsafePointer<T>
 {
@@ -29,6 +34,11 @@ import clangatomics
 @inline(__always) public func SyncRead<T>(p: UnsafeMutablePointer<UnsafeMutablePointer<T>>) -> UnsafeMutablePointer<T>
 {
   return UnsafeMutablePointer<T>(SyncReadVoidPtr(UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
+}
+
+@inline(__always) public func SyncRead(p: UnsafeMutablePointer<COpaquePointer>) -> COpaquePointer
+{
+  return COpaquePointer(SyncReadVoidPtr(UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
 }
 
 
@@ -42,6 +52,11 @@ import clangatomics
   StoreVoidPtr(v, UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p))
 }
 
+@inline(__always) public func Store(v: COpaquePointer, _ p: UnsafeMutablePointer<COpaquePointer>)
+{
+  StoreVoidPtr(UnsafeMutablePointer(v), UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p))
+}
+
 
 @inline(__always) public func SyncStore<T>(v: UnsafePointer<T>, _ p: UnsafeMutablePointer<UnsafePointer<T>>)
 {
@@ -53,6 +68,11 @@ import clangatomics
   SyncStoreVoidPtr(v, UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p))
 }
 
+@inline(__always) public func SyncStore(v: COpaquePointer, _ p: UnsafeMutablePointer<COpaquePointer>)
+{
+  SyncStoreVoidPtr(UnsafeMutablePointer(v), UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p))
+}
+
 
 @inline(__always) public func Swap<T>(v: UnsafePointer<T>, _ p: UnsafeMutablePointer<UnsafePointer<T>>) -> UnsafePointer<T>
 {
@@ -62,6 +82,11 @@ import clangatomics
 @inline(__always) public func Swap<T>(v: UnsafePointer<T>, _ p: UnsafeMutablePointer<UnsafeMutablePointer<T>>) -> UnsafeMutablePointer<T>
 {
   return UnsafeMutablePointer<T>(SwapVoidPtr(v, UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
+}
+
+@inline(__always) public func Swap(v: COpaquePointer, _ p: UnsafeMutablePointer<COpaquePointer>) -> COpaquePointer
+{
+  return COpaquePointer(SwapVoidPtr(UnsafeMutablePointer(v), UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)))
 }
 
 
