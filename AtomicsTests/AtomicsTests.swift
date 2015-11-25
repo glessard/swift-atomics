@@ -281,11 +281,17 @@ class AtomicsTests: XCTestCase
     XCTAssert(CAS(randPtr, storPtr, &randPtr))
     XCTAssert(randPtr == storPtr)
 
-    var randMutPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
-    let storMutPtr = UnsafePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    var randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
+    let storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: UInt(nzRandom()))
     XCTAssertFalse(CAS(nil, randMutPtr, &randMutPtr))
     XCTAssert(CAS(randMutPtr, storMutPtr, &randMutPtr))
     XCTAssert(randMutPtr == storMutPtr)
+
+    var randOPtr = COpaquePointer(bitPattern: UInt(nzRandom()))
+    let storOPtr = COpaquePointer(bitPattern: UInt(nzRandom()))
+    XCTAssertFalse(CAS(nil, randOPtr, &randOPtr))
+    XCTAssert(CAS(randOPtr, storOPtr, &randOPtr))
+    XCTAssert(randOPtr == storOPtr)
   }
 
   private struct TestStruct: CustomStringConvertible
