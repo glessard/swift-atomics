@@ -24,14 +24,7 @@ extension UnsafeMutablePointer
 
   @inline(__always) public mutating func atomicStore(v: UnsafeMutablePointer, synchronized: Bool = true)
   {
-    if synchronized
-    {
-      SyncStoreVoidPtr(v, ptr(&self))
-    }
-    else
-    {
-      StoreVoidPtr(v, ptr(&self))
-    }
+    synchronized ? SyncStoreVoidPtr(v, ptr(&self)) : StoreVoidPtr(v, ptr(&self))
   }
 
   @inline(__always) public mutating func atomicSwap(v: UnsafeMutablePointer) -> UnsafeMutablePointer
@@ -59,14 +52,7 @@ extension UnsafePointer
 
   @inline(__always) public mutating func atomicStore(v: UnsafePointer, synchronized: Bool = true)
   {
-    if synchronized
-    {
-      SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-    }
-    else
-    {
-      StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-    }
+    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
   }
 
   @inline(__always) public mutating func atomicSwap(v: UnsafePointer) -> UnsafePointer
@@ -94,14 +80,7 @@ extension COpaquePointer
 
   @inline(__always) public mutating func atomicStore(v: COpaquePointer, synchronized: Bool = true)
   {
-    if synchronized
-    {
-      SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-    }
-    else
-    {
-      StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-    }
+    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
   }
 
   @inline(__always) public mutating func atomicSwap(v: COpaquePointer) -> COpaquePointer
