@@ -6,7 +6,6 @@
 //
 
 import clang_atomics
-import Darwin.libkern.OSAtomic
 
 // MARK: Pointer Atomics
 
@@ -34,7 +33,8 @@ extension UnsafeMutablePointer
 
   @inline(__always) public mutating func CAS(current current: UnsafeMutablePointer, future: UnsafeMutablePointer) -> Bool
   {
-    return OSAtomicCompareAndSwapPtrBarrier(current, future, ptr(&self))
+    var expect = current
+    return CASVoidPtr(ptr(&expect), future, ptr(&self))
   }
 }
 
@@ -62,7 +62,8 @@ extension UnsafePointer
 
   @inline(__always) public mutating func CAS(current current: UnsafePointer, future: UnsafePointer) -> Bool
   {
-    return OSAtomicCompareAndSwapPtrBarrier(UnsafeMutablePointer(current), UnsafeMutablePointer(future), ptr(&self))
+    var expect = current
+    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
   }
 }
 
@@ -90,7 +91,8 @@ extension COpaquePointer
 
   @inline(__always) public mutating func CAS(current current: COpaquePointer, future: COpaquePointer) -> Bool
   {
-    return OSAtomicCompareAndSwapPtrBarrier(UnsafeMutablePointer(current), UnsafeMutablePointer(future), ptr(&self))
+    var expect = current
+    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
   }
 }
 
@@ -136,7 +138,8 @@ extension Int
 
   @inline(__always) public mutating func CAS(current current: Int, future: Int) -> Bool
   {
-    return OSAtomicCompareAndSwapLongBarrier(current, future, &self)
+    var expect = current
+    return CASWord(&expect, future, &self)
   }
 }
 
@@ -184,7 +187,8 @@ extension UInt
 
   @inline(__always) public mutating func CAS(current current: UInt, future: UInt) -> Bool
   {
-    return OSAtomicCompareAndSwapLongBarrier(unsafeBitCast(current, Int.self), unsafeBitCast(future, Int.self), ptr(&self))
+    var expect = current
+    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&self))
   }
 }
 
@@ -229,7 +233,17 @@ extension Int32
 
   @inline(__always) public mutating func CAS(current current: Int32, future: Int32) -> Bool
   {
-    return OSAtomicCompareAndSwap32Barrier(current, future, &self)
+    var expect = current
+    return CAS32(&expect, future, &self)
+//    if CAS32(&expect, future, &self)
+//    {
+//      precondition(expect == current)
+//    }
+//    else
+//    {
+//      precondition(expect != current)
+//    }
+//    return expect == current
   }
 }
 
@@ -277,7 +291,8 @@ extension UInt32
 
   @inline(__always) public mutating func CAS(current current: UInt32, future: UInt32) -> Bool
   {
-    return OSAtomicCompareAndSwap32Barrier(unsafeBitCast(current, Int32.self), unsafeBitCast(future, Int32.self), ptr(&self))
+    var expect = current
+    return CAS32(ptr(&expect), unsafeBitCast(future, Int32.self), ptr(&self))
   }
 }
 
@@ -322,7 +337,8 @@ extension Int64
 
   @inline(__always) public mutating func CAS(current current: Int64, future: Int64) -> Bool
   {
-    return OSAtomicCompareAndSwap64Barrier(current, future, &self)
+    var expect = current
+    return CAS64(&expect, future, &self)
   }
 }
 
@@ -370,6 +386,7 @@ extension UInt64
 
   @inline(__always) public mutating func CAS(current current: UInt64, future: UInt64) -> Bool
   {
-    return OSAtomicCompareAndSwap64Barrier(unsafeBitCast(current, Int64.self), unsafeBitCast(future, Int64.self), ptr(&self))
+    var expect = current
+    return CAS64(ptr(&expect), unsafeBitCast(future, Int64.self), ptr(&self))
   }
 }

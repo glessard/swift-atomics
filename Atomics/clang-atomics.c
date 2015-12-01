@@ -10,6 +10,7 @@
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
+//      http://en.cppreference.com/w/c/atomic/atomic_compare_exchange
 
 
 const void* ReadVoidPtr(void** ptr)
@@ -35,6 +36,11 @@ void SyncStoreVoidPtr(const void* val, void** ptr)
 const void* SwapVoidPtr(const void* val, void** ptr)
 {
   return __c11_atomic_exchange((_Atomic(void*)*)ptr, (void*)val, __ATOMIC_SEQ_CST);
+}
+
+_Bool CASVoidPtr(void** current, const void* future, void** ptr)
+{
+  return __c11_atomic_compare_exchange_weak((_Atomic(void*)*)ptr, (void**)current, (void*)future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
 }
 
 
@@ -83,6 +89,11 @@ long DecrementWord(long* ptr)
   return __c11_atomic_fetch_sub((_Atomic(long)*)ptr, 1, __ATOMIC_SEQ_CST);
 }
 
+_Bool CASWord(long* current, long future, long* ptr)
+{
+  return __c11_atomic_compare_exchange_weak((_Atomic(long)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+}
+
 
 int Read32(int *ptr)
 {
@@ -129,6 +140,11 @@ int Decrement32(int* ptr)
   return __c11_atomic_fetch_sub((_Atomic(int)*)ptr, 1, __ATOMIC_SEQ_CST);
 }
 
+_Bool CAS32(int* current, int future, int* ptr)
+{
+  return __c11_atomic_compare_exchange_weak((_Atomic(int)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+}
+
 
 long long Read64(long long *ptr)
 {
@@ -173,4 +189,9 @@ long long Increment64(long long* ptr)
 long long Decrement64(long long* ptr)
 {
   return __c11_atomic_fetch_sub((_Atomic(long long)*)ptr, 1, __ATOMIC_SEQ_CST);
+}
+
+_Bool CAS64(long long* current, long long future, long long* ptr)
+{
+  return __c11_atomic_compare_exchange_weak((_Atomic(long long)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
 }
