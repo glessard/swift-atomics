@@ -451,6 +451,28 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr == storOPtr)
   }
 
+  func testPerformanceSwiftCAS()
+  {
+    measureBlock {
+      var m = Int32(0)
+      for i in m..<1_000_000
+      {
+        m.CAS(current: m, future: i)
+      }
+    }
+  }
+
+  func testPerformanceOSCAS()
+  {
+    measureBlock {
+      var m = Int32(0)
+      for i in m..<1_000_000
+      {
+        OSAtomicCompareAndSwap32(m, i, &m)
+      }
+    }
+  }
+
   private struct TestStruct: CustomStringConvertible
   {
     var a = 0
