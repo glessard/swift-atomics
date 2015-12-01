@@ -8,8 +8,7 @@
 
 import XCTest
 
-import Darwin
-import Dispatch
+import Darwin.libkern.OSAtomic
 
 import Atomics
 
@@ -451,28 +450,38 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr == storOPtr)
   }
 
-  func testPerformanceSwiftCAS()
+  func testPerformanceSwiftCASSuccess()
   {
     measureBlock {
       var m = Int32(0)
-      for i in m..<1_000_000
-      {
-        m.CAS(current: m, future: i)
-      }
+      for i in m..<1_000_000 { m.CAS(current: m, future: i) }
     }
   }
 
-  func testPerformanceOSCAS()
+  func testPerformanceOSAtomicCASSuccess()
   {
     measureBlock {
       var m = Int32(0)
-      for i in m..<1_000_000
-      {
-        OSAtomicCompareAndSwap32(m, i, &m)
-      }
+      for i in m..<1_000_000 { OSAtomicCompareAndSwap32(m, i, &m) }
     }
   }
 
+  func testPerformanceSwiftCASFailure()
+  {
+    measureBlock {
+      var m = Int32(0)
+      for i in m..<1_000_000 { m.CAS(current: i, future: 0) }
+    }
+  }
+
+  func testPerformanceOSAtomicCASFailure()
+  {
+    measureBlock {
+      var m = Int32(0)
+      for i in m..<1_000_000 { OSAtomicCompareAndSwap32(i, 0, &m) }
+    }
+  }
+  
   private struct TestStruct: CustomStringConvertible
   {
     var a = 0
