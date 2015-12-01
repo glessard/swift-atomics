@@ -9,14 +9,12 @@
 /* Begin PBXBuildFile section */
 		030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
 		030110FF1B4B896700F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
-		0301110D1B4B89C200F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
 		0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.c */; };
-		030111101B4B89C200F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
+		030111101B4B89C200F4B44B /* atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* atomics.swift */; };
 		03DB46DB1B4C6F4100F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics.framework */; };
 		03DB46E81B4C6F9000F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
 		03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.c */; };
-		03DB46EB1B4C6FCE00F4B44B /* clang-atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* clang-atomics.swift */; };
-		03DB46EC1B4C6FCE00F4B44B /* better-cas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030111091B4B89C200F4B44B /* better-cas.swift */; };
+		03DB46EB1B4C6FCE00F4B44B /* atomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* atomics.swift */; };
 		03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */; };
 		03DB46F81B4C7AFC00F4B44B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F71B4C7AFC00F4B44B /* ViewController.swift */; };
 		03DB46FB1B4C7AFC00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46F91B4C7AFC00F4B44B /* Main.storyboard */; };
@@ -85,10 +83,9 @@
 		030110F91B4B896700F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		030110FE1B4B896700F4B44B /* AtomicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicsTests.swift; sourceTree = "<group>"; };
 		030111001B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		030111091B4B89C200F4B44B /* better-cas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "better-cas.swift"; sourceTree = "<group>"; };
 		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
 		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "clang-atomics.c"; sourceTree = "<group>"; };
-		0301110C1B4B89C200F4B44B /* clang-atomics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "clang-atomics.swift"; sourceTree = "<group>"; };
+		0301110C1B4B89C200F4B44B /* atomics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = atomics.swift; sourceTree = "<group>"; };
 		03DB46D11B4C6F4100F4B44B /* Atomics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Atomics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB46D51B4C6F4100F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03DB46DA1B4C6F4100F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,8 +184,7 @@
 				03E4BEEB1BFD994D00F4B44B /* module.map */,
 				0301110A1B4B89C200F4B44B /* clang-atomics.h */,
 				0301110B1B4B89C200F4B44B /* clang-atomics.c */,
-				0301110C1B4B89C200F4B44B /* clang-atomics.swift */,
-				030111091B4B89C200F4B44B /* better-cas.swift */,
+				0301110C1B4B89C200F4B44B /* atomics.swift */,
 			);
 			path = Atomics;
 			sourceTree = "<group>";
@@ -480,9 +476,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030111101B4B89C200F4B44B /* clang-atomics.swift in Sources */,
+				030111101B4B89C200F4B44B /* atomics.swift in Sources */,
 				0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */,
-				0301110D1B4B89C200F4B44B /* better-cas.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,8 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB46EC1B4C6FCE00F4B44B /* better-cas.swift in Sources */,
-				03DB46EB1B4C6FCE00F4B44B /* clang-atomics.swift in Sources */,
+				03DB46EB1B4C6FCE00F4B44B /* atomics.swift in Sources */,
 				03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
