@@ -450,6 +450,50 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr == storOPtr)
   }
 
+  func testPerformanceStore()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000 { m.atomicStore(i, synchronized: false) }
+    }
+  }
+  
+  func testPerformanceSynchronizedStore()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000 { m.atomicStore(i, synchronized: true) }
+    }
+  }
+
+  func testPerformanceRead()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000
+      {
+        m = i
+        _ = m.atomicRead(synchronized: false)
+      }
+    }
+  }
+
+  func testPerformanceSynchronizedRead()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000
+      {
+        m = i
+        _ = m.atomicRead(synchronized: true)
+      }
+    }
+  }
+
   func testPerformanceSwiftCASSuccess()
   {
     measureBlock {
