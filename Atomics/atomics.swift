@@ -1,12 +1,11 @@
 //
-//  clang-atomics.swift
-//  Test23
+//  atomics.swift
 //
 //  Created by Guillaume Lessard on 2015-05-21.
 //  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
 //
 
-import clangatomics
+import clang_atomics
 import Darwin.libkern.OSAtomic
 
 // MARK: Pointer Atomics
