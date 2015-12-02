@@ -450,34 +450,82 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr == storOPtr)
   }
 
+  func testPerformanceStore()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000 { m.atomicStore(i, synchronized: false) }
+    }
+  }
+  
+  func testPerformanceSynchronizedStore()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000 { m.atomicStore(i, synchronized: true) }
+    }
+  }
+
+  func testPerformanceRead()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000
+      {
+        m = i
+        _ = m.atomicRead(synchronized: false)
+      }
+    }
+  }
+
+  func testPerformanceSynchronizedRead()
+  {
+    var m = 0
+    measureBlock {
+      m = 0
+      for i in m..<1_000_000
+      {
+        m = i
+        _ = m.atomicRead(synchronized: true)
+      }
+    }
+  }
+
   func testPerformanceSwiftCASSuccess()
   {
+    var m = Int32(0)
     measureBlock {
-      var m = Int32(0)
+      m = 0
       for i in m..<1_000_000 { m.CAS(current: m, future: i) }
     }
   }
 
   func testPerformanceOSAtomicCASSuccess()
   {
+    var m = Int32(0)
     measureBlock {
-      var m = Int32(0)
+      m = 0
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(m, i, &m) }
     }
   }
 
   func testPerformanceSwiftCASFailure()
   {
+    var m = Int32(0)
     measureBlock {
-      var m = Int32(0)
+      m = 0
       for i in m..<1_000_000 { m.CAS(current: i, future: 0) }
     }
   }
 
   func testPerformanceOSAtomicCASFailure()
   {
+    var m = Int32(0)
     measureBlock {
-      var m = Int32(0)
+      m = 0
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(i, 0, &m) }
     }
   }
