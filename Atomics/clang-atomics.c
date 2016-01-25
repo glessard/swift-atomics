@@ -12,6 +12,7 @@
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
 //      http://en.cppreference.com/w/c/atomic/atomic_compare_exchange
 
+// pointer
 
 const void* ReadVoidPtr(void** ptr)
 {
@@ -43,6 +44,7 @@ _Bool CASVoidPtr(void** current, const void* future, void** ptr)
   return __c11_atomic_compare_exchange_weak((_Atomic(void*)*)ptr, (void**)current, (void*)future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
 }
 
+// pointer-sized integer
 
 long ReadWord(long *ptr)
 {
@@ -94,6 +96,7 @@ _Bool CASWord(long* current, long future, long* ptr)
   return __c11_atomic_compare_exchange_weak((_Atomic(long)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
 }
 
+// 32-bit integer
 
 int Read32(int *ptr)
 {
@@ -145,6 +148,7 @@ _Bool CAS32(int* current, int future, int* ptr)
   return __c11_atomic_compare_exchange_weak((_Atomic(int)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
 }
 
+// 64-bit integer
 
 long long Read64(long long *ptr)
 {
