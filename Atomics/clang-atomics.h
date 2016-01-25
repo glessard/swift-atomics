@@ -18,19 +18,6 @@ void SyncStoreVoidPtr(const void* val, void** var);
 const void* SwapVoidPtr(const void* val, void** var);
 _Bool CASVoidPtr(void** current, const void* future, void** var);
 
-// 32-bit integer
-
-int Read32(int* var);
-int SyncRead32(int* var);
-void Store32(int val, int* var);
-void SyncStore32(int val, int* var);
-int Swap32(int val, int* var);
-int Add32(int increment, int* var);
-int Sub32(int increment, int* var);
-int Increment32(int* var);
-int Decrement32(int* var);
-_Bool CAS32(int* current, int future, int* var);
-
 // pointer-sized integer
 
 long ReadWord(long *var);
@@ -43,6 +30,19 @@ long SubWord(long increment, long* var);
 long IncrementWord(long* var);
 long DecrementWord(long* var);
 _Bool CASWord(long* current, long future, long* var);
+
+// 32-bit integer
+
+int Read32(int* var);
+int SyncRead32(int* var);
+void Store32(int val, int* var);
+void SyncStore32(int val, int* var);
+int Swap32(int val, int* var);
+int Add32(int increment, int* var);
+int Sub32(int increment, int* var);
+int Increment32(int* var);
+int Decrement32(int* var);
+_Bool CAS32(int* current, int future, int* var);
 
 // 64-bit integer
 
