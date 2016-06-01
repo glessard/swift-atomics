@@ -95,52 +95,94 @@ extension AtomicInt
   }
 }
 
-extension UInt
+public struct AtomicUInt: IntegerLiteralConvertible
 {
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<UInt>) -> UnsafeMutablePointer<Int>
+  private var val: UInt = 0
+  public init(_ v: UInt = 0) { val = v }
+  public init(integerLiteral value: IntegerLiteralType) { val = UInt(bitPattern: value) }
+
+  @inline(__always)
+  private func ptr(p: UnsafeMutablePointer<UInt>) -> UnsafeMutablePointer<Int>
   {
     return UnsafeMutablePointer<Int>(p)
   }
 
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UInt
+  public var value: UInt {
+    mutating get { return UInt(bitPattern: ReadWord(ptr(&val), memory_order_relaxed)) }
+    mutating set { StoreWord(unsafeBitCast(newValue, Int.self), ptr(&val), memory_order_relaxed) }
+  }
+}
+
+extension AtomicUInt
+{
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return synchronized ? UInt(bitPattern: ReadWord(ptr(&self), memory_order_seq_cst)) : UInt(bitPattern: ReadWord(ptr(&self), memory_order_relaxed))
+    return UInt(bitPattern: ReadWord(ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func atomicStore(v: UInt, synchronized: Bool = true)
+  @inline(__always)
+  public mutating func store(value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    synchronized ? StoreWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_seq_cst) : StoreWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_relaxed)
+    StoreWord(unsafeBitCast(value, Int.self), ptr(&val), order.order)
   }
 
-  @inline(__always) public mutating func atomicSwap(v: UInt) -> UInt
+  @inline(__always)
+  public mutating func swap(value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: SwapWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_seq_cst))
+    return UInt(bitPattern: SwapWord(unsafeBitCast(value, Int.self), ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func atomicAdd(i: UInt) -> UInt
+  @inline(__always)
+  public mutating func add(i: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), ptr(&self), memory_order_seq_cst))
+    return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func increment() -> UInt
+  @inline(__always)
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: IncrementWord(ptr(&self), memory_order_seq_cst))
+    return UInt(bitPattern: IncrementWord(ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func atomicSub(i: UInt) -> UInt
+  @inline(__always)
+  public mutating func subtract(i: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), ptr(&self), memory_order_seq_cst))
+    return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func decrement() -> UInt
+  @inline(__always)
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: DecrementWord(ptr(&self), memory_order_seq_cst))
+    return UInt(bitPattern: DecrementWord(ptr(&val), order.order))
   }
 
-  @inline(__always) public mutating func CAS(current current: UInt, future: UInt) -> Bool
+  @inline(__always)
+  public mutating func logicalOr(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
+    return UInt(bitPattern: OrWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+  }
+
+  @inline(__always)
+  public mutating func logicalXor(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return UInt(bitPattern: XorWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+  }
+
+  @inline(__always)
+  public mutating func logicalAnd(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return UInt(bitPattern: AndWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+  }
+
+  @inline(__always)
+  public mutating func CAS(current current: UInt, future: UInt,
+                                   orderSuccess: MemoryOrder = .relaxed,
+                                   orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
-    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&self), memory_order_seq_cst, memory_order_relaxed)
+    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&val), orderSuccess.order, orderFailure.order)
   }
 }
 

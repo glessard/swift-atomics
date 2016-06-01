@@ -8,8 +8,6 @@
 
 import clang_atomics
 
-public struct AtomicUInt { var value: UInt = 0 }
-
 public struct AtomicInt32 { var value: Int32 = 0 }
 public struct AtomicUInt32 { var value: UInt32 = 0 }
 

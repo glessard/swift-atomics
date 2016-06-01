@@ -26,9 +26,9 @@ class AtomicsTests: XCTestCase
     let readInt = randInt.load()
     XCTAssert(randInt.value == readInt)
 
-    var randUInt = UInt(nzRandom())
-    let readUInt = randUInt.atomicRead(synchronized: false)
-    XCTAssert(randUInt == readUInt)
+    var randUInt = AtomicUInt(UInt(nzRandom()))
+    let readUInt = randUInt.load()
+    XCTAssert(randUInt.value == readUInt)
 
     var randInt32 = Int32(nzRandom())
     let readInt32 = randInt32.atomicRead(synchronized: false)
@@ -66,9 +66,9 @@ class AtomicsTests: XCTestCase
     let readInt = randInt.load(.sequential)
     XCTAssert(randInt.value == readInt)
 
-    var randUInt = UInt(nzRandom())
-    let readUInt = randUInt.atomicRead(synchronized: true)
-    XCTAssert(randUInt == readUInt)
+    var randUInt = AtomicUInt(UInt(nzRandom()))
+    let readUInt = randUInt.load(.sequential)
+    XCTAssert(randUInt.value == readUInt)
 
     var randInt32 = Int32(nzRandom())
     let readInt32 = randInt32.atomicRead(synchronized: true)
@@ -108,9 +108,9 @@ class AtomicsTests: XCTestCase
     XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
-    var storUInt = UInt(nzRandom())
-    storUInt.atomicStore(randUInt, synchronized: false)
-    XCTAssert(randUInt == storUInt)
+    var storUInt = AtomicUInt(UInt(nzRandom()))
+    storUInt.store(randUInt)
+    XCTAssert(randUInt == storUInt.value)
 
     let randInt32 = Int32(nzRandom())
     var storInt32 = Int32(nzRandom())
@@ -157,9 +157,9 @@ class AtomicsTests: XCTestCase
     XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
-    var storUInt = UInt(nzRandom())
-    storUInt.atomicStore(randUInt, synchronized: true)
-    XCTAssert(randUInt == storUInt)
+    var storUInt = AtomicUInt(UInt(nzRandom()))
+    storUInt.store(randUInt, order: .sequential)
+    XCTAssert(randUInt == storUInt.value)
 
     let randInt32 = Int32(nzRandom())
     var storInt32 = Int32(nzRandom())
@@ -207,10 +207,10 @@ class AtomicsTests: XCTestCase
     XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
-    var storUInt = UInt(nzRandom())
-    let readUInt = storUInt.atomicSwap(randUInt)
+    var storUInt = AtomicUInt(UInt(nzRandom()))
+    let readUInt = storUInt.swap(randUInt)
     XCTAssert(readUInt != randUInt)
-    XCTAssert(randUInt == storUInt)
+    XCTAssert(randUInt == storUInt.value)
 
     let randInt32 = Int32(nzRandom())
     var storInt32 = Int32(nzRandom())
@@ -265,9 +265,9 @@ class AtomicsTests: XCTestCase
 
     let fUInt = UInt(nzRandom())
     let sUInt = UInt(nzRandom())
-    var rUInt = sUInt
-    XCTAssert(rUInt.atomicAdd(fUInt) == sUInt)
-    XCTAssert(rUInt == fUInt+sUInt)
+    var rUInt = AtomicUInt(sUInt)
+    XCTAssert(rUInt.add(fUInt) == sUInt)
+    XCTAssert(rUInt.value == fUInt+sUInt)
 
     let fInt32 = Int32(nzRandom())
     let sInt32 = Int32(nzRandom())
@@ -302,9 +302,9 @@ class AtomicsTests: XCTestCase
     XCTAssert(rInt.value == fInt-1)
 
     let fUInt = UInt(nzRandom())
-    var rUInt = fUInt
-    XCTAssert(rUInt.atomicSub(1) == fUInt)
-    XCTAssert(rUInt == fUInt-1)
+    var rUInt = AtomicUInt(fUInt)
+    XCTAssert(rUInt.subtract(1) == fUInt)
+    XCTAssert(rUInt.value == fUInt-1)
 
     let fInt32 = Int32(nzRandom())
     var rInt32 = fInt32
@@ -335,9 +335,9 @@ class AtomicsTests: XCTestCase
     XCTAssert(rInt.value == fInt+1)
 
     let fUInt = UInt(nzRandom())
-    var rUInt = fUInt
+    var rUInt = AtomicUInt(fUInt)
     XCTAssert(rUInt.increment() == fUInt)
-    XCTAssert(rUInt == fUInt+1)
+    XCTAssert(rUInt.value == fUInt+1)
 
     let fInt32 = Int32(nzRandom())
     var rInt32 = fInt32
@@ -368,9 +368,9 @@ class AtomicsTests: XCTestCase
     XCTAssert(rInt.value == fInt-1)
 
     let fUInt = UInt(nzRandom())
-    var rUInt = fUInt
+    var rUInt = AtomicUInt(fUInt)
     XCTAssert(rUInt.decrement() == fUInt)
-    XCTAssert(rUInt == fUInt-1)
+    XCTAssert(rUInt.value == fUInt-1)
 
     let fInt32 = Int32(nzRandom())
     var rInt32 = fInt32
@@ -401,11 +401,11 @@ class AtomicsTests: XCTestCase
     XCTAssert(randInt.CAS(current: randInt.value, future: storInt))
     XCTAssert(randInt.value == storInt)
 
-    var randUInt = UInt(nzRandom())
+    var randUInt = AtomicUInt(UInt(nzRandom()))
     let storUInt = UInt(nzRandom())
-    XCTAssertFalse(randUInt.CAS(current: 0, future: randUInt))
-    XCTAssert(randUInt.CAS(current: randUInt, future: storUInt))
-    XCTAssert(randUInt == storUInt)
+    XCTAssert(randUInt.CAS(current: 0, future: randUInt.value) == false)
+    XCTAssert(randUInt.CAS(current: randUInt.value, future: storUInt))
+    XCTAssert(randUInt.value == storUInt)
 
     var randInt32 = Int32(nzRandom())
     let storInt32 = Int32(nzRandom())
