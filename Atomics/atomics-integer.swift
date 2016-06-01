@@ -10,6 +10,18 @@ import clang_atomics
 
 // MARK: Int and UInt Atomics
 
+public struct AtomicInt: IntegerLiteralConvertible
+{
+  private var val: Int = 0
+  public init(_ v: Int = 0) { val = v }
+  public init(integerLiteral value: IntegerLiteralType) { val = value }
+
+  public var value: Int {
+    mutating get { return ReadWord(&val, memory_order_relaxed) }
+    mutating set { StoreWord(newValue, &val, memory_order_relaxed) }
+  }
+}
+
 extension AtomicInt
 {
   @inline(__always)
@@ -19,15 +31,15 @@ extension AtomicInt
   }
 
   @inline(__always)
-  public mutating func store(v: Int, order: StoreMemoryOrder = .relaxed)
+  public mutating func store(value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    StoreWord(v, &self.value, order.order)
+    StoreWord(value, &self.value, order.order)
   }
 
   @inline(__always)
-  public mutating func swap(v: Int, order: MemoryOrder = .relaxed) -> Int
+  public mutating func swap(value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return SwapWord(v, &self.value, order.order)
+    return SwapWord(value, &self.value, order.order)
   }
 
   @inline(__always)
@@ -52,6 +64,24 @@ extension AtomicInt
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
     return DecrementWord(&self.value, order.order)
+  }
+
+  @inline(__always)
+  public mutating func bitwiseOr(bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return OrWord(bits, &self.value, order.order)
+  }
+
+  @inline(__always)
+  public mutating func bitwiseXor(bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return XorWord(bits, &self.value, order.order)
+  }
+
+  @inline(__always)
+  public mutating func bitwiseAnd(bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return AndWord(bits, &self.value, order.order)
   }
 
   @inline(__always)

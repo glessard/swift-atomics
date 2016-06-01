@@ -82,6 +82,21 @@ long DecrementWord(long* ptr, memory_order order)
   return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, 1, order);
 }
 
+long OrWord(long bits, long* ptr, memory_order order)
+{
+  return atomic_fetch_or_explicit((_Atomic(long)*)ptr, bits, order);
+}
+
+long XorWord(long bits, long* ptr, memory_order order)
+{
+  return atomic_fetch_xor_explicit((_Atomic(long)*)ptr, bits, order);
+}
+
+long AndWord(long bits, long* ptr, memory_order order)
+{
+  return atomic_fetch_and_explicit((_Atomic(long)*)ptr, bits, order);
+}
+
 _Bool CASWord(long* current, long future, long* ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_weak_explicit((_Atomic(long)*)ptr, current, future, succ, fail);

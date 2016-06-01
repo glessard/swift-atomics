@@ -8,18 +8,6 @@
 
 import clang_atomics
 
-public struct AtomicInt: IntegerLiteralConvertible
-{
-  var val: Int = 0
-  public init(_ v: Int) { val = v }
-  public init(integerLiteral value: IntegerLiteralType) { val = value }
-
-  public var value: Int {
-    mutating get { return ReadWord(&val, memory_order_relaxed) }
-    mutating set { StoreWord(newValue, &val, memory_order_relaxed) }
-  }
-}
-
 public struct AtomicUInt { var value: UInt = 0 }
 
 public struct AtomicInt32 { var value: Int32 = 0 }
