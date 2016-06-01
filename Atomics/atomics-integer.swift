@@ -1,145 +1,67 @@
 //
-//  atomics.swift
+//  atomics-integer.swift
+//  Atomics
 //
-//  Created by Guillaume Lessard on 2015-05-21.
-//  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
+//  Created by Guillaume Lessard on 31/05/2016.
+//  Copyright © 2016 Guillaume Lessard. All rights reserved.
 //
 
 import clang_atomics
 
-// MARK: Pointer Atomics
-
-extension UnsafeMutablePointer
-{
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<UnsafeMutablePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
-  {
-    return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
-  }
-
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UnsafeMutablePointer
-  {
-    return synchronized ? UnsafeMutablePointer(SyncReadVoidPtr(ptr(&self))) : UnsafeMutablePointer(ReadVoidPtr(ptr(&self)))
-  }
-
-  @inline(__always) public mutating func atomicStore(v: UnsafeMutablePointer, synchronized: Bool = true)
-  {
-    synchronized ? SyncStoreVoidPtr(v, ptr(&self)) : StoreVoidPtr(v, ptr(&self))
-  }
-
-  @inline(__always) public mutating func atomicSwap(v: UnsafeMutablePointer) -> UnsafeMutablePointer
-  {
-    return UnsafeMutablePointer(SwapVoidPtr(v, ptr(&self)))
-  }
-
-  @inline(__always) public mutating func CAS(current current: UnsafeMutablePointer, future: UnsafeMutablePointer) -> Bool
-  {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), future, ptr(&self))
-  }
-}
-
-extension UnsafePointer
-{
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<UnsafePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
-  {
-    return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
-  }
-
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UnsafePointer
-  {
-    return synchronized ? UnsafePointer(SyncReadVoidPtr(ptr(&self))) : UnsafePointer(ReadVoidPtr(ptr(&self)))
-  }
-
-  @inline(__always) public mutating func atomicStore(v: UnsafePointer, synchronized: Bool = true)
-  {
-    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-  }
-
-  @inline(__always) public mutating func atomicSwap(v: UnsafePointer) -> UnsafePointer
-  {
-    return UnsafePointer(SwapVoidPtr(v, ptr(&self)))
-  }
-
-  @inline(__always) public mutating func CAS(current current: UnsafePointer, future: UnsafePointer) -> Bool
-  {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
-  }
-}
-
-extension COpaquePointer
-{
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<COpaquePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
-  {
-    return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
-  }
-
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> COpaquePointer
-  {
-    return synchronized ? COpaquePointer(SyncReadVoidPtr(ptr(&self))) : COpaquePointer(ReadVoidPtr(ptr(&self)))
-  }
-
-  @inline(__always) public mutating func atomicStore(v: COpaquePointer, synchronized: Bool = true)
-  {
-    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
-  }
-
-  @inline(__always) public mutating func atomicSwap(v: COpaquePointer) -> COpaquePointer
-  {
-    return COpaquePointer(SwapVoidPtr(UnsafeMutablePointer<Void>(v), ptr(&self)))
-  }
-
-  @inline(__always) public mutating func CAS(current current: COpaquePointer, future: COpaquePointer) -> Bool
-  {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
-  }
-}
-
-
 // MARK: Int and UInt Atomics
 
-extension Int
+extension AtomicInt
 {
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> Int
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return synchronized ? SyncReadWord(&self) : ReadWord(&self)
+    return ReadWord(&self.value, order.order)
   }
 
-  @inline(__always) public mutating func atomicStore(v: Int, synchronized: Bool = true)
+  @inline(__always)
+  public mutating func store(v: Int, order: StoreMemoryOrder = .relaxed)
   {
-    synchronized ? SyncStoreWord(v, &self) : StoreWord(v, &self)
+    StoreWord(v, &self.value, order.order)
   }
 
-  @inline(__always) public mutating func atomicSwap(v: Int) -> Int
+  @inline(__always)
+  public mutating func swap(v: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return SwapWord(v, &self)
+    return SwapWord(v, &self.value, order.order)
   }
 
-  @inline(__always) public mutating func atomicAdd(i: Int) -> Int
+  @inline(__always)
+  public mutating func add(i: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AddWord(i, &self)
+    return AddWord(i, &self.value, order.order)
   }
 
-  @inline(__always) public mutating func increment() -> Int
+  @inline(__always)
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return IncrementWord(&self)
+    return IncrementWord(&self.value, order.order)
   }
 
-  @inline(__always) public mutating func atomicSub(i: Int) -> Int
+  @inline(__always)
+  public mutating func subtract(i: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return SubWord(i, &self)
+    return SubWord(i, &self.value, order.order)
   }
 
-  @inline(__always) public mutating func decrement() -> Int
+  @inline(__always)
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return DecrementWord(&self)
+    return DecrementWord(&self.value, order.order)
   }
 
-  @inline(__always) public mutating func CAS(current current: Int, future: Int) -> Bool
+  @inline(__always)
+  public mutating func CAS(current current: Int, future: Int,
+                           orderSuccess: MemoryOrder = .relaxed,
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
-    return CASWord(&expect, future, &self)
+    return CASWord(&expect, future, &self.value, orderSuccess.order, orderFailure.order)
   }
 }
 
@@ -152,43 +74,43 @@ extension UInt
 
   @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UInt
   {
-    return synchronized ? UInt(bitPattern: SyncReadWord(ptr(&self))) : UInt(bitPattern: ReadWord(ptr(&self)))
+    return synchronized ? UInt(bitPattern: ReadWord(ptr(&self), memory_order_seq_cst)) : UInt(bitPattern: ReadWord(ptr(&self), memory_order_relaxed))
   }
 
   @inline(__always) public mutating func atomicStore(v: UInt, synchronized: Bool = true)
   {
-    synchronized ? SyncStoreWord(unsafeBitCast(v, Int.self), ptr(&self)) : StoreWord(unsafeBitCast(v, Int.self), ptr(&self))
+    synchronized ? StoreWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_seq_cst) : StoreWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_relaxed)
   }
 
   @inline(__always) public mutating func atomicSwap(v: UInt) -> UInt
   {
-    return UInt(bitPattern: SwapWord(unsafeBitCast(v, Int.self), ptr(&self)))
+    return UInt(bitPattern: SwapWord(unsafeBitCast(v, Int.self), ptr(&self), memory_order_seq_cst))
   }
 
   @inline(__always) public mutating func atomicAdd(i: UInt) -> UInt
   {
-    return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), ptr(&self)))
+    return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), ptr(&self), memory_order_seq_cst))
   }
 
   @inline(__always) public mutating func increment() -> UInt
   {
-    return UInt(bitPattern: IncrementWord(ptr(&self)))
+    return UInt(bitPattern: IncrementWord(ptr(&self), memory_order_seq_cst))
   }
 
   @inline(__always) public mutating func atomicSub(i: UInt) -> UInt
   {
-    return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), ptr(&self)))
+    return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), ptr(&self), memory_order_seq_cst))
   }
 
   @inline(__always) public mutating func decrement() -> UInt
   {
-    return UInt(bitPattern: DecrementWord(ptr(&self)))
+    return UInt(bitPattern: DecrementWord(ptr(&self), memory_order_seq_cst))
   }
 
   @inline(__always) public mutating func CAS(current current: UInt, future: UInt) -> Bool
   {
     var expect = current
-    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&self))
+    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&self), memory_order_seq_cst, memory_order_relaxed)
   }
 }
 
@@ -235,15 +157,15 @@ extension Int32
   {
     var expect = current
     return CAS32(&expect, future, &self)
-//    if CAS32(&expect, future, &self)
-//    {
-//      precondition(expect == current)
-//    }
-//    else
-//    {
-//      precondition(expect != current)
-//    }
-//    return expect == current
+    //    if CAS32(&expect, future, &self)
+    //    {
+    //      precondition(expect == current)
+    //    }
+    //    else
+    //    {
+    //      precondition(expect != current)
+    //    }
+    //    return expect == current
   }
 }
 

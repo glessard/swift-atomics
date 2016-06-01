@@ -22,9 +22,9 @@ class AtomicsTests: XCTestCase
 
   func testRead()
   {
-    var randInt = Int(nzRandom())
-    let readInt = randInt.atomicRead(synchronized: false)
-    XCTAssert(randInt == readInt)
+    var randInt = AtomicInt(Int(nzRandom()))
+    let readInt = randInt.load()
+    XCTAssert(randInt.value == readInt)
 
     var randUInt = UInt(nzRandom())
     let readUInt = randUInt.atomicRead(synchronized: false)
@@ -62,9 +62,9 @@ class AtomicsTests: XCTestCase
     
   func testSyncRead()
   {
-    var randInt = Int(nzRandom())
-    let readInt = randInt.atomicRead(synchronized: true)
-    XCTAssert(randInt == readInt)
+    var randInt = AtomicInt(Int(nzRandom()))
+    let readInt = randInt.load(.sequential)
+    XCTAssert(randInt.value == readInt)
 
     var randUInt = UInt(nzRandom())
     let readUInt = randUInt.atomicRead(synchronized: true)
@@ -103,9 +103,9 @@ class AtomicsTests: XCTestCase
   func testStore()
   {
     let randInt = Int(nzRandom())
-    var storInt = Int(nzRandom())
-    storInt.atomicStore(randInt, synchronized: false)
-    XCTAssert(randInt == storInt)
+    var storInt = AtomicInt(Int(nzRandom()))
+    storInt.store(randInt)
+    XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
     var storUInt = UInt(nzRandom())
@@ -152,9 +152,9 @@ class AtomicsTests: XCTestCase
   func testSyncStore()
   {
     let randInt = Int(nzRandom())
-    var storInt = Int(nzRandom())
-    storInt.atomicStore(randInt, synchronized: true)
-    XCTAssert(randInt == storInt)
+    var storInt = AtomicInt(Int(nzRandom()))
+    storInt.store(randInt, order: .sequential)
+    XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
     var storUInt = UInt(nzRandom())
@@ -201,10 +201,10 @@ class AtomicsTests: XCTestCase
   func testSwap()
   {
     let randInt = Int(nzRandom())
-    var storInt = Int(nzRandom())
-    let readInt = storInt.atomicSwap(randInt)
+    var storInt = AtomicInt(Int(nzRandom()))
+    let readInt = storInt.swap(randInt)
     XCTAssert(readInt != randInt)
-    XCTAssert(randInt == storInt)
+    XCTAssert(randInt == storInt.value)
 
     let randUInt = UInt(nzRandom())
     var storUInt = UInt(nzRandom())
@@ -259,9 +259,9 @@ class AtomicsTests: XCTestCase
   {
     let fInt = Int(nzRandom())
     let sInt = Int(nzRandom())
-    var rInt = sInt
-    XCTAssert(rInt.atomicAdd(fInt) == sInt)
-    XCTAssert(rInt == fInt+sInt)
+    var rInt = AtomicInt(sInt)
+    XCTAssert(rInt.add(fInt) == sInt)
+    XCTAssert(rInt.value == fInt+sInt)
 
     let fUInt = UInt(nzRandom())
     let sUInt = UInt(nzRandom())
@@ -297,9 +297,9 @@ class AtomicsTests: XCTestCase
   func testSub()
   {
     let fInt = Int(nzRandom())
-    var rInt = fInt
-    XCTAssert(rInt.atomicSub(1) == fInt)
-    XCTAssert(rInt == fInt-1)
+    var rInt = AtomicInt(fInt)
+    XCTAssert(rInt.subtract(1) == fInt)
+    XCTAssert(rInt.value == fInt-1)
 
     let fUInt = UInt(nzRandom())
     var rUInt = fUInt
@@ -330,9 +330,9 @@ class AtomicsTests: XCTestCase
   func testIncrement()
   {
     let fInt = Int(nzRandom())
-    var rInt = fInt
+    var rInt = AtomicInt(fInt)
     XCTAssert(rInt.increment() == fInt)
-    XCTAssert(rInt == fInt+1)
+    XCTAssert(rInt.value == fInt+1)
 
     let fUInt = UInt(nzRandom())
     var rUInt = fUInt
@@ -363,9 +363,9 @@ class AtomicsTests: XCTestCase
   func testDecrement()
   {
     let fInt = Int(nzRandom())
-    var rInt = fInt
+    var rInt = AtomicInt(fInt)
     XCTAssert(rInt.decrement() == fInt)
-    XCTAssert(rInt == fInt-1)
+    XCTAssert(rInt.value == fInt-1)
 
     let fUInt = UInt(nzRandom())
     var rUInt = fUInt
@@ -395,11 +395,11 @@ class AtomicsTests: XCTestCase
   
   func testCAS()
   {
-    var randInt = Int(nzRandom())
+    var randInt = AtomicInt(Int(nzRandom()))
     let storInt = Int(nzRandom())
-    XCTAssertFalse(randInt.CAS(current: 0, future: randInt))
-    XCTAssert(randInt.CAS(current: randInt, future: storInt))
-    XCTAssert(randInt == storInt)
+    XCTAssert(randInt.CAS(current: 0, future: randInt.value) == false)
+    XCTAssert(randInt.CAS(current: randInt.value, future: storInt))
+    XCTAssert(randInt.value == storInt)
 
     var randUInt = UInt(nzRandom())
     let storUInt = UInt(nzRandom())
@@ -452,44 +452,44 @@ class AtomicsTests: XCTestCase
 
   func testPerformanceStore()
   {
-    var m = 0
+    var m = AtomicInt(0)
     measureBlock {
-      m = 0
-      for i in m..<1_000_000 { m.atomicStore(i, synchronized: false) }
+      m.value = 0
+      for i in 0..<1_000_000 { m.store(i, order: .relaxed) }
     }
   }
   
   func testPerformanceSynchronizedStore()
   {
-    var m = 0
+    var m = AtomicInt(0)
     measureBlock {
-      m = 0
-      for i in m..<1_000_000 { m.atomicStore(i, synchronized: true) }
+      m.value = 0
+      for i in 0..<1_000_000 { m.store(i, order: .sequential) }
     }
   }
 
   func testPerformanceRead()
   {
-    var m = 0
+    var m = AtomicInt(0)
     measureBlock {
-      m = 0
-      for i in m..<1_000_000
+      m.value = 0
+      for i in 0..<1_000_000
       {
-        m = i
-        _ = m.atomicRead(synchronized: false)
+        m.value = i
+        guard m.load(.relaxed) == i else { XCTFail(); break }
       }
     }
   }
 
   func testPerformanceSynchronizedRead()
   {
-    var m = 0
+    var m = AtomicInt(0)
     measureBlock {
-      m = 0
-      for i in m..<1_000_000
+      m.value = 0
+      for i in 0..<1_000_000
       {
-        m = i
-        _ = m.atomicRead(synchronized: true)
+        m.value = i
+        guard m.load(.sequential) == i else { XCTFail(); break }
       }
     }
   }
@@ -532,21 +532,21 @@ class AtomicsTests: XCTestCase
   
   private struct TestStruct: CustomStringConvertible
   {
-    var a = 0
-    var b = 1
-    var c = 2
-    var d = 3
+    var a: AtomicInt = 0
+    var b: AtomicInt = 1
+    var c: AtomicInt = 2
+    var d: AtomicInt = 3
 
     var description: String { return "\(a) \(b) \(c) \(d)" }
   }
 
   func testExample()
   {
-    var value = 0
+    var value = AtomicInt(0)
 
-    print(value.atomicSwap(1))
+    print(value.swap(1))
     print(value)
-    value.atomicStore(2)
+    value.store(2)
     print(value)
 
     var p = UnsafeMutablePointer<Int>.alloc(1)
@@ -608,7 +608,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value = random()
+      value.value = random()
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -616,7 +616,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.atomicStore(random())
+      value.store(random())
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -624,7 +624,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.atomicStore(random())
+      value.store(random())
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -633,14 +633,14 @@ class AtomicsTests: XCTestCase
 
     print(t)
 
-    t.c.atomicStore(4)
+    t.c.store(4)
 
     let g = dispatch_group_create()
     dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
       print(t)
-      let v = t.a.atomicSwap(5)
+      let v = t.a.swap(5)
       usleep(1000)
-      t.b.atomicStore(v, synchronized: true)
+      t.b.store(v, order: .sequential)
     }
 
     usleep(500)
@@ -654,13 +654,13 @@ class AtomicsTests: XCTestCase
     
     print(pt.memory)
 
-    pt.memory.c.atomicStore(4)
+    pt.memory.c.store(4)
 
     dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
       print(pt.memory)
-      let v = pt.memory.a.atomicSwap(5)
+      let v = pt.memory.a.swap(5)
       usleep(1000)
-      pt.memory.b.atomicStore(v, synchronized: true)
+      pt.memory.b.store(v, order: .sequential)
     }
     
     usleep(500)

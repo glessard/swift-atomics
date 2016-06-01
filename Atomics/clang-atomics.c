@@ -47,54 +47,44 @@ _Bool CASVoidPtr(void** current, const void* future, void** ptr)
 
 // pointer-sized integer
 
-long ReadWord(long *ptr)
+long ReadWord(long *ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(long)*)ptr, __ATOMIC_RELAXED);
+  return atomic_load_explicit((_Atomic(long)*)ptr, order);
 }
 
-long SyncReadWord(long *ptr)
+void StoreWord(long val, long* ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(long)*)ptr, __ATOMIC_SEQ_CST);
+  atomic_store_explicit((_Atomic(long)*)ptr, val, order);
 }
 
-void StoreWord(long val, long* ptr)
+long SwapWord(long val, long *ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(long)*)ptr, val, __ATOMIC_RELAXED);
+  return atomic_exchange_explicit((_Atomic(long)*)ptr, val, order);
 }
 
-void SyncStoreWord(long val, long* ptr)
+long AddWord(long increment, long* ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(long)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_add_explicit((_Atomic(long)*)ptr, increment, order);
 }
 
-long SwapWord(long val, long *ptr)
+long SubWord(long increment, long* ptr, memory_order order)
 {
-  return atomic_exchange_explicit((_Atomic(long)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, increment, order);
 }
 
-long AddWord(long increment, long* ptr)
+long IncrementWord(long* ptr, memory_order order)
 {
-  return atomic_fetch_add_explicit((_Atomic(long)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_add_explicit((_Atomic(long)*)ptr, 1, order);
 }
 
-long SubWord(long increment, long* ptr)
+long DecrementWord(long* ptr, memory_order order)
 {
-  return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, 1, order);
 }
 
-long IncrementWord(long* ptr)
+_Bool CASWord(long* current, long future, long* ptr, memory_order succ, memory_order fail)
 {
-  return atomic_fetch_add_explicit((_Atomic(long)*)ptr, 1, __ATOMIC_SEQ_CST);
-}
-
-long DecrementWord(long* ptr)
-{
-  return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, 1, __ATOMIC_SEQ_CST);
-}
-
-_Bool CASWord(long* current, long future, long* ptr)
-{
-  return atomic_compare_exchange_weak_explicit((_Atomic(long)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+  return atomic_compare_exchange_weak_explicit((_Atomic(long)*)ptr, current, future, succ, fail);
 }
 
 // 32-bit integer

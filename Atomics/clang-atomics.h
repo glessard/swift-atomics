@@ -9,10 +9,11 @@
 #ifndef clang_atomics_h
 #define clang_atomics_h
 
-#import <stdatomic.h>
+#include <stdatomic.h>
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
+//      http://en.cppreference.com/w/c/atomic
 //      http://en.cppreference.com/w/c/atomic/atomic_compare_exchange
 
 // pointer
@@ -26,16 +27,14 @@ _Bool CASVoidPtr(void** current, const void* future, void** var);
 
 // pointer-sized integer
 
-long ReadWord(long *var);
-long SyncReadWord(long *var);
-void StoreWord(long val, long *var);
-void SyncStoreWord(long val, long *var);
-long SwapWord(long val, long* var);
-long AddWord(long increment, long* var);
-long SubWord(long increment, long* var);
-long IncrementWord(long* var);
-long DecrementWord(long* var);
-_Bool CASWord(long* current, long future, long* var);
+long ReadWord(long *var, memory_order order);
+void StoreWord(long val, long *var, memory_order order);
+long SwapWord(long val, long* var, memory_order order);
+long AddWord(long increment, long* var, memory_order order);
+long SubWord(long increment, long* var, memory_order order);
+long IncrementWord(long* var, memory_order order);
+long DecrementWord(long* var, memory_order order);
+_Bool CASWord(long* current, long future, long* var, memory_order succ, memory_order fail);
 
 // 32-bit integer
 
