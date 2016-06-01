@@ -9,6 +9,8 @@
 #ifndef clang_atomics_h
 #define clang_atomics_h
 
+#import <stdatomic.h>
+
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
 //      http://en.cppreference.com/w/c/atomic/atomic_compare_exchange
