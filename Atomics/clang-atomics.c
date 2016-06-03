@@ -15,34 +15,29 @@
 
 // pointer
 
-const void* ReadVoidPtr(void** ptr)
+const void* ReadVoidPtr(void** ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(void*)*)ptr, __ATOMIC_RELAXED);
+  return atomic_load_explicit((_Atomic(void*)*)ptr, order);
 }
 
-const void* SyncReadVoidPtr(void** ptr)
+void StoreVoidPtr(const void* val, void** ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(void*)*)ptr, __ATOMIC_SEQ_CST);
+  atomic_store_explicit((_Atomic(void*)*)ptr, (void*)val, order);
 }
 
-void StoreVoidPtr(const void* val, void** ptr)
+const void* SwapVoidPtr(const void* val, void** ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(void*)*)ptr, (void*)val, __ATOMIC_RELAXED);
+  return atomic_exchange_explicit((_Atomic(void*)*)ptr, (void*)val, order);
 }
 
-void SyncStoreVoidPtr(const void* val, void** ptr)
+_Bool CASVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
 {
-  atomic_store_explicit((_Atomic(void*)*)ptr, (void*)val, __ATOMIC_SEQ_CST);
+  return atomic_compare_exchange_strong_explicit((_Atomic(void*)*)ptr, (void**)current, (void*)future, succ, fail);
 }
 
-const void* SwapVoidPtr(const void* val, void** ptr)
+_Bool CASWeakVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
 {
-  return atomic_exchange_explicit((_Atomic(void*)*)ptr, (void*)val, __ATOMIC_SEQ_CST);
-}
-
-_Bool CASVoidPtr(void** current, const void* future, void** ptr)
-{
-  return atomic_compare_exchange_weak_explicit((_Atomic(void*)*)ptr, (void**)current, (void*)future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+  return atomic_compare_exchange_weak_explicit((_Atomic(void*)*)ptr, (void**)current, (void*)future, succ, fail);
 }
 
 // pointer-sized integer

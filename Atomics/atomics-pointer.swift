@@ -9,89 +9,156 @@ import clang_atomics
 
 // MARK: Pointer Atomics
 
-extension UnsafeMutablePointer
+public struct AtomicMutablePointer<Pointee>: NilLiteralConvertible
 {
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<UnsafeMutablePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
+  private var p: UnsafeMutablePointer<Void>
+  public init(_ ptr: UnsafeMutablePointer<Pointee> = nil) { self.p = UnsafeMutablePointer(ptr) }
+  public init(nilLiteral: ()) { self.p = nil }
+
+  public var pointer: UnsafeMutablePointer<Pointee> {
+    mutating get { return UnsafeMutablePointer(ReadVoidPtr(&p, memory_order_relaxed)) }
+    mutating set { StoreVoidPtr(newValue, &p, memory_order_relaxed) }
+  }
+}
+
+extension AtomicMutablePointer
+{
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UnsafeMutablePointer<Pointee>
+  {
+    return UnsafeMutablePointer(ReadVoidPtr(&self.p, order.order))
+  }
+
+  @inline(__always)
+  public mutating func store(pointer: UnsafeMutablePointer<Pointee>, order: StoreMemoryOrder = .relaxed)
+  {
+    StoreVoidPtr(UnsafePointer(pointer), &self.p, order.order)
+  }
+
+  @inline(__always)
+  public mutating func swap(pointer: UnsafeMutablePointer<Pointee>, order: MemoryOrder = .relaxed) -> UnsafeMutablePointer<Pointee>
+  {
+    return UnsafeMutablePointer(SwapVoidPtr(UnsafePointer(pointer), &self.p, order.order))
+  }
+
+  @inline(__always)
+  public mutating func CAS(current current: UnsafeMutablePointer<Pointee>, future: UnsafeMutablePointer<Pointee>,
+                                   type: CASType = .strong,
+                                   orderSuccess: MemoryOrder = .relaxed,
+                                   orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    var expect = UnsafeMutablePointer<Void>(current)
+    switch type {
+    case .strong:
+      return CASVoidPtr(&expect, UnsafePointer(future), &self.p, orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakVoidPtr(&expect, UnsafePointer(future), &self.p, orderSuccess.order, orderFailure.order)
+    }
+  }
+}
+
+public struct AtomicPointer<Pointee>: NilLiteralConvertible
+{
+  private var p: UnsafePointer<Void>
+  public init(_ ptr: UnsafePointer<Pointee> = nil) { self.p = UnsafePointer(ptr) }
+  public init(nilLiteral: ()) { self.p = nil }
+
+  @inline(__always) private func ptr(p: UnsafeMutablePointer<UnsafePointer<Void>>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
   {
     return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
   }
 
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UnsafeMutablePointer
-  {
-    return synchronized ? UnsafeMutablePointer(SyncReadVoidPtr(ptr(&self))) : UnsafeMutablePointer(ReadVoidPtr(ptr(&self)))
-  }
-
-  @inline(__always) public mutating func atomicStore(v: UnsafeMutablePointer, synchronized: Bool = true)
-  {
-    synchronized ? SyncStoreVoidPtr(v, ptr(&self)) : StoreVoidPtr(v, ptr(&self))
-  }
-
-  @inline(__always) public mutating func atomicSwap(v: UnsafeMutablePointer) -> UnsafeMutablePointer
-  {
-    return UnsafeMutablePointer(SwapVoidPtr(v, ptr(&self)))
-  }
-
-  @inline(__always) public mutating func CAS(current current: UnsafeMutablePointer, future: UnsafeMutablePointer) -> Bool
-  {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), future, ptr(&self))
+  public var pointer: UnsafePointer<Pointee> {
+    mutating get { return UnsafePointer(ReadVoidPtr(ptr(&self.p), memory_order_relaxed)) }
+    mutating set { StoreVoidPtr(newValue, ptr(&self.p), memory_order_relaxed) }
   }
 }
 
-extension UnsafePointer
+extension AtomicPointer
 {
-  @inline(__always) private func ptr(p: UnsafeMutablePointer<UnsafePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UnsafePointer<Pointee>
   {
-    return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
+    return UnsafePointer(ReadVoidPtr(ptr(&self.p), order.order))
   }
 
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> UnsafePointer
+  @inline(__always)
+  public mutating func store(pointer: UnsafePointer<Pointee>, order: StoreMemoryOrder = .relaxed)
   {
-    return synchronized ? UnsafePointer(SyncReadVoidPtr(ptr(&self))) : UnsafePointer(ReadVoidPtr(ptr(&self)))
+    StoreVoidPtr(UnsafePointer(pointer), ptr(&self.p), order.order)
   }
 
-  @inline(__always) public mutating func atomicStore(v: UnsafePointer, synchronized: Bool = true)
+  @inline(__always)
+  public mutating func swap(pointer: UnsafePointer<Pointee>, order: MemoryOrder = .relaxed) -> UnsafePointer<Pointee>
   {
-    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
+    return UnsafePointer(SwapVoidPtr(UnsafePointer(pointer), ptr(&self.p), order.order))
   }
 
-  @inline(__always) public mutating func atomicSwap(v: UnsafePointer) -> UnsafePointer
+  @inline(__always)
+  public mutating func CAS(current current: UnsafePointer<Pointee>, future: UnsafePointer<Pointee>,
+                                   type: CASType = .strong,
+                                   orderSuccess: MemoryOrder = .relaxed,
+                                   orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return UnsafePointer(SwapVoidPtr(v, ptr(&self)))
-  }
-
-  @inline(__always) public mutating func CAS(current current: UnsafePointer, future: UnsafePointer) -> Bool
-  {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
+    var expect = UnsafeMutablePointer<Void>(current)
+    switch type {
+    case .strong:
+      return CASVoidPtr(&expect, UnsafePointer(future), ptr(&self.p), orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakVoidPtr(&expect, UnsafePointer(future), ptr(&self.p), orderSuccess.order, orderFailure.order)
+    }
   }
 }
 
-extension COpaquePointer
+public struct AtomicOpaquePointer: NilLiteralConvertible
 {
+  private var p: COpaquePointer
+  public init(_ ptr: COpaquePointer = nil) { self.p = ptr }
+  public init(nilLiteral: ()) { self.p = nil }
+
   @inline(__always) private func ptr(p: UnsafeMutablePointer<COpaquePointer>) -> UnsafeMutablePointer<UnsafeMutablePointer<Void>>
   {
     return UnsafeMutablePointer<UnsafeMutablePointer<Void>>(p)
   }
 
-  @inline(__always) public mutating func atomicRead(synchronized synchronized: Bool = true) -> COpaquePointer
+  public var pointer: COpaquePointer {
+    mutating get { return COpaquePointer(ReadVoidPtr(ptr(&self.p), memory_order_relaxed)) }
+    mutating set { StoreVoidPtr(UnsafePointer(newValue), ptr(&self.p), memory_order_relaxed) }
+  }
+}
+
+extension AtomicOpaquePointer
+{
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> COpaquePointer
   {
-    return synchronized ? COpaquePointer(SyncReadVoidPtr(ptr(&self))) : COpaquePointer(ReadVoidPtr(ptr(&self)))
+    return COpaquePointer(ReadVoidPtr(ptr(&self.p), order.order))
   }
 
-  @inline(__always) public mutating func atomicStore(v: COpaquePointer, synchronized: Bool = true)
+  @inline(__always)
+  public mutating func store(pointer: COpaquePointer, order: StoreMemoryOrder = .relaxed)
   {
-    synchronized ? SyncStoreVoidPtr(UnsafeMutablePointer(v), ptr(&self)) : StoreVoidPtr(UnsafeMutablePointer(v), ptr(&self))
+    StoreVoidPtr(UnsafePointer(pointer), ptr(&self.p), order.order)
   }
 
-  @inline(__always) public mutating func atomicSwap(v: COpaquePointer) -> COpaquePointer
+  @inline(__always)
+  public mutating func swap(pointer: COpaquePointer, order: MemoryOrder = .relaxed) -> COpaquePointer
   {
-    return COpaquePointer(SwapVoidPtr(UnsafeMutablePointer<Void>(v), ptr(&self)))
+    return COpaquePointer(SwapVoidPtr(UnsafePointer(pointer), ptr(&self.p), order.order))
   }
 
-  @inline(__always) public mutating func CAS(current current: COpaquePointer, future: COpaquePointer) -> Bool
+  @inline(__always)
+  public mutating func CAS(current current: COpaquePointer, future: COpaquePointer,
+                                   type: CASType = .strong,
+                                   orderSuccess: MemoryOrder = .relaxed,
+                                   orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return CASVoidPtr(ptr(&expect), UnsafeMutablePointer(future), ptr(&self))
+    var expect = UnsafeMutablePointer<Void>(current)
+    switch type {
+    case .strong:
+      return CASVoidPtr(&expect, UnsafePointer(future), ptr(&self.p), orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakVoidPtr(&expect, UnsafePointer(future), ptr(&self.p), orderSuccess.order, orderFailure.order)
+    }
   }
 }

@@ -18,12 +18,11 @@
 
 // pointer
 
-const void* ReadVoidPtr(void** var);
-const void* SyncReadVoidPtr(void** var);
-void StoreVoidPtr(const void* val, void** var);
-void SyncStoreVoidPtr(const void* val, void** var);
-const void* SwapVoidPtr(const void* val, void** var);
-_Bool CASVoidPtr(void** current, const void* future, void** var);
+const void* ReadVoidPtr(void** ptr, memory_order order);
+void StoreVoidPtr(const void* val, void** ptr, memory_order order);
+const void* SwapVoidPtr(const void* val, void** ptr, memory_order order);
+_Bool CASVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
+_Bool CASWeakVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
 
 // pointer-sized integer
 
