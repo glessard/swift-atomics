@@ -51,7 +51,7 @@ extension AtomicInt
   @inline(__always)
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return IncrementWord(&self.value, order.order)
+    return AddWord(1, &self.value, order.order)
   }
 
   @inline(__always)
@@ -63,7 +63,7 @@ extension AtomicInt
   @inline(__always)
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return DecrementWord(&self.value, order.order)
+    return SubWord(1, &self.value, order.order)
   }
 
   @inline(__always)
@@ -147,7 +147,7 @@ extension AtomicUInt
   @inline(__always)
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: IncrementWord(ptr(&val), order.order))
+    return UInt(bitPattern: AddWord(1, ptr(&val), order.order))
   }
 
   @inline(__always)
@@ -159,7 +159,7 @@ extension AtomicUInt
   @inline(__always)
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: DecrementWord(ptr(&val), order.order))
+    return UInt(bitPattern: SubWord(1, ptr(&val), order.order))
   }
 
   @inline(__always)

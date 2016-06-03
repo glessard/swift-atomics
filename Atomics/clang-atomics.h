@@ -32,8 +32,6 @@ void StoreWord(long val, long *var, memory_order order);
 long SwapWord(long val, long* var, memory_order order);
 long AddWord(long increment, long* var, memory_order order);
 long SubWord(long increment, long* var, memory_order order);
-long IncrementWord(long* var, memory_order order);
-long DecrementWord(long* var, memory_order order);
 long OrWord(long bits, long* var, memory_order order);
 long XorWord(long bits, long* var, memory_order order);
 long AndWord(long bits, long* var, memory_order order);

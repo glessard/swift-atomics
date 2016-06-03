@@ -72,16 +72,6 @@ long SubWord(long increment, long* ptr, memory_order order)
   return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, increment, order);
 }
 
-long IncrementWord(long* ptr, memory_order order)
-{
-  return atomic_fetch_add_explicit((_Atomic(long)*)ptr, 1, order);
-}
-
-long DecrementWord(long* ptr, memory_order order)
-{
-  return atomic_fetch_sub_explicit((_Atomic(long)*)ptr, 1, order);
-}
-
 long OrWord(long bits, long* ptr, memory_order order)
 {
   return atomic_fetch_or_explicit((_Atomic(long)*)ptr, bits, order);
