@@ -99,104 +99,104 @@ _Bool CASWeakWord(long* current, long future, long* ptr, memory_order succ, memo
 
 // 32-bit integer
 
-int Read32(int *ptr)
+int Read32(int *ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(int)*)ptr, __ATOMIC_RELAXED);
+  return atomic_load_explicit((_Atomic(int)*)ptr, order);
 }
 
-int SyncRead32(int *ptr)
+void Store32(int val, int* ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(int)*)ptr, __ATOMIC_SEQ_CST);
+  atomic_store_explicit((_Atomic(int)*)ptr, val, order);
 }
 
-void Store32(int val, int* ptr)
+int Swap32(int val, int *ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(int)*)ptr, val, __ATOMIC_RELAXED);
+  return atomic_exchange_explicit((_Atomic(int)*)ptr, val, order);
 }
 
-void SyncStore32(int val, int* ptr)
+int Add32(int increment, int* ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(int)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_add_explicit((_Atomic(int)*)ptr, increment, order);
 }
 
-int Swap32(int val, int *ptr)
+int Sub32(int increment, int* ptr, memory_order order)
 {
-  return atomic_exchange_explicit((_Atomic(int)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_sub_explicit((_Atomic(int)*)ptr, increment, order);
 }
 
-int Add32(int increment, int* ptr)
+int Or32(int bits, int* ptr, memory_order order)
 {
-  return atomic_fetch_add_explicit((_Atomic(int)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_or_explicit((_Atomic(int)*)ptr, bits, order);
 }
 
-int Sub32(int increment, int* ptr)
+int Xor32(int bits, int* ptr, memory_order order)
 {
-  return atomic_fetch_sub_explicit((_Atomic(int)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_xor_explicit((_Atomic(int)*)ptr, bits, order);
 }
 
-int Increment32(int* ptr)
+int And32(int bits, int* ptr, memory_order order)
 {
-  return atomic_fetch_add_explicit((_Atomic(int)*)ptr, 1, __ATOMIC_SEQ_CST);
+  return atomic_fetch_and_explicit((_Atomic(int)*)ptr, bits, order);
 }
 
-int Decrement32(int* ptr)
+_Bool CAS32(int* current, int future, int* ptr, memory_order succ, memory_order fail)
 {
-  return atomic_fetch_sub_explicit((_Atomic(int)*)ptr, 1, __ATOMIC_SEQ_CST);
+  return atomic_compare_exchange_strong_explicit((_Atomic(int)*)ptr, current, future, succ, fail);
 }
 
-_Bool CAS32(int* current, int future, int* ptr)
+_Bool CASWeak32(int* current, int future, int* ptr, memory_order succ, memory_order fail)
 {
-  return atomic_compare_exchange_weak_explicit((_Atomic(int)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+  return atomic_compare_exchange_weak_explicit((_Atomic(int)*)ptr, current, future, succ, fail);
 }
 
 // 64-bit integer
 
-long long Read64(long long *ptr)
+long long Read64(long long *ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(long long)*)ptr, __ATOMIC_RELAXED);
+  return atomic_load_explicit((_Atomic(long long)*)ptr, order);
 }
 
-long long SyncRead64(long long *ptr)
+void Store64(long long val, long long* ptr, memory_order order)
 {
-  return atomic_load_explicit((_Atomic(long long)*)ptr, __ATOMIC_SEQ_CST);
+  atomic_store_explicit((_Atomic(long long)*)ptr, val, order);
 }
 
-void Store64(long long val, long long* ptr)
+long long Swap64(long long val, long long *ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(long long)*)ptr, val, __ATOMIC_RELAXED);
+  return atomic_exchange_explicit((_Atomic(long long)*)ptr, val, order);
 }
 
-void SyncStore64(long long val, long long* ptr)
+long long Add64(long long increment, long long* ptr, memory_order order)
 {
-  atomic_store_explicit((_Atomic(long long)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_add_explicit((_Atomic(long long)*)ptr, increment, order);
 }
 
-long long Swap64(long long val, long long *ptr)
+long long Sub64(long long increment, long long* ptr, memory_order order)
 {
-  return  atomic_exchange_explicit((_Atomic(long long)*)ptr, val, __ATOMIC_SEQ_CST);
+  return atomic_fetch_sub_explicit((_Atomic(long long)*)ptr, increment, order);
 }
 
-long long Add64(long long increment, long long* ptr)
+long long Or64(long long bits, long long* ptr, memory_order order)
 {
-  return atomic_fetch_add_explicit((_Atomic(long long)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_or_explicit((_Atomic(long long)*)ptr, bits, order);
 }
 
-long long Sub64(long long increment, long long* ptr)
+long long Xor64(long long bits, long long* ptr, memory_order order)
 {
-  return atomic_fetch_sub_explicit((_Atomic(long long)*)ptr, increment, __ATOMIC_SEQ_CST);
+  return atomic_fetch_xor_explicit((_Atomic(long long)*)ptr, bits, order);
 }
 
-long long Increment64(long long* ptr)
+long long And64(long long bits, long long* ptr, memory_order order)
 {
-  return atomic_fetch_add_explicit((_Atomic(long long)*)ptr, 1, __ATOMIC_SEQ_CST);
+  return atomic_fetch_and_explicit((_Atomic(long long)*)ptr, bits, order);
 }
 
-long long Decrement64(long long* ptr)
+_Bool CAS64(long long* current, long long future, long long* ptr, memory_order succ, memory_order fail)
 {
-  return atomic_fetch_sub_explicit((_Atomic(long long)*)ptr, 1, __ATOMIC_SEQ_CST);
+  return atomic_compare_exchange_strong_explicit((_Atomic(long long)*)ptr, current, future, succ, fail);
 }
 
-_Bool CAS64(long long* current, long long future, long long* ptr)
+_Bool CASWeak64(long long* current, long long future, long long* ptr, memory_order succ, memory_order fail)
 {
-  return atomic_compare_exchange_weak_explicit((_Atomic(long long)*)ptr, current, future, __ATOMIC_SEQ_CST, __ATOMIC_RELAXED);
+  return atomic_compare_exchange_weak_explicit((_Atomic(long long)*)ptr, current, future, succ, fail);
 }
