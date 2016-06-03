@@ -38,6 +38,7 @@ long OrWord(long bits, long* var, memory_order order);
 long XorWord(long bits, long* var, memory_order order);
 long AndWord(long bits, long* var, memory_order order);
 _Bool CASWord(long* current, long future, long* var, memory_order succ, memory_order fail);
+_Bool CASWeakWord(long* current, long future, long* ptr, memory_order succ, memory_order fail);
 
 // 32-bit integer
 

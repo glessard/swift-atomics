@@ -85,13 +85,18 @@ extension AtomicInt
   }
 
   @inline(__always)
-  public mutating func CAS(current current: Int, future: Int,
+  public mutating func CAS(current current: Int, future: Int, type: CASType = .strong,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
-    return CASWord(&expect, future, &self.value, orderSuccess.order, orderFailure.order)
+    switch type {
+    case .strong:
+      return CASWord(&expect, future, &self.value, orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakWord(&expect, future, &self.value, orderSuccess.order, orderFailure.order)
+    }
   }
 }
 
@@ -176,13 +181,18 @@ extension AtomicUInt
   }
 
   @inline(__always)
-  public mutating func CAS(current current: UInt, future: UInt,
+  public mutating func CAS(current current: UInt, future: UInt, type: CASType = .strong,
                                    orderSuccess: MemoryOrder = .relaxed,
                                    orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = current
-    return CASWord(ptr(&expect), unsafeBitCast(future, Int.self), ptr(&val), orderSuccess.order, orderFailure.order)
+    var expect = unsafeBitCast(current, Int.self)
+    switch type {
+    case .strong:
+      return CASWord(&expect, unsafeBitCast(future, Int.self), ptr(&val), orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakWord(&expect, unsafeBitCast(future, Int.self), ptr(&val), orderSuccess.order, orderFailure.order)
+    }
   }
 }
 

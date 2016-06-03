@@ -99,6 +99,11 @@ long AndWord(long bits, long* ptr, memory_order order)
 
 _Bool CASWord(long* current, long future, long* ptr, memory_order succ, memory_order fail)
 {
+  return atomic_compare_exchange_strong_explicit((_Atomic(long)*)ptr, current, future, succ, fail);
+}
+
+_Bool CASWeakWord(long* current, long future, long* ptr, memory_order succ, memory_order fail)
+{
   return atomic_compare_exchange_weak_explicit((_Atomic(long)*)ptr, current, future, succ, fail);
 }
 
