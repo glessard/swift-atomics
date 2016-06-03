@@ -113,7 +113,7 @@ public struct AtomicUInt: IntegerLiteralConvertible
   }
 
   public var value: UInt {
-    mutating get { return UInt(bitPattern: ReadWord(ptr(&val), memory_order_relaxed)) }
+    mutating get { return unsafeBitCast(ReadWord(ptr(&val), memory_order_relaxed), UInt.self) }
     mutating set { StoreWord(unsafeBitCast(newValue, Int.self), ptr(&val), memory_order_relaxed) }
   }
 }
@@ -123,7 +123,7 @@ extension AtomicUInt
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: ReadWord(ptr(&val), order.order))
+    return unsafeBitCast(ReadWord(ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
@@ -135,49 +135,49 @@ extension AtomicUInt
   @inline(__always)
   public mutating func swap(value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: SwapWord(unsafeBitCast(value, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(SwapWord(unsafeBitCast(value, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func add(i: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: AddWord(unsafeBitCast(i, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(AddWord(unsafeBitCast(i, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: AddWord(1, ptr(&val), order.order))
+    return unsafeBitCast(AddWord(1, ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func subtract(i: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: SubWord(unsafeBitCast(i, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(SubWord(unsafeBitCast(i, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: SubWord(1, ptr(&val), order.order))
+    return unsafeBitCast(SubWord(1, ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func logicalOr(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: OrWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(OrWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func logicalXor(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: XorWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(XorWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
   public mutating func logicalAnd(bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return UInt(bitPattern: AndWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order))
+    return unsafeBitCast(AndWord(unsafeBitCast(bits, Int.self), ptr(&val), order.order), UInt.self)
   }
 
   @inline(__always)
