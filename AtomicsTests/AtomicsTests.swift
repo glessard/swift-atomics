@@ -54,7 +54,7 @@ class AtomicsTests: XCTestCase
     let readMutPtr = randMutPtr.load()
     XCTAssert(randMutPtr.pointer == readMutPtr)
 
-    var randOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
+    var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     let readOPtr = randOPtr.load()
     XCTAssert(randOPtr.pointer == readOPtr)
   }
@@ -63,39 +63,39 @@ class AtomicsTests: XCTestCase
   func testSyncRead()
   {
     var randInt = AtomicInt(Int(nzRandom()))
-    let readInt = randInt.load(.sequential)
+    let readInt = randInt.load(order: .sequential)
     XCTAssert(randInt.value == readInt)
 
     var randUInt = AtomicUInt(UInt(nzRandom()))
-    let readUInt = randUInt.load(.sequential)
+    let readUInt = randUInt.load(order: .sequential)
     XCTAssert(randUInt.value == readUInt)
 
     var randInt32 = AtomicInt32(Int32(nzRandom()))
-    let readInt32 = randInt32.load(.sequential)
+    let readInt32 = randInt32.load(order: .sequential)
     XCTAssert(randInt32.value == readInt32)
 
     var randUInt32 = AtomicUInt32(UInt32(nzRandom()))
-    let readUInt32 = randUInt32.load(.sequential)
+    let readUInt32 = randUInt32.load(order: .sequential)
     XCTAssert(randUInt32.value == readUInt32)
 
     var randInt64 = AtomicInt64(Int64(nzRandom()))
-    let readInt64 = randInt64.load(.sequential)
+    let readInt64 = randInt64.load(order: .sequential)
     XCTAssert(randInt64.value == readInt64)
 
     var randUInt64 = AtomicUInt64(UInt64(nzRandom()))
-    let readUInt64 = randUInt64.load(.sequential)
+    let readUInt64 = randUInt64.load(order: .sequential)
     XCTAssert(randUInt64.value == readUInt64)
 
     var randPtr = AtomicPointer<CGPoint>(UnsafePointer(bitPattern: nzRandom()))
-    let readPtr = randPtr.load(.sequential)
+    let readPtr = randPtr.load(order: .sequential)
     XCTAssert(randPtr.pointer == readPtr)
 
     var randMutPtr = AtomicMutablePointer<CGPoint>(UnsafeMutablePointer(bitPattern: nzRandom()))
-    let readMutPtr = randMutPtr.load(.sequential)
+    let readMutPtr = randMutPtr.load(order: .sequential)
     XCTAssert(randMutPtr.pointer == readMutPtr)
 
-    var randOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
-    let readOPtr = randOPtr.load(.sequential)
+    var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
+    let readOPtr = randOPtr.load(order: .sequential)
     XCTAssert(randOPtr.pointer == readOPtr)
   }
 
@@ -142,8 +142,8 @@ class AtomicsTests: XCTestCase
     storMutPtr.store(randMutPtr)
     XCTAssert(randMutPtr == storMutPtr.pointer)
 
-    let randOPtr = COpaquePointer(bitPattern: nzRandom())
-    var storOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
+    let randOPtr = OpaquePointer(bitPattern: nzRandom())
+    var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     storOPtr.store(randOPtr)
     XCTAssert(randOPtr == storOPtr.pointer)
   }
@@ -191,8 +191,8 @@ class AtomicsTests: XCTestCase
     storMutPtr.store(randMutPtr, order: .sequential)
     XCTAssert(randMutPtr == storMutPtr.pointer)
 
-    let randOPtr = COpaquePointer(bitPattern: nzRandom())
-    var storOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
+    let randOPtr = OpaquePointer(bitPattern: nzRandom())
+    var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     storOPtr.store(randOPtr, order: .sequential)
     XCTAssert(randOPtr == storOPtr.pointer)
   }
@@ -248,8 +248,8 @@ class AtomicsTests: XCTestCase
     XCTAssert(readMutPtr != randMutPtr)
     XCTAssert(randMutPtr == storMutPtr.pointer)
 
-    let randOPtr = COpaquePointer(bitPattern: nzRandom())
-    var storOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
+    let randOPtr = OpaquePointer(bitPattern: nzRandom())
+    var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     let readOPtr = storOPtr.swap(randOPtr)
     XCTAssert(readOPtr != randOPtr)
     XCTAssert(randOPtr == storOPtr.pointer)
@@ -443,8 +443,8 @@ class AtomicsTests: XCTestCase
     XCTAssert(randMutPtr.CAS(current: randMutPtr.pointer, future: storMutPtr))
     XCTAssert(randMutPtr.pointer == storMutPtr)
 
-    var randOPtr = AtomicOpaquePointer(COpaquePointer(bitPattern: nzRandom()))
-    let storOPtr = COpaquePointer(bitPattern: nzRandom())
+    var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
+    let storOPtr = OpaquePointer(bitPattern: nzRandom())
     XCTAssert(randOPtr.CAS(current: nil, future: randOPtr.pointer) == false)
     XCTAssert(randOPtr.CAS(current: randOPtr.pointer, future: storOPtr))
     XCTAssert(randOPtr.pointer == storOPtr)
@@ -453,7 +453,7 @@ class AtomicsTests: XCTestCase
   func testPerformanceStore()
   {
     var m = AtomicInt(0)
-    measureBlock {
+    measure {
       m.store(0)
       for i in 0..<1_000_000 { m.store(i, order: .relaxed) }
     }
@@ -462,7 +462,7 @@ class AtomicsTests: XCTestCase
   func testPerformanceSynchronizedStore()
   {
     var m = AtomicInt(0)
-    measureBlock {
+    measure {
       m.store(0)
       for i in 0..<1_000_000 { m.store(i, order: .sequential) }
     }
@@ -471,25 +471,25 @@ class AtomicsTests: XCTestCase
   func testPerformanceRead()
   {
     var m = AtomicInt(0)
-    measureBlock {
+    measure {
       m.store(0)
-      for _ in 0..<1_000_000 { _ = m.load(.relaxed) }
+      for _ in 0..<1_000_000 { _ = m.load(order: .relaxed) }
     }
   }
 
   func testPerformanceSynchronizedRead()
   {
     var m = AtomicInt(0)
-    measureBlock {
+    measure {
       m.store(0)
-      for _ in 0..<1_000_000 { _ = m.load(.sequential) }
+      for _ in 0..<1_000_000 { _ = m.load(order: .sequential) }
     }
   }
 
   func testPerformanceSwiftCASSuccess()
   {
     var m = AtomicInt32(0)
-    measureBlock {
+    measure {
       m.store(0)
       for i in (m.value)..<1_000_000 { m.CAS(current: m.value, future: i) }
     }
@@ -498,7 +498,7 @@ class AtomicsTests: XCTestCase
   func testPerformanceOSAtomicCASSuccess()
   {
     var m = Int32(0)
-    measureBlock {
+    measure {
       m = 0
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(m, i, &m) }
     }
@@ -507,7 +507,7 @@ class AtomicsTests: XCTestCase
   func testPerformanceSwiftCASFailure()
   {
     var m = AtomicInt32(0)
-    measureBlock {
+    measure {
       m.store(0)
       for i in (m.value)..<1_000_000 { m.CAS(current: i, future: 0) }
     }
@@ -516,7 +516,7 @@ class AtomicsTests: XCTestCase
   func testPerformanceOSAtomicCASFailure()
   {
     var m = Int32(0)
-    measureBlock {
+    measure {
       m = 0
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(i, 0, &m) }
     }
@@ -541,12 +541,12 @@ class AtomicsTests: XCTestCase
     value.store(2)
     print(value)
 
-    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.alloc(1))
+    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
 
     print(p)
 
     var q = AtomicMutablePointer(p.load())
-    let r = q.swap(UnsafeMutablePointer<Int>.alloc(1))
+    let r = q.swap(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
     p.store(q.pointer)
 
     print(q)
@@ -554,12 +554,12 @@ class AtomicsTests: XCTestCase
     print(p)
     print("")
 
-    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.alloc(1))
+    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
 
     print(pp)
 
     var qq = AtomicPointer(pp.load())
-    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.alloc(1)))
+    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>(allocatingCapacity: 1)))
     pp.store(qq.pointer)
 
     print(qq)
@@ -627,7 +627,7 @@ class AtomicsTests: XCTestCase
 
     t.c.store(4)
 
-    let g = dispatch_group_create()
+    let g = dispatch_group_create()!
     dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
       print(t)
       let v = t.a.swap(5)
@@ -641,25 +641,25 @@ class AtomicsTests: XCTestCase
     print(t)
     
     print("")
-    let pt = UnsafeMutablePointer<TestStruct>.alloc(1)
-    pt.memory = TestStruct()
+    let pt = UnsafeMutablePointer<TestStruct>(allocatingCapacity: 1)
+    pt.pointee = TestStruct()
     
-    print(pt.memory)
+    print(pt.pointee)
 
-    pt.memory.c.store(4)
+    pt.pointee.c.store(4)
 
     dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
-      print(pt.memory)
-      let v = pt.memory.a.swap(5)
+      print(pt.pointee)
+      let v = pt.pointee.a.swap(5)
       usleep(1000)
-      pt.memory.b.store(v, order: .sequential)
+      pt.pointee.b.store(v, order: .sequential)
     }
     
     usleep(500)
-    print(pt.memory)
+    print(pt.pointee)
     dispatch_group_wait(g, DISPATCH_TIME_FOREVER)
-    print(pt.memory)
+    print(pt.pointee)
 
-    pt.dealloc(1)
+    pt.deallocateCapacity(1)
   }
 }
