@@ -91,8 +91,6 @@
 		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
 		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "clang-atomics.c"; sourceTree = "<group>"; };
 		0301110C1B4B89C200F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-pointer.swift"; sourceTree = "<group>"; };
-		0378F2A51C84B7BC00F4B44B /* clang-atomics-test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "clang-atomics-test.cpp"; sourceTree = "<group>"; };
-		0378F2A61C84B7BC00F4B44B /* clang-atomics-test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = "clang-atomics-test.hpp"; sourceTree = "<group>"; };
 		03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-integer.swift"; sourceTree = "<group>"; };
 		03AD03001CFF449A00F4B44B /* memory-order.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "memory-order.swift"; sourceTree = "<group>"; };
 		03AD03031D01669F00F4B44B /* cas-type.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "cas-type.swift"; sourceTree = "<group>"; };
@@ -198,8 +196,6 @@
 				03AD03031D01669F00F4B44B /* cas-type.swift */,
 				0301110C1B4B89C200F4B44B /* atomics-pointer.swift */,
 				03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */,
-				0378F2A51C84B7BC00F4B44B /* clang-atomics-test.cpp */,
-				0378F2A61C84B7BC00F4B44B /* clang-atomics-test.hpp */,
 			);
 			path = Atomics;
 			sourceTree = "<group>";
