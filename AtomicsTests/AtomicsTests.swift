@@ -473,11 +473,7 @@ class AtomicsTests: XCTestCase
     var m = AtomicInt(0)
     measureBlock {
       m.store(0)
-      for i in 0..<1_000_000
-      {
-        m.store(i)
-        guard m.load(.relaxed) == i else { XCTFail(); break }
-      }
+      for _ in 0..<1_000_000 { _ = m.load(.relaxed) }
     }
   }
 
@@ -486,11 +482,7 @@ class AtomicsTests: XCTestCase
     var m = AtomicInt(0)
     measureBlock {
       m.store(0)
-      for i in 0..<1_000_000
-      {
-        m.store(i)
-        guard m.load(.sequential) == i else { XCTFail(); break }
-      }
+      for _ in 0..<1_000_000 { _ = m.load(.sequential) }
     }
   }
 
