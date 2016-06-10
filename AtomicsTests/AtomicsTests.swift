@@ -454,7 +454,7 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in 0..<1_000_000 { m.store(i, order: .relaxed) }
     }
   }
@@ -463,7 +463,7 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in 0..<1_000_000 { m.store(i, order: .sequential) }
     }
   }
@@ -472,10 +472,10 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in 0..<1_000_000
       {
-        m.value = i
+        m.store(i)
         guard m.load(.relaxed) == i else { XCTFail(); break }
       }
     }
@@ -485,10 +485,10 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in 0..<1_000_000
       {
-        m.value = i
+        m.store(i)
         guard m.load(.sequential) == i else { XCTFail(); break }
       }
     }
@@ -498,7 +498,7 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt32(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in (m.value)..<1_000_000 { m.CAS(current: m.value, future: i) }
     }
   }
@@ -516,7 +516,7 @@ class AtomicsTests: XCTestCase
   {
     var m = AtomicInt32(0)
     measureBlock {
-      m.value = 0
+      m.store(0)
       for i in (m.value)..<1_000_000 { m.CAS(current: i, future: 0) }
     }
   }
@@ -608,7 +608,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.value = random()
+      value.store(random())
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))

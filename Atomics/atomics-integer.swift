@@ -18,7 +18,6 @@ public struct AtomicInt: IntegerLiteralConvertible
 
   public var value: Int {
     mutating get { return ReadWord(&val, memory_order_relaxed) }
-    mutating set { StoreWord(newValue, &val, memory_order_relaxed) }
   }
 }
 
@@ -108,7 +107,6 @@ public struct AtomicUInt: IntegerLiteralConvertible
 
   public var value: UInt {
     mutating get { return unsafeBitCast(ReadWord(&val, memory_order_relaxed), UInt.self) }
-    mutating set { StoreWord(unsafeBitCast(newValue, Int.self), &val, memory_order_relaxed) }
   }
 }
 
@@ -200,7 +198,6 @@ public struct AtomicInt32: IntegerLiteralConvertible
 
   public var value: Int32 {
     mutating get { return Read32(&val, memory_order_relaxed) }
-    mutating set { Store32(newValue, &val, memory_order_relaxed) }
   }
 }
 
@@ -291,7 +288,6 @@ public struct AtomicUInt32: IntegerLiteralConvertible
 
   public var value: UInt32 {
     mutating get { return unsafeBitCast(Read32(&val, memory_order_relaxed), UInt32.self) }
-    mutating set { Store32(unsafeBitCast(newValue, Int32.self), &val, memory_order_relaxed) }
   }
 }
 
@@ -384,7 +380,6 @@ public struct AtomicInt64: IntegerLiteralConvertible
 
   public var value: Int64 {
     mutating get { return Read64(&val, memory_order_relaxed) }
-    mutating set { Store64(newValue, &val, memory_order_relaxed) }
   }
 }
 
@@ -475,7 +470,6 @@ public struct AtomicUInt64: IntegerLiteralConvertible
 
   public var value: UInt64 {
     mutating get { return unsafeBitCast(Read64(&val, memory_order_relaxed), UInt64.self) }
-    mutating set { Store64(unsafeBitCast(newValue, Int64.self), &val, memory_order_relaxed) }
   }
 }
 

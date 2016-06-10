@@ -17,7 +17,6 @@ public struct AtomicMutablePointer<Pointee>: NilLiteralConvertible
 
   public var pointer: UnsafeMutablePointer<Pointee> {
     mutating get { return UnsafeMutablePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
-    mutating set { StoreVoidPtr(newValue, &ptr, memory_order_relaxed) }
   }
 }
 
@@ -65,7 +64,6 @@ public struct AtomicPointer<Pointee>: NilLiteralConvertible
 
   public var pointer: UnsafePointer<Pointee> {
     mutating get { return UnsafePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
-    mutating set { StoreVoidPtr(newValue, &ptr, memory_order_relaxed) }
   }
 }
 
@@ -113,7 +111,6 @@ public struct AtomicOpaquePointer: NilLiteralConvertible
 
   public var pointer: COpaquePointer {
     mutating get { return COpaquePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
-    mutating set { StoreVoidPtr(UnsafePointer(newValue), &ptr, memory_order_relaxed) }
   }
 }
 
