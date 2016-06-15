@@ -600,7 +600,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(random())
+      value.store(numericCast(arc4random()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -608,7 +608,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(random())
+      value.store(numericCast(arc4random()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -616,7 +616,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(random())
+      value.store(numericCast(arc4random()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
