@@ -11,6 +11,8 @@
 		030110FF1B4B896700F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030110FE1B4B896700F4B44B /* AtomicsTests.swift */; };
 		0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 0301110B1B4B89C200F4B44B /* clang-atomics.c */; };
 		030111101B4B89C200F4B44B /* atomics-pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* atomics-pointer.swift */; };
+		031D23071D0B991700F4B44B /* atomics-bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D23061D0B991700F4B44B /* atomics-bool.swift */; };
+		031D23081D0B991700F4B44B /* atomics-bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D23061D0B991700F4B44B /* atomics-bool.swift */; };
 		03AD02FD1CFE9D5700F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */; };
 		03AD02FE1CFE9DB000F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */; };
 		03AD03011CFF449A00F4B44B /* memory-order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD03001CFF449A00F4B44B /* memory-order.swift */; };
@@ -91,6 +93,7 @@
 		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
 		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "clang-atomics.c"; sourceTree = "<group>"; };
 		0301110C1B4B89C200F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-pointer.swift"; sourceTree = "<group>"; };
+		031D23061D0B991700F4B44B /* atomics-bool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-bool.swift"; sourceTree = "<group>"; };
 		03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-integer.swift"; sourceTree = "<group>"; };
 		03AD03001CFF449A00F4B44B /* memory-order.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "memory-order.swift"; sourceTree = "<group>"; };
 		03AD03031D01669F00F4B44B /* cas-type.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "cas-type.swift"; sourceTree = "<group>"; };
@@ -196,6 +199,7 @@
 				03AD03031D01669F00F4B44B /* cas-type.swift */,
 				0301110C1B4B89C200F4B44B /* atomics-pointer.swift */,
 				03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */,
+				031D23061D0B991700F4B44B /* atomics-bool.swift */,
 			);
 			path = Atomics;
 			sourceTree = "<group>";
@@ -489,6 +493,7 @@
 			files = (
 				030111101B4B89C200F4B44B /* atomics-pointer.swift in Sources */,
 				0301110F1B4B89C200F4B44B /* clang-atomics.c in Sources */,
+				031D23071D0B991700F4B44B /* atomics-bool.swift in Sources */,
 				03AD02FD1CFE9D5700F4B44B /* atomics-integer.swift in Sources */,
 				03AD03011CFF449A00F4B44B /* memory-order.swift in Sources */,
 				03AD03041D01669F00F4B44B /* cas-type.swift in Sources */,
@@ -511,6 +516,7 @@
 				03DB46EB1B4C6FCE00F4B44B /* atomics-pointer.swift in Sources */,
 				03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */,
 				03AD03021CFF449A00F4B44B /* memory-order.swift in Sources */,
+				031D23081D0B991700F4B44B /* atomics-bool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
