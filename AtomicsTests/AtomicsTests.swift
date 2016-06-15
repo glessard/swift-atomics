@@ -627,8 +627,8 @@ class AtomicsTests: XCTestCase
 
     t.c.store(4)
 
-    let g = dispatch_group_create()!
-    dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
+    let g = DispatchGroup()
+    DispatchQueue.global().async(group: g) {
       print(t)
       let v = t.a.swap(5)
       usleep(1000)
@@ -637,7 +637,7 @@ class AtomicsTests: XCTestCase
 
     usleep(500)
     print(t)
-    dispatch_group_wait(g, DISPATCH_TIME_FOREVER)
+    g.wait()
     print(t)
     
     print("")
@@ -648,7 +648,7 @@ class AtomicsTests: XCTestCase
 
     pt.pointee.c.store(4)
 
-    dispatch_group_async(g, dispatch_get_global_queue(qos_class_self(), 0)) {
+    DispatchQueue.global().async(group: g) {
       print(pt.pointee)
       let v = pt.pointee.a.swap(5)
       usleep(1000)
@@ -657,7 +657,7 @@ class AtomicsTests: XCTestCase
     
     usleep(500)
     print(pt.pointee)
-    dispatch_group_wait(g, DISPATCH_TIME_FOREVER)
+    g.wait()
     print(pt.pointee)
 
     pt.deallocateCapacity(1)
