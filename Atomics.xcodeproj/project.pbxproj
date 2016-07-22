@@ -405,11 +405,13 @@
 					};
 					03DB46D91B4C6F4100F4B44B = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0800;
 						TestTargetID = 03DB46F21B4C7AFB00F4B44B;
 					};
 					03DB46F21B4C7AFB00F4B44B = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = JMB77RELWN;
+						LastSwiftMigration = 0800;
 					};
 					03DB47051B4C7AFC00F4B44B = {
 						CreatedOnToolsVersion = 7.0;
@@ -801,6 +803,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-iOSTests";
 				PRODUCT_NAME = AtomicsTests;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
 			};
 			name = Debug;
@@ -815,6 +818,7 @@
 				PRODUCT_NAME = AtomicsTests;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -833,6 +837,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -851,6 +856,7 @@
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
