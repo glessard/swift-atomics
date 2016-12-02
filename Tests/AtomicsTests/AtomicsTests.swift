@@ -14,6 +14,28 @@ import Atomics
 
 class AtomicsTests: XCTestCase
 {
+  static var allTsets: [(String, (AtomicsTests) -> () throws -> Void)] {
+    return [
+      ("testRead", testRead),
+      ("testSyncRead", testSyncRead),
+      ("testStore", testStore),
+      ("testSyncStore", testSyncStore),
+      ("testSwap", testSwap),
+      ("testAdd", testAdd),
+      ("testSub", testSub),
+      ("testIncrement", testIncrement),
+      ("testDecrement", testDecrement),
+      ("testCAS", testCAS),
+      ("testPerformanceRead", testPerformanceRead),
+      ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
+      ("testPerformanceStore", testPerformanceStore),
+      ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
+      ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
+      ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
+      ("testExample", testExample),
+    ]
+  }
+
   func nzRandom() -> UInt
   {
     // Return a positive Int less than (or equal to) Int32.max/2.

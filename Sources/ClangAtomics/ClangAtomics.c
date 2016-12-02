@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
 //
 
-#import "clang-atomics.h"
+#import "ClangAtomics.h"
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
