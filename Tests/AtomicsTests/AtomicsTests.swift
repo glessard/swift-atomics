@@ -56,6 +56,18 @@ class AtomicsTests: XCTestCase
 #endif
   }
 
+  func testBool()
+  {
+    var boolean = AtomicBool(false)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(false)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(true)
+    XCTAssert(boolean.value == true)
+  }
+
   func testRead()
   {
     var randInt = AtomicInt(Int(nzRandom()))

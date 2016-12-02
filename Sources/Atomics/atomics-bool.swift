@@ -11,14 +11,11 @@ import ClangAtomics
 public struct AtomicBool: ExpressibleByBooleanLiteral
 {
   fileprivate var val: Int32 = 0
-  public init(_ b: Bool = false) { val = b ? 0 : 1 }
-  public init(booleanLiteral value: BooleanLiteralType) { val = value ? 0 : 1 }
-
-  public var boolValue: Bool { return val != 0 }
+  public init(_ b: Bool = false) { val = b ? 1 : 0 }
+  public init(booleanLiteral value: BooleanLiteralType) { val = value ? 1 : 0 }
 
   public var value: Bool {
     mutating get { return Read32(&val, memory_order_relaxed) != 0 }
-    mutating set { Store32(newValue ? 0 : 1, &val, memory_order_relaxed) }
   }
 }
 
@@ -33,7 +30,7 @@ extension AtomicBool
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    Store32(value ? 0 : 1, &val, order.order)
+    Store32(value ? 1 : 0, &val, order.order)
   }
 
   @inline(__always)
@@ -67,13 +64,12 @@ extension AtomicBool
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect: Int32 = current ? 0 : 1
+    var expect: Int32 = current ? 1 : 0
     switch type {
     case .strong:
-      return CAS32(&expect, future ? 0 : 1, &val, orderSuccess.order, orderFailure.order)
+      return CAS32(&expect, future ? 1 : 0, &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak32(&expect, future ? 0 : 1, &val, orderSuccess.order, orderFailure.order)
+      return CASWeak32(&expect, future ? 1 : 0, &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
-
