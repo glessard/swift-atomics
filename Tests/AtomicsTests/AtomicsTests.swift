@@ -8,13 +8,23 @@
 
 import XCTest
 
-import Darwin.libkern.OSAtomic
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+import func Darwin.libkern.OSAtomic.OSAtomicCompareAndSwap32
+import func Darwin.C.stdlib.arc4random
+#else // assuming os(Linux)
+import func Glibc.random
+import func Glibc.usleep
+#endif
+
+import struct Foundation.Date
+import struct Foundation.CGPoint
+import Dispatch
 
 import Atomics
 
 class AtomicsTests: XCTestCase
 {
-  static var allTsets: [(String, (AtomicsTests) -> () throws -> Void)] {
+  static var allTests: [(String, (AtomicsTests) -> () throws -> Void)] {
     return [
       ("testRead", testRead),
       ("testSyncRead", testSyncRead),
@@ -38,8 +48,12 @@ class AtomicsTests: XCTestCase
 
   func nzRandom() -> UInt
   {
-    // Return a positive Int less than (or equal to) Int32.max/2.
+    // Return a nonzero, positive Int less than (or equal to) Int32.max/2.
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
     return UInt(arc4random() & 0x3fff_fffe + 1)
+#else
+    return UInt(random() & 0x3fff_fffe + 1)
+#endif
   }
 
   func testRead()
@@ -517,6 +531,7 @@ class AtomicsTests: XCTestCase
     }
   }
 
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
   func testPerformanceOSAtomicCASSuccess()
   {
     var m = Int32(0)
@@ -525,6 +540,7 @@ class AtomicsTests: XCTestCase
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(m, i, &m) }
     }
   }
+#endif
 
   func testPerformanceSwiftCASFailure()
   {
@@ -535,6 +551,7 @@ class AtomicsTests: XCTestCase
     }
   }
 
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
   func testPerformanceOSAtomicCASFailure()
   {
     var m = Int32(0)
@@ -543,6 +560,7 @@ class AtomicsTests: XCTestCase
       for i in m..<1_000_000 { OSAtomicCompareAndSwap32(i, 0, &m) }
     }
   }
+#endif
   
   private struct TestStruct: CustomStringConvertible
   {
@@ -615,33 +633,33 @@ class AtomicsTests: XCTestCase
     print(ii)
     print("")
 
-    var start = mach_absolute_time()
-    var dt = mach_absolute_time()
+    var start = Date()
+    var dt = Date().timeIntervalSince(start)
     let iterations = 1_000_000
 
-    start = mach_absolute_time()
+    start = Date()
     for _ in 1...iterations
     {
       value.store(numericCast(nzRandom()))
     }
-    dt = mach_absolute_time() - start
-    print(dt/numericCast(iterations))
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
 
-    start = mach_absolute_time()
+    start = Date()
     for _ in 1...iterations
     {
       value.store(numericCast(nzRandom()))
     }
-    dt = mach_absolute_time() - start
-    print(dt/numericCast(iterations))
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
 
-    start = mach_absolute_time()
+    start = Date()
     for _ in 1...iterations
     {
       value.store(numericCast(nzRandom()))
     }
-    dt = mach_absolute_time() - start
-    print(dt/numericCast(iterations))
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
 
     var t = TestStruct()
 
