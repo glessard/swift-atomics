@@ -18,11 +18,11 @@
 
 // pointer
 
-const void* ReadVoidPtr(void** ptr, memory_order order);
-void StoreVoidPtr(const void* val, void** ptr, memory_order order);
-const void* SwapVoidPtr(const void* val, void** ptr, memory_order order);
-_Bool CASVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
-_Bool CASWeakVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
+void* ReadRawPtr(void** ptr, memory_order order);
+void StoreRawPtr(const void* val, void** ptr, memory_order order);
+void* SwapRawPtr(const void* val, void** ptr, memory_order order);
+_Bool CASRawPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
+_Bool CASWeakRawPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail);
 
 // pointer-sized integer
 

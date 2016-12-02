@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
 //
 
-#import "clang-atomics.h"
+#import "ClangAtomics.h"
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
@@ -15,27 +15,27 @@
 
 // pointer
 
-const void* ReadVoidPtr(void** ptr, memory_order order)
+void* ReadRawPtr(void** ptr, memory_order order)
 {
   return atomic_load_explicit((_Atomic(void*)*)ptr, order);
 }
 
-void StoreVoidPtr(const void* val, void** ptr, memory_order order)
+void StoreRawPtr(const void* val, void** ptr, memory_order order)
 {
   atomic_store_explicit((_Atomic(void*)*)ptr, (void*)val, order);
 }
 
-const void* SwapVoidPtr(const void* val, void** ptr, memory_order order)
+void* SwapRawPtr(const void* val, void** ptr, memory_order order)
 {
   return atomic_exchange_explicit((_Atomic(void*)*)ptr, (void*)val, order);
 }
 
-_Bool CASVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
+_Bool CASRawPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_strong_explicit((_Atomic(void*)*)ptr, (void**)current, (void*)future, succ, fail);
 }
 
-_Bool CASWeakVoidPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
+_Bool CASWeakRawPtr(void** current, const void* future, void** ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_weak_explicit((_Atomic(void*)*)ptr, (void**)current, (void*)future, succ, fail);
 }

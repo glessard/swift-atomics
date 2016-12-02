@@ -1,5 +1,0 @@
-module clang_atomics [system]
-{
-  header "clang-atomics.h"
-  export *
-}
