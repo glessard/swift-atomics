@@ -6,7 +6,7 @@
 //  Copyright © 2016 Guillaume Lessard. All rights reserved.
 //
 
-import clang_atomics
+import ClangAtomics
 
 public struct AtomicBool: ExpressibleByBooleanLiteral
 {

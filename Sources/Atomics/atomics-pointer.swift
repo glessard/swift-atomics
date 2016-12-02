@@ -5,7 +5,7 @@
 //  Copyright © 2015, 2016 Guillaume Lessard. All rights reserved.
 //
 
-import clang_atomics
+import ClangAtomics
 
 // MARK: Pointer Atomics
 
