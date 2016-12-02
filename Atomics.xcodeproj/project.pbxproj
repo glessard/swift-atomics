@@ -13,6 +13,8 @@
 		030111101B4B89C200F4B44B /* atomics-pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0301110C1B4B89C200F4B44B /* atomics-pointer.swift */; };
 		031D23071D0B991700F4B44B /* atomics-bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D23061D0B991700F4B44B /* atomics-bool.swift */; };
 		031D23081D0B991700F4B44B /* atomics-bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D23061D0B991700F4B44B /* atomics-bool.swift */; };
+		03505A8A1D42B81000F4B44B /* cas-type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD03031D01669F00F4B44B /* cas-type.swift */; };
+		03505A8B1D42B81000F4B44B /* cas-type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD03031D01669F00F4B44B /* cas-type.swift */; };
 		03AD02FD1CFE9D5700F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */; };
 		03AD02FE1CFE9DB000F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */; };
 		03AD03011CFF449A00F4B44B /* memory-order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AD03001CFF449A00F4B44B /* memory-order.swift */; };
@@ -90,9 +92,9 @@
 		030110F91B4B896700F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		030110FE1B4B896700F4B44B /* AtomicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicsTests.swift; sourceTree = "<group>"; };
 		030111001B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "clang-atomics.h"; sourceTree = "<group>"; };
-		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "clang-atomics.c"; sourceTree = "<group>"; };
-		0301110C1B4B89C200F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-pointer.swift"; sourceTree = "<group>"; };
+		0301110A1B4B89C200F4B44B /* clang-atomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "clang-atomics.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		0301110B1B4B89C200F4B44B /* clang-atomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = "clang-atomics.c"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		0301110C1B4B89C200F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "atomics-pointer.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		031D23061D0B991700F4B44B /* atomics-bool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-bool.swift"; sourceTree = "<group>"; };
 		03AD02FC1CFE9D5700F4B44B /* atomics-integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "atomics-integer.swift"; sourceTree = "<group>"; };
 		03AD03001CFF449A00F4B44B /* memory-order.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "memory-order.swift"; sourceTree = "<group>"; };
@@ -389,7 +391,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Guillaume Lessard";
 				TargetAttributes = {
 					030110EE1B4B896700F4B44B = {
@@ -402,6 +404,7 @@
 					};
 					03DB46D01B4C6F4100F4B44B = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0800;
 					};
 					03DB46D91B4C6F4100F4B44B = {
 						CreatedOnToolsVersion = 7.0;
@@ -521,6 +524,7 @@
 				03DB46EA1B4C6FCE00F4B44B /* clang-atomics.c in Sources */,
 				03AD03021CFF449A00F4B44B /* memory-order.swift in Sources */,
 				031D23081D0B991700F4B44B /* atomics-bool.swift in Sources */,
+				03505A8A1D42B81000F4B44B /* cas-type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +542,7 @@
 			files = (
 				03DB46F81B4C7AFC00F4B44B /* ViewController.swift in Sources */,
 				03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */,
+				03505A8B1D42B81000F4B44B /* cas-type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,8 +616,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -658,8 +665,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -679,6 +688,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -755,7 +765,7 @@
 		03DB46E21B4C6F4100F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -768,6 +778,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -775,7 +786,7 @@
 		03DB46E31B4C6F4100F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -789,6 +800,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

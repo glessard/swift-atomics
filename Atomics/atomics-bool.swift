@@ -8,9 +8,9 @@
 
 import clang_atomics
 
-public struct AtomicBool: Boolean, BooleanLiteralConvertible
+public struct AtomicBool: ExpressibleByBooleanLiteral
 {
-  private var val: Int32 = 0
+  fileprivate var val: Int32 = 0
   public init(_ b: Bool = false) { val = b ? 0 : 1 }
   public init(booleanLiteral value: BooleanLiteralType) { val = value ? 0 : 1 }
 
@@ -62,9 +62,9 @@ extension AtomicBool
 
   @inline(__always)
   public mutating func CAS(current: Bool, future: Bool,
-                                   type: CASType = .strong,
-                                   orderSuccess: MemoryOrder = .relaxed,
-                                   orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           type: CASType = .strong,
+                           orderSuccess: MemoryOrder = .relaxed,
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect: Int32 = current ? 0 : 1

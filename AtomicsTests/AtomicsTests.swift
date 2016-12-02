@@ -541,29 +541,29 @@ class AtomicsTests: XCTestCase
     value.store(2)
     print(value)
 
-    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
+    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
 
     print(p)
 
     var q = AtomicMutablePointer(p.load())
-    let r = q.swap(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
+    let r = q.swap(UnsafeMutablePointer<Int>.allocate(capacity: 1))
     p.store(q.pointer)
 
     print(q)
-    print(r)
+    print(r!)
     print(p)
     print("")
 
-    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>(allocatingCapacity: 1))
+    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.allocate(capacity: 1))
 
     print(pp)
 
     var qq = AtomicPointer(pp.load())
-    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>(allocatingCapacity: 1)))
+    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1)))
     pp.store(qq.pointer)
 
     print(qq)
-    print(rr)
+    print(rr!)
     print(pp)
     print("")
 
@@ -600,7 +600,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(numericCast(arc4random()))
+      value.store(numericCast(nzRandom()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -608,7 +608,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(numericCast(arc4random()))
+      value.store(numericCast(nzRandom()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -616,7 +616,7 @@ class AtomicsTests: XCTestCase
     start = mach_absolute_time()
     for _ in 1...iterations
     {
-      value.store(numericCast(arc4random()))
+      value.store(numericCast(nzRandom()))
     }
     dt = mach_absolute_time() - start
     print(dt/numericCast(iterations))
@@ -641,7 +641,7 @@ class AtomicsTests: XCTestCase
     print(t)
     
     print("")
-    let pt = UnsafeMutablePointer<TestStruct>(allocatingCapacity: 1)
+    let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
     pt.pointee = TestStruct()
     
     print(pt.pointee)
@@ -660,6 +660,6 @@ class AtomicsTests: XCTestCase
     g.wait()
     print(pt.pointee)
 
-    pt.deallocateCapacity(1)
+    pt.deallocate(capacity: 1)
   }
 }

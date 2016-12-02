@@ -9,14 +9,16 @@ import clang_atomics
 
 // MARK: Pointer Atomics
 
-public struct AtomicMutablePointer<Pointee>: NilLiteralConvertible
+public struct AtomicMutablePointer<Pointee>: ExpressibleByNilLiteral
 {
-  private var ptr: UnsafeMutablePointer<Void>?
-  public init(_ ptr: UnsafeMutablePointer<Pointee>? = nil) { self.ptr = UnsafeMutablePointer(ptr) }
+  fileprivate var ptr: UnsafeMutableRawPointer?
+  public init(_ ptr: UnsafeMutablePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
   public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
-    mutating get { return UnsafeMutablePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
+    mutating get {
+      return ReadRawPtr(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self)
+    }
   }
 }
 
@@ -25,19 +27,19 @@ extension AtomicMutablePointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer(ReadVoidPtr(&ptr, order.order))
+    return ReadRawPtr(&ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>?, order: StoreMemoryOrder = .relaxed)
   {
-    StoreVoidPtr(UnsafePointer(pointer), &ptr, order.order)
+    StoreRawPtr(UnsafePointer(pointer), &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .relaxed) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer(SwapVoidPtr(UnsafePointer(pointer), &ptr, order.order))
+    return SwapRawPtr(UnsafePointer(pointer), &ptr, order.order).assumingMemoryBound(to: Pointee.self)
   }
 
   @inline(__always) @discardableResult
@@ -46,24 +48,25 @@ extension AtomicMutablePointer
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    var expect = UnsafeMutablePointer<Void>(current)
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    var expect = UnsafeMutableRawPointer(current)
     switch type {
     case .strong:
-      return CASVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
-public struct AtomicPointer<Pointee>: NilLiteralConvertible
+public struct AtomicPointer<Pointee>: ExpressibleByNilLiteral
 {
-  private var ptr: UnsafeMutablePointer<Void>?
-  public init(_ ptr: UnsafePointer<Pointee>? = nil) { self.ptr = UnsafeMutablePointer(ptr) }
+  fileprivate var ptr: UnsafeMutableRawPointer?
+  public init(_ ptr: UnsafePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(mutating: ptr) }
   public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: UnsafePointer<Pointee> {
-    mutating get { return UnsafePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
+    mutating get { return UnsafePointer(ReadRawPtr(&ptr, memory_order_relaxed).assumingMemoryBound(to: Pointee.self)) }
   }
 }
 
@@ -72,19 +75,19 @@ extension AtomicPointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer(ReadVoidPtr(&ptr, order.order))
+    return UnsafePointer(ReadRawPtr(&ptr, order.order).assumingMemoryBound(to: Pointee.self))
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafePointer<Pointee>?, order: StoreMemoryOrder = .relaxed)
   {
-    StoreVoidPtr(UnsafePointer(pointer), &ptr, order.order)
+    StoreRawPtr(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .relaxed) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer(SwapVoidPtr(UnsafePointer(pointer), &ptr, order.order))
+    return UnsafePointer(SwapRawPtr(UnsafePointer(pointer), &ptr, order.order).assumingMemoryBound(to: Pointee.self))
   }
 
   @inline(__always) @discardableResult
@@ -93,24 +96,25 @@ extension AtomicPointer
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    var expect = UnsafeMutablePointer<Void>(current)
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    var expect = UnsafeMutableRawPointer(mutating: current)
     switch type {
     case .strong:
-      return CASVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
-public struct AtomicOpaquePointer: NilLiteralConvertible
+public struct AtomicOpaquePointer: ExpressibleByNilLiteral
 {
-  private var ptr: UnsafeMutablePointer<Void>?
-  public init(_ ptr: OpaquePointer? = nil) { self.ptr = UnsafeMutablePointer(ptr) }
+  fileprivate var ptr: UnsafeMutableRawPointer?
+  public init(_ ptr: OpaquePointer? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
   public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: OpaquePointer? {
-    mutating get { return OpaquePointer(ReadVoidPtr(&ptr, memory_order_relaxed)) }
+    mutating get { return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed)) }
   }
 }
 
@@ -119,19 +123,19 @@ extension AtomicOpaquePointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> OpaquePointer?
   {
-    return OpaquePointer(ReadVoidPtr(&ptr, order.order))
+    return OpaquePointer(ReadRawPtr(&ptr, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ pointer: OpaquePointer?, order: StoreMemoryOrder = .relaxed)
   {
-    StoreVoidPtr(UnsafePointer(pointer), &ptr, order.order)
+    StoreRawPtr(UnsafePointer(pointer), &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: OpaquePointer?, order: MemoryOrder = .relaxed) -> OpaquePointer?
   {
-    return OpaquePointer(SwapVoidPtr(UnsafePointer(pointer), &ptr, order.order))
+    return OpaquePointer(SwapRawPtr(UnsafePointer(pointer), &ptr, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -140,12 +144,13 @@ extension AtomicOpaquePointer
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    var expect = UnsafeMutablePointer<Void>(current)
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    var expect = UnsafeMutableRawPointer(current)
     switch type {
     case .strong:
-      return CASVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakVoidPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }

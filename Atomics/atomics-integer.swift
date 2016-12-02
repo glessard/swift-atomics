@@ -10,9 +10,9 @@ import clang_atomics
 
 // MARK: Int and UInt Atomics
 
-public struct AtomicInt: IntegerLiteralConvertible
+public struct AtomicInt: ExpressibleByIntegerLiteral
 {
-  private var val: Int = 0
+  fileprivate var val: Int = 0
   public init(_ v: Int = 0) { val = v }
   public init(integerLiteral value: IntegerLiteralType) { val = value }
 
@@ -99,9 +99,9 @@ extension AtomicInt
   }
 }
 
-public struct AtomicUInt: IntegerLiteralConvertible
+public struct AtomicUInt: ExpressibleByIntegerLiteral
 {
-  private var val: Int = 0
+  fileprivate var val: Int = 0
   public init(_ v: UInt = 0) { val = unsafeBitCast(v, to: Int.self) }
   public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt(bitPattern: value), to: Int.self) }
 
@@ -190,9 +190,9 @@ extension AtomicUInt
 
 // MARK: Int32 and UInt32 Atomics
 
-public struct AtomicInt32: IntegerLiteralConvertible
+public struct AtomicInt32: ExpressibleByIntegerLiteral
 {
-  private var val: Int32 = 0
+  fileprivate var val: Int32 = 0
   public init(_ v: Int32 = 0) { val = v }
   public init(integerLiteral value: IntegerLiteralType) { val = Int32(value) }
 
@@ -279,9 +279,9 @@ extension AtomicInt32
   }
 }
 
-public struct AtomicUInt32: IntegerLiteralConvertible
+public struct AtomicUInt32: ExpressibleByIntegerLiteral
 {
-  private var val: Int32 = 0
+  fileprivate var val: Int32 = 0
   public init(_ v: UInt32 = 0) { val = unsafeBitCast(v, to: Int32.self) }
   public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt32(value), to: Int32.self) }
 
@@ -370,9 +370,9 @@ extension AtomicUInt32
 
 // MARK: Int64 and UInt64 Atomics
 
-public struct AtomicInt64: IntegerLiteralConvertible
+public struct AtomicInt64: ExpressibleByIntegerLiteral
 {
-  private var val: Int64 = 0
+  fileprivate var val: Int64 = 0
   public init(_ v: Int64 = 0) { val = v }
   public init(integerLiteral value: IntegerLiteralType) { val = Int64(value) }
 
@@ -459,9 +459,9 @@ extension AtomicInt64
   }
 }
 
-public struct AtomicUInt64: IntegerLiteralConvertible
+public struct AtomicUInt64: ExpressibleByIntegerLiteral
 {
-  private var val: Int64 = 0
+  fileprivate var val: Int64 = 0
   public init(_ v: UInt64 = 0) { val = unsafeBitCast(v, to: Int64.self) }
   public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt64(value), to: Int64.self) }
 
