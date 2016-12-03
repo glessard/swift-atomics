@@ -577,10 +577,10 @@ class AtomicsTests: XCTestCase
 
   private struct TestStruct: CustomStringConvertible
   {
-    var a: AtomicInt = 0
-    var b: AtomicInt = 1
-    var c: AtomicInt = 2
-    var d: AtomicInt = 3
+    var a = AtomicInt(0)
+    var b = AtomicInt(1)
+    var c = AtomicInt(2)
+    var d = AtomicInt(3)
 
     var description: String { return "\(a) \(b) \(c) \(d)" }
   }

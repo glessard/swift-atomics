@@ -8,11 +8,10 @@
 
 import ClangAtomics
 
-public struct AtomicBool: ExpressibleByBooleanLiteral
+public struct AtomicBool
 {
   fileprivate var val: Int32 = 0
   public init(_ b: Bool = false) { val = b ? 1 : 0 }
-  public init(booleanLiteral value: BooleanLiteralType) { val = value ? 1 : 0 }
 
   public var value: Bool {
     mutating get { return Read32(&val, memory_order_relaxed) != 0 }

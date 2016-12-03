@@ -10,11 +10,10 @@ import ClangAtomics
 
 // MARK: Int and UInt Atomics
 
-public struct AtomicInt: ExpressibleByIntegerLiteral
+public struct AtomicInt
 {
   fileprivate var val: Int = 0
   public init(_ v: Int = 0) { val = v }
-  public init(integerLiteral value: IntegerLiteralType) { val = value }
 
   public var value: Int {
     mutating get { return ReadWord(&val, memory_order_relaxed) }
@@ -99,11 +98,10 @@ extension AtomicInt
   }
 }
 
-public struct AtomicUInt: ExpressibleByIntegerLiteral
+public struct AtomicUInt
 {
   fileprivate var val: Int = 0
   public init(_ v: UInt = 0) { val = unsafeBitCast(v, to: Int.self) }
-  public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt(bitPattern: value), to: Int.self) }
 
   public var value: UInt {
     mutating get { return unsafeBitCast(ReadWord(&val, memory_order_relaxed), to: UInt.self) }
@@ -190,11 +188,10 @@ extension AtomicUInt
 
 // MARK: Int32 and UInt32 Atomics
 
-public struct AtomicInt32: ExpressibleByIntegerLiteral
+public struct AtomicInt32
 {
   fileprivate var val: Int32 = 0
   public init(_ v: Int32 = 0) { val = v }
-  public init(integerLiteral value: IntegerLiteralType) { val = Int32(value) }
 
   public var value: Int32 {
     mutating get { return Read32(&val, memory_order_relaxed) }
@@ -262,7 +259,7 @@ extension AtomicInt32
   {
     return And32(bits, &val, order.order)
   }
-  
+
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int32, future: Int32, type: CASType = .strong,
                            orderSuccess: MemoryOrder = .relaxed,
@@ -279,11 +276,10 @@ extension AtomicInt32
   }
 }
 
-public struct AtomicUInt32: ExpressibleByIntegerLiteral
+public struct AtomicUInt32
 {
   fileprivate var val: Int32 = 0
   public init(_ v: UInt32 = 0) { val = unsafeBitCast(v, to: Int32.self) }
-  public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt32(value), to: Int32.self) }
 
   public var value: UInt32 {
     mutating get { return unsafeBitCast(Read32(&val, memory_order_relaxed), to: UInt32.self) }
@@ -370,11 +366,10 @@ extension AtomicUInt32
 
 // MARK: Int64 and UInt64 Atomics
 
-public struct AtomicInt64: ExpressibleByIntegerLiteral
+public struct AtomicInt64
 {
   fileprivate var val: Int64 = 0
   public init(_ v: Int64 = 0) { val = v }
-  public init(integerLiteral value: IntegerLiteralType) { val = Int64(value) }
 
   public var value: Int64 {
     mutating get { return Read64(&val, memory_order_relaxed) }
@@ -459,11 +454,10 @@ extension AtomicInt64
   }
 }
 
-public struct AtomicUInt64: ExpressibleByIntegerLiteral
+public struct AtomicUInt64
 {
   fileprivate var val: Int64 = 0
   public init(_ v: UInt64 = 0) { val = unsafeBitCast(v, to: Int64.self) }
-  public init(integerLiteral value: IntegerLiteralType) { val = unsafeBitCast(UInt64(value), to: Int64.self) }
 
   public var value: UInt64 {
     mutating get { return unsafeBitCast(Read64(&val, memory_order_relaxed), to: UInt64.self) }

@@ -9,11 +9,10 @@ import ClangAtomics
 
 // MARK: Pointer Atomics
 
-public struct AtomicMutablePointer<Pointee>: ExpressibleByNilLiteral
+public struct AtomicMutablePointer<Pointee>
 {
   fileprivate var ptr: UnsafeMutableRawPointer?
   public init(_ ptr: UnsafeMutablePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
-  public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
     mutating get {
@@ -59,11 +58,10 @@ extension AtomicMutablePointer
   }
 }
 
-public struct AtomicPointer<Pointee>: ExpressibleByNilLiteral
+public struct AtomicPointer<Pointee>
 {
   fileprivate var ptr: UnsafeMutableRawPointer?
   public init(_ ptr: UnsafePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(mutating: ptr) }
-  public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: UnsafePointer<Pointee> {
     mutating get { return UnsafePointer(ReadRawPtr(&ptr, memory_order_relaxed).assumingMemoryBound(to: Pointee.self)) }
@@ -107,11 +105,10 @@ extension AtomicPointer
   }
 }
 
-public struct AtomicOpaquePointer: ExpressibleByNilLiteral
+public struct AtomicOpaquePointer
 {
   fileprivate var ptr: UnsafeMutableRawPointer?
   public init(_ ptr: OpaquePointer? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
-  public init(nilLiteral: ()) { self.ptr = nil }
 
   public var pointer: OpaquePointer? {
     mutating get { return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed)) }
