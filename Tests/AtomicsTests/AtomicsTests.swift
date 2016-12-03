@@ -42,6 +42,7 @@ class AtomicsTests: XCTestCase
       ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
       ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
       ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
+      ("testBool", testBool),
       ("testExample", testExample),
     ]
   }
