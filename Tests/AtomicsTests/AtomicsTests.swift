@@ -108,7 +108,7 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr.pointer == readOPtr)
   }
 
-    
+  
   func testSyncRead()
   {
     var randInt = AtomicInt(Int(nzRandom()))
@@ -148,7 +148,7 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr.pointer == readOPtr)
   }
 
-  
+
   func testStore()
   {
     let randInt = Int(nzRandom())
@@ -196,8 +196,8 @@ class AtomicsTests: XCTestCase
     storOPtr.store(randOPtr)
     XCTAssert(randOPtr == storOPtr.pointer)
   }
-  
-  
+
+
   func testSyncStore()
   {
     let randInt = Int(nzRandom())
@@ -441,7 +441,7 @@ class AtomicsTests: XCTestCase
     XCTAssert(rUInt64.decrement() == fUInt64)
     XCTAssert(rUInt64.value == fUInt64-1)
   }
-  
+
   func testCAS()
   {
     var randInt = AtomicInt(Int(nzRandom()))
@@ -507,7 +507,7 @@ class AtomicsTests: XCTestCase
       for i in 0..<1_000_000 { m.store(i, order: .relaxed) }
     }
   }
-  
+
   func testPerformanceSynchronizedStore()
   {
     var m = AtomicInt(0)
@@ -574,7 +574,7 @@ class AtomicsTests: XCTestCase
     }
   }
 #endif
-  
+
   private struct TestStruct: CustomStringConvertible
   {
     var a: AtomicInt = 0
@@ -692,11 +692,11 @@ class AtomicsTests: XCTestCase
     print(t)
     g.wait()
     print(t)
-    
+  
     print("")
     let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
     pt.pointee = TestStruct()
-    
+  
     print(pt.pointee)
 
     pt.pointee.c.store(4)
@@ -707,7 +707,7 @@ class AtomicsTests: XCTestCase
       usleep(1000)
       pt.pointee.b.store(v, order: .sequential)
     }
-    
+  
     usleep(500)
     print(pt.pointee)
     g.wait()
