@@ -9,6 +9,104 @@ import ClangAtomics
 
 // MARK: Pointer Atomics
 
+public struct AtomicMutableRawPointer
+{
+  fileprivate var ptr: UnsafeMutableRawPointer?
+  public init(_ ptr: UnsafeMutableRawPointer? = nil) { self.ptr = ptr }
+
+  public var pointer: UnsafeMutableRawPointer? {
+    mutating get {
+      return ReadRawPtr(&ptr, memory_order_relaxed)
+    }
+  }
+}
+
+extension AtomicMutableRawPointer
+{
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutableRawPointer?
+  {
+    return ReadRawPtr(&ptr, order.order)
+  }
+
+  @inline(__always)
+  public mutating func store(_ pointer: UnsafeMutableRawPointer?, order: StoreMemoryOrder = .sequential)
+  {
+    StoreRawPtr(pointer, &ptr, order.order)
+  }
+
+  @inline(__always)
+  public mutating func swap(_ pointer: UnsafeMutableRawPointer?, order: MemoryOrder = .sequential) -> UnsafeMutableRawPointer?
+  {
+    return SwapRawPtr(pointer, &ptr, order.order)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: UnsafeMutableRawPointer?, future: UnsafeMutableRawPointer?,
+                           type: CASType = .strong,
+                           orderSuccess: MemoryOrder = .sequential,
+                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+  {
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    var expect = UnsafeMutableRawPointer(current)
+    switch type {
+    case .strong:
+      return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+    }
+  }
+}
+
+public struct AtomicRawPointer
+{
+  fileprivate var ptr: UnsafeMutableRawPointer?
+  public init(_ ptr: UnsafeRawPointer? = nil) { self.ptr = UnsafeMutableRawPointer(mutating: ptr) }
+
+  public var pointer: UnsafeRawPointer? {
+    mutating get {
+      return UnsafeRawPointer(ReadRawPtr(&ptr, memory_order_relaxed))
+    }
+  }
+}
+
+extension AtomicRawPointer
+{
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeRawPointer?
+  {
+    return UnsafeRawPointer(ReadRawPtr(&ptr, order.order))
+  }
+
+  @inline(__always)
+  public mutating func store(_ pointer: UnsafeRawPointer?, order: StoreMemoryOrder = .sequential)
+  {
+    StoreRawPtr(pointer, &ptr, order.order)
+  }
+
+  @inline(__always)
+  public mutating func swap(_ pointer: UnsafeRawPointer?, order: MemoryOrder = .sequential) -> UnsafeRawPointer?
+  {
+    return UnsafeRawPointer(SwapRawPtr(pointer, &ptr, order.order))
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: UnsafeRawPointer?, future: UnsafeRawPointer?,
+                           type: CASType = .strong,
+                           orderSuccess: MemoryOrder = .sequential,
+                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+  {
+    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    var expect = UnsafeMutableRawPointer(mutating: current)
+    switch type {
+    case .strong:
+      return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+    case .weak:
+      return CASWeakRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+    }
+  }
+}
+
 public struct AtomicMutablePointer<Pointee>
 {
   fileprivate var ptr: UnsafeMutableRawPointer?
