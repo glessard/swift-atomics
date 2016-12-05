@@ -32,31 +32,31 @@ extension AtomicBool
     Store32(value ? 1 : 0, &val, order.order)
   }
 
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Swap32(value ? 0 : 1, &val, order.order) != 0
+    return Swap32(value ? 1 : 0, &val, order.order) != 0
   }
 
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Or32(value ? 0 : 1, &val, order.order) != 0
+    return Or32(value ? 1 : 0, &val, order.order) != 0
   }
 
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Xor32(value ? 0: 1, &val, order.order) != 0
+    return Xor32(value ? 1 : 0, &val, order.order) != 0
   }
 
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return And32(value ? 0 : 1, &val, order.order) != 0
+    return And32(value ? 1 : 0, &val, order.order) != 0
   }
 
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func CAS(current: Bool, future: Bool,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .relaxed,

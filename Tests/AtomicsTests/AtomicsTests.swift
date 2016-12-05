@@ -60,6 +60,7 @@ class AtomicsTests: XCTestCase
   func testBool()
   {
     var boolean = AtomicBool(false)
+    _ = AtomicBool(true)
     XCTAssert(boolean.value == false)
 
     boolean.store(false)
@@ -67,6 +68,39 @@ class AtomicsTests: XCTestCase
 
     boolean.store(true)
     XCTAssert(boolean.value == true)
+    XCTAssert(boolean.value == boolean.load())
+
+    boolean.store(true)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+    boolean.or(false)
+    XCTAssert(boolean.value == true)
+    boolean.store(false)
+    boolean.or(false)
+    XCTAssert(boolean.value == false)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+
+    boolean.and(false)
+    XCTAssert(boolean.value == false)
+    boolean.and(true)
+    XCTAssert(boolean.value == false)
+
+    boolean.xor(false)
+    XCTAssert(boolean.value == false)
+    boolean.xor(true)
+    XCTAssert(boolean.value == true)
+
+    let old = boolean.swap(false)
+    XCTAssert(old == true)
+    XCTAssert(boolean.swap(true) == false)
+
+    boolean.CAS(current: true, future: false)
+    if boolean.CAS(current: false, future: true)
+    {
+      boolean.CAS(current: true, future: false, type: .weak)
+      boolean.CAS(current: false, future: true, type: .weak)
+    }
   }
 
   func testRead()
