@@ -127,6 +127,14 @@ class AtomicsTests: XCTestCase
     let readUInt64 = randUInt64.load()
     XCTAssert(randUInt64.value == readUInt64)
 
+    var randRPtr = AtomicRawPointer(UnsafeRawPointer(bitPattern: nzRandom()))
+    let readRPtr = randRPtr.load()
+    XCTAssert(randRPtr.pointer == readRPtr)
+
+    var randMRPtr = AtomicMutableRawPointer(UnsafeMutableRawPointer(bitPattern: nzRandom()))
+    let readMRPtr = randMRPtr.load()
+    XCTAssert(randMRPtr.pointer == readMRPtr)
+
     var randPtr = AtomicPointer<CGPoint>(UnsafePointer(bitPattern: nzRandom()))
     let readPtr = randPtr.load()
     XCTAssert(randPtr.pointer == readPtr)
@@ -173,6 +181,16 @@ class AtomicsTests: XCTestCase
     storUInt64.store(randUInt64)
     XCTAssert(randUInt64 == storUInt64.value)
 
+    let randRPtr = UnsafeRawPointer(bitPattern: nzRandom())
+    var storRPtr = AtomicRawPointer()
+    storRPtr.store(randRPtr)
+    XCTAssert(randRPtr == storRPtr.pointer)
+
+    let randMRPtr = UnsafeMutableRawPointer(bitPattern: nzRandom())
+    var storMRPtr = AtomicMutableRawPointer()
+    storMRPtr.store(randMRPtr)
+    XCTAssert(storMRPtr.pointer == randMRPtr)
+    
     let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
     var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
     storPtr.store(randPtr)
@@ -227,6 +245,18 @@ class AtomicsTests: XCTestCase
     let readUInt64 = storUInt64.swap(randUInt64)
     XCTAssert(readUInt64 != randUInt64)
     XCTAssert(randUInt64 == storUInt64.value)
+
+    let randRPtr = UnsafeRawPointer(bitPattern: nzRandom())
+    var storRPtr = AtomicRawPointer()
+    let readRPtr = storRPtr.swap(randRPtr)
+    XCTAssert(readRPtr != randRPtr)
+    XCTAssert(randRPtr == storRPtr.pointer)
+
+    let randMRPtr = UnsafeMutableRawPointer(bitPattern: nzRandom())
+    var storMRPtr = AtomicMutableRawPointer()
+    let readMRPtr = storMRPtr.swap(randMRPtr)
+    XCTAssert(readMRPtr != randMRPtr)
+    XCTAssert(randMRPtr == storMRPtr.pointer)
 
     let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
     var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
@@ -422,6 +452,18 @@ class AtomicsTests: XCTestCase
     XCTAssert(randUInt64.CAS(current: 0, future: randUInt64.value) == false)
     XCTAssert(randUInt64.CAS(current: randUInt64.value, future: storUInt64, type: .weak))
     XCTAssert(randUInt64.value == storUInt64)
+
+    var randRPtr = AtomicRawPointer(UnsafeRawPointer(bitPattern: nzRandom()))
+    let storRPtr = UnsafeRawPointer(bitPattern: nzRandom())
+    XCTAssert(randRPtr.CAS(current: nil, future: randRPtr.pointer) == false)
+    XCTAssert(randRPtr.CAS(current: randRPtr.pointer, future: storRPtr, type: .weak))
+    XCTAssert(randRPtr.pointer == storRPtr)
+
+    var randMRPtr = AtomicMutableRawPointer(UnsafeMutableRawPointer(bitPattern: nzRandom()))
+    let storMRPtr = UnsafeMutableRawPointer(bitPattern: nzRandom())
+    XCTAssert(randMRPtr.CAS(current: nil, future: randMRPtr.pointer) == false)
+    XCTAssert(randMRPtr.CAS(current: randMRPtr.pointer, future: storMRPtr, type: .weak))
+    XCTAssert(randMRPtr.pointer == storMRPtr)
 
     var randPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
     let storPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
