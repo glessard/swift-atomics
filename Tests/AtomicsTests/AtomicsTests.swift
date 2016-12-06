@@ -349,6 +349,123 @@ class AtomicsTests: XCTestCase
     XCTAssert(rUInt64.value == fUInt64-1)
   }
 
+  func testOr()
+  {
+    let fInt = Int(nzRandom())
+    let sInt = Int(nzRandom())
+    var rInt = AtomicInt(sInt)
+    XCTAssert(rInt.bitwiseOr(fInt) == sInt)
+    XCTAssert(rInt.value == fInt|sInt)
+
+    let fUInt = UInt(nzRandom())
+    let sUInt = UInt(nzRandom())
+    var rUInt = AtomicUInt(sUInt)
+    XCTAssert(rUInt.bitwiseOr(fUInt) == sUInt)
+    XCTAssert(rUInt.value == fUInt|sUInt)
+
+    let fInt32 = Int32(nzRandom())
+    let sInt32 = Int32(nzRandom())
+    var rInt32 = AtomicInt32(sInt32)
+    XCTAssert(rInt32.bitwiseOr(fInt32) == sInt32)
+    XCTAssert(rInt32.value == fInt32|sInt32)
+
+    let fUInt32 = UInt32(nzRandom())
+    let sUInt32 = UInt32(nzRandom())
+    var rUInt32 = AtomicUInt32(sUInt32)
+    XCTAssert(rUInt32.bitwiseOr(fUInt32) == sUInt32)
+    XCTAssert(rUInt32.value == fUInt32|sUInt32)
+
+    let fInt64 = Int64(nzRandom())
+    let sInt64 = Int64(nzRandom())
+    var rInt64 = AtomicInt64(sInt64)
+    XCTAssert(rInt64.bitwiseOr(fInt64) == sInt64)
+    XCTAssert(rInt64.value == fInt64|sInt64)
+
+    let fUInt64 = UInt64(nzRandom())
+    let sUInt64 = UInt64(nzRandom())
+    var rUInt64 = AtomicUInt64(sUInt64)
+    XCTAssert(rUInt64.bitwiseOr(fUInt64) == sUInt64)
+    XCTAssert(rUInt64.value == fUInt64|sUInt64)
+  }
+
+  func testXor()
+  {
+    let fInt = Int(nzRandom())
+    let sInt = Int(nzRandom())
+    var rInt = AtomicInt(sInt)
+    XCTAssert(rInt.bitwiseXor(fInt) == sInt)
+    XCTAssert(rInt.value == fInt^sInt)
+
+    let fUInt = UInt(nzRandom())
+    let sUInt = UInt(nzRandom())
+    var rUInt = AtomicUInt(sUInt)
+    XCTAssert(rUInt.bitwiseXor(fUInt) == sUInt)
+    XCTAssert(rUInt.value == fUInt^sUInt)
+
+    let fInt32 = Int32(nzRandom())
+    let sInt32 = Int32(nzRandom())
+    var rInt32 = AtomicInt32(sInt32)
+    XCTAssert(rInt32.bitwiseXor(fInt32) == sInt32)
+    XCTAssert(rInt32.value == fInt32^sInt32)
+
+    let fUInt32 = UInt32(nzRandom())
+    let sUInt32 = UInt32(nzRandom())
+    var rUInt32 = AtomicUInt32(sUInt32)
+    XCTAssert(rUInt32.bitwiseXor(fUInt32) == sUInt32)
+    XCTAssert(rUInt32.value == fUInt32^sUInt32)
+
+    let fInt64 = Int64(nzRandom())
+    let sInt64 = Int64(nzRandom())
+    var rInt64 = AtomicInt64(sInt64)
+    XCTAssert(rInt64.bitwiseXor(fInt64) == sInt64)
+    XCTAssert(rInt64.value == fInt64^sInt64)
+
+    let fUInt64 = UInt64(nzRandom())
+    let sUInt64 = UInt64(nzRandom())
+    var rUInt64 = AtomicUInt64(sUInt64)
+    XCTAssert(rUInt64.bitwiseXor(fUInt64) == sUInt64)
+    XCTAssert(rUInt64.value == fUInt64^sUInt64)
+  }
+
+  func testAnd()
+  {
+    let fInt = Int(nzRandom())
+    let sInt = Int(nzRandom())
+    var rInt = AtomicInt(sInt)
+    XCTAssert(rInt.bitwiseAnd(fInt) == sInt)
+    XCTAssert(rInt.value == fInt&sInt)
+
+    let fUInt = UInt(nzRandom())
+    let sUInt = UInt(nzRandom())
+    var rUInt = AtomicUInt(sUInt)
+    XCTAssert(rUInt.bitwiseAnd(fUInt) == sUInt)
+    XCTAssert(rUInt.value == fUInt&sUInt)
+
+    let fInt32 = Int32(nzRandom())
+    let sInt32 = Int32(nzRandom())
+    var rInt32 = AtomicInt32(sInt32)
+    XCTAssert(rInt32.bitwiseAnd(fInt32) == sInt32)
+    XCTAssert(rInt32.value == fInt32&sInt32)
+
+    let fUInt32 = UInt32(nzRandom())
+    let sUInt32 = UInt32(nzRandom())
+    var rUInt32 = AtomicUInt32(sUInt32)
+    XCTAssert(rUInt32.bitwiseAnd(fUInt32) == sUInt32)
+    XCTAssert(rUInt32.value == fUInt32&sUInt32)
+
+    let fInt64 = Int64(nzRandom())
+    let sInt64 = Int64(nzRandom())
+    var rInt64 = AtomicInt64(sInt64)
+    XCTAssert(rInt64.bitwiseAnd(fInt64) == sInt64)
+    XCTAssert(rInt64.value == fInt64&sInt64)
+
+    let fUInt64 = UInt64(nzRandom())
+    let sUInt64 = UInt64(nzRandom())
+    var rUInt64 = AtomicUInt64(sUInt64)
+    XCTAssert(rUInt64.bitwiseAnd(fUInt64) == sUInt64)
+    XCTAssert(rUInt64.value == fUInt64&sUInt64)
+  }
+
   func testIncrement()
   {
     let fInt = Int(nzRandom())

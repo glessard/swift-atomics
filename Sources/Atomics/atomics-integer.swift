@@ -153,19 +153,19 @@ extension AtomicUInt
   }
 
   @inline(__always) @discardableResult
-  public mutating func logicalOr(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
+  public mutating func bitwiseOr(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return unsafeBitCast(OrWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
   }
 
   @inline(__always) @discardableResult
-  public mutating func logicalXor(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
+  public mutating func bitwiseXor(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return unsafeBitCast(XorWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
   }
 
   @inline(__always) @discardableResult
-  public mutating func logicalAnd(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
+  public mutating func bitwiseAnd(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return unsafeBitCast(AndWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
   }
