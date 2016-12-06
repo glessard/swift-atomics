@@ -27,9 +27,7 @@ class AtomicsTests: XCTestCase
   static var allTests: [(String, (AtomicsTests) -> () throws -> Void)] {
     return [
       ("testRead", testRead),
-      ("testSyncRead", testSyncRead),
       ("testStore", testStore),
-      ("testSyncStore", testSyncStore),
       ("testSwap", testSwap),
       ("testAdd", testAdd),
       ("testSub", testSub),
@@ -143,46 +141,6 @@ class AtomicsTests: XCTestCase
   }
 
   
-  func testSyncRead()
-  {
-    var randInt = AtomicInt(Int(nzRandom()))
-    let readInt = randInt.load(order: .sequential)
-    XCTAssert(randInt.value == readInt)
-
-    var randUInt = AtomicUInt(UInt(nzRandom()))
-    let readUInt = randUInt.load(order: .sequential)
-    XCTAssert(randUInt.value == readUInt)
-
-    var randInt32 = AtomicInt32(Int32(nzRandom()))
-    let readInt32 = randInt32.load(order: .sequential)
-    XCTAssert(randInt32.value == readInt32)
-
-    var randUInt32 = AtomicUInt32(UInt32(nzRandom()))
-    let readUInt32 = randUInt32.load(order: .sequential)
-    XCTAssert(randUInt32.value == readUInt32)
-
-    var randInt64 = AtomicInt64(Int64(nzRandom()))
-    let readInt64 = randInt64.load(order: .sequential)
-    XCTAssert(randInt64.value == readInt64)
-
-    var randUInt64 = AtomicUInt64(UInt64(nzRandom()))
-    let readUInt64 = randUInt64.load(order: .sequential)
-    XCTAssert(randUInt64.value == readUInt64)
-
-    var randPtr = AtomicPointer<CGPoint>(UnsafePointer(bitPattern: nzRandom()))
-    let readPtr = randPtr.load(order: .sequential)
-    XCTAssert(randPtr.pointer == readPtr)
-
-    var randMutPtr = AtomicMutablePointer<CGPoint>(UnsafeMutablePointer(bitPattern: nzRandom()))
-    let readMutPtr = randMutPtr.load(order: .sequential)
-    XCTAssert(randMutPtr.pointer == readMutPtr)
-
-    var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
-    let readOPtr = randOPtr.load(order: .sequential)
-    XCTAssert(randOPtr.pointer == readOPtr)
-  }
-
-
   func testStore()
   {
     let randInt = Int(nzRandom())
@@ -228,55 +186,6 @@ class AtomicsTests: XCTestCase
     let randOPtr = OpaquePointer(bitPattern: nzRandom())
     var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     storOPtr.store(randOPtr)
-    XCTAssert(randOPtr == storOPtr.pointer)
-  }
-
-
-  func testSyncStore()
-  {
-    let randInt = Int(nzRandom())
-    var storInt = AtomicInt(Int(nzRandom()))
-    storInt.store(randInt, order: .sequential)
-    XCTAssert(randInt == storInt.value)
-
-    let randUInt = UInt(nzRandom())
-    var storUInt = AtomicUInt(UInt(nzRandom()))
-    storUInt.store(randUInt, order: .sequential)
-    XCTAssert(randUInt == storUInt.value)
-
-    let randInt32 = Int32(nzRandom())
-    var storInt32 = AtomicInt32(Int32(nzRandom()))
-    storInt32.store(randInt32, order: .sequential)
-    XCTAssert(randInt32 == storInt32.value)
-
-    let randUInt32 = UInt32(nzRandom())
-    var storUInt32 = AtomicUInt32(UInt32(nzRandom()))
-    storUInt32.store(randUInt32, order: .sequential)
-    XCTAssert(randUInt32 == storUInt32.value)
-
-    let randInt64 = Int64(nzRandom())
-    var storInt64 = AtomicInt64(Int64(nzRandom()))
-    storInt64.store(randInt64, order: .sequential)
-    XCTAssert(randInt64 == storInt64.value)
-
-    let randUInt64 = UInt64(nzRandom())
-    var storUInt64 = AtomicUInt64(UInt64(nzRandom()))
-    storUInt64.store(randUInt64, order: .sequential)
-    XCTAssert(randUInt64 == storUInt64.value)
-
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
-    var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
-    storPtr.store(randPtr, order: .sequential)
-    XCTAssert(randPtr == storPtr.pointer)
-
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom())
-    var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom()))
-    storMutPtr.store(randMutPtr, order: .sequential)
-    XCTAssert(randMutPtr == storMutPtr.pointer)
-
-    let randOPtr = OpaquePointer(bitPattern: nzRandom())
-    var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
-    storOPtr.store(randOPtr, order: .sequential)
     XCTAssert(randOPtr == storOPtr.pointer)
   }
 
