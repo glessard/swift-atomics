@@ -18,7 +18,7 @@ The pointer types have the following methods:
 The integer types have the following methods:
 - `load`, `store`, `swap`, `CAS`, `add`, `subtract`, `increment`, `decrement`, `bitwiseAnd`, `bitwiseOr` and `bitwiseXor`
 
-The memory order (from `<stdatomic.h>`) can be set by using the `order` parameter on each method; the default is `.relaxed` for the integer types (it is sufficient for counter operations, the most common application.), and `.sequential` for pointer types.
+The memory order (from `<stdatomic.h>`) can be set by using the `order` parameter on each method; the default is `.relaxed` for the integer types (it is sufficient for counter operations, the most common application,) and `.sequential` for pointer types.
 
 The integer types also have a `value` property, as a convenient way to perform a `.relaxed` load. The pointer types have a `pointer` property for the same purpose.
 
