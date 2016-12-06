@@ -148,7 +148,7 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr.pointer == readOPtr)
   }
 
-  
+
   func testStore()
   {
     let randInt = Int(nzRandom())
@@ -190,7 +190,7 @@ class AtomicsTests: XCTestCase
     var storMRPtr = AtomicMutableRawPointer()
     storMRPtr.store(randMRPtr)
     XCTAssert(storMRPtr.pointer == randMRPtr)
-    
+  
     let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
     var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
     storPtr.store(randPtr)
@@ -677,11 +677,11 @@ class AtomicsTests: XCTestCase
     print(t)
     g.wait()
     print(t)
-  
+
     print("")
     let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
     pt.pointee = TestStruct()
-  
+
     print(pt.pointee)
 
     pt.pointee.c.store(4)
@@ -692,7 +692,7 @@ class AtomicsTests: XCTestCase
       usleep(1000)
       pt.pointee.b.store(v, order: .sequential)
     }
-  
+
     usleep(500)
     print(pt.pointee)
     g.wait()
