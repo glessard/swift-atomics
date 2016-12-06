@@ -8,8 +8,9 @@ Clang, on the other hand, has an implementation of the C11 atomic functions buil
 This project bridges a subset of Clang's C11 atomics support to Swift.
 
 The following Swift types are implemented:
-- `AtomicPointer`, `AtomicMutablePointer` and `AtomicOpaquePointer`,
-- `AtomicInt` and `AtomicUInt`, `AtomicInt32` and `AtomicUInt32`, `AtomicInt64` and `AtomicUInt64`.
+- `AtomicPointer`, `AtomicMutablePointer`, `AtomicRawPointer`, `AtomicMutableRawPointer` and `AtomicOpaquePointer`;
+- `AtomicInt` and `AtomicUInt`, `AtomicInt32` and `AtomicUInt32`, `AtomicInt64` and `AtomicUInt64`;
+- `AtomicBool`
 
 The pointer types have the following methods:
 - `load`, `store`, `swap` and `CAS`
