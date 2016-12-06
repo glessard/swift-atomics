@@ -26,14 +26,17 @@ class AtomicsTests: XCTestCase
 {
   static var allTests: [(String, (AtomicsTests) -> () throws -> Void)] {
     return [
-      ("testRead", testRead),
+      ("testLoad", testLoad),
       ("testStore", testStore),
       ("testSwap", testSwap),
+      ("testCAS", testCAS),
       ("testAdd", testAdd),
       ("testSub", testSub),
       ("testIncrement", testIncrement),
       ("testDecrement", testDecrement),
-      ("testCAS", testCAS),
+      ("testOr", testOr),
+      ("testXor", testXor),
+      ("testAnd", testAnd),
       ("testPerformanceRead", testPerformanceRead),
       ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
       ("testPerformanceStore", testPerformanceStore),
@@ -101,7 +104,7 @@ class AtomicsTests: XCTestCase
     }
   }
 
-  func testRead()
+  func testLoad()
   {
     var randInt = AtomicInt(Int(nzRandom()))
     let readInt = randInt.load()
