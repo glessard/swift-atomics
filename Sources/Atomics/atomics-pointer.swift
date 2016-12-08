@@ -45,7 +45,7 @@ extension AtomicMutableRawPointer
   public mutating func CAS(current: UnsafeMutableRawPointer?, future: UnsafeMutableRawPointer?,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
@@ -94,7 +94,7 @@ extension AtomicRawPointer
   public mutating func CAS(current: UnsafeRawPointer?, future: UnsafeRawPointer?,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(mutating: current)
@@ -143,7 +143,7 @@ extension AtomicMutablePointer
   public mutating func CAS(current: UnsafeMutablePointer<Pointee>?, future: UnsafeMutablePointer<Pointee>?,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
@@ -192,7 +192,7 @@ extension AtomicPointer
   public mutating func CAS(current: UnsafePointer<Pointee>?, future: UnsafePointer<Pointee>?,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(mutating: current)
@@ -239,7 +239,7 @@ extension AtomicOpaquePointer
   public mutating func CAS(current: OpaquePointer?, future: OpaquePointer?,
                            type: CASType = .strong,
                            orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .sequential) -> Bool
+                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     precondition(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
