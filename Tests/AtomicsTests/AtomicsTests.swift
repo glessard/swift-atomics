@@ -141,10 +141,14 @@ class AtomicsTests: XCTestCase
     var randPtr = AtomicPointer<CGPoint>(UnsafePointer(bitPattern: nzRandom()))
     let readPtr = randPtr.load()
     XCTAssert(randPtr.pointer == readPtr)
+    randPtr = AtomicPointer(nil)
+    XCTAssert(randPtr.load() == nil)
 
     var randMutPtr = AtomicMutablePointer<CGPoint>(UnsafeMutablePointer(bitPattern: nzRandom()))
     let readMutPtr = randMutPtr.load()
     XCTAssert(randMutPtr.pointer == readMutPtr)
+    randMutPtr = AtomicMutablePointer(nil)
+    XCTAssert(randMutPtr.load() == nil)
 
     var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     let readOPtr = randOPtr.load()
@@ -266,12 +270,16 @@ class AtomicsTests: XCTestCase
     let readPtr = storPtr.swap(randPtr)
     XCTAssert(readPtr != randPtr)
     XCTAssert(randPtr == storPtr.pointer)
+    storPtr = AtomicPointer(nil)
+    XCTAssert(storPtr.swap(randPtr) == nil)
 
     let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom())
     var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom()))
     let readMutPtr = storMutPtr.swap(randMutPtr)
     XCTAssert(readMutPtr != randMutPtr)
     XCTAssert(randMutPtr == storMutPtr.pointer)
+    storMutPtr = AtomicMutablePointer(nil)
+    XCTAssert(storMutPtr.swap(randMutPtr) == nil)
 
     let randOPtr = OpaquePointer(bitPattern: nzRandom())
     var storOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
