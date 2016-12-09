@@ -32,6 +32,7 @@
 		03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */; };
 		03DB47291B4CED0800F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics.framework */; };
 		03DB472A1B4CED1700F4B44B /* Atomics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 03DB46D11B4C6F4100F4B44B /* Atomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		03E976511DFB1E9600F4B44B /* RacetestsDispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Atomics_TestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB470C1B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03E4BEEB1BFD994D00F4B44B /* module.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.map; sourceTree = "<group>"; };
+		03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RacetestsDispatch.swift; path = ../../Tests/AtomicsTests/RacetestsDispatch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 			children = (
 				03D6A8441DF20B3600F4B44B /* LinuxMain.swift */,
 				03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */,
+				03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */,
 				030111001B4B896700F4B44B /* Info.plist */,
 			);
 			path = AtomicsTests;
@@ -520,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03E976511DFB1E9600F4B44B /* RacetestsDispatch.swift in Sources */,
 				03D6A8421DF20B2700F4B44B /* AtomicsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
