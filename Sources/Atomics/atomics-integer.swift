@@ -12,8 +12,11 @@ import ClangAtomics
 
 public struct AtomicInt
 {
-  fileprivate var val: Int = 0
-  public init(_ v: Int = 0) { val = v }
+  fileprivate var val = AtomicWord()
+  public init(_ value: Int = 0)
+  {
+    StoreWord(value, &val, memory_order_relaxed)
+  }
 
   public var value: Int {
     mutating get { return ReadWord(&val, memory_order_relaxed) }
@@ -93,15 +96,18 @@ extension AtomicInt
     case .strong:
       return CASWord(&expect, future, &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakWord(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCASWord(&expect, future, &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicUInt
 {
-  fileprivate var val: Int = 0
-  public init(_ v: UInt = 0) { val = unsafeBitCast(v, to: Int.self) }
+  fileprivate var val = AtomicWord()
+  public init(_ value: UInt = 0)
+  {
+    StoreWord(unsafeBitCast(value, to: Int.self), &val, memory_order_relaxed)
+  }
 
   public var value: UInt {
     mutating get { return unsafeBitCast(ReadWord(&val, memory_order_relaxed), to: UInt.self) }
@@ -181,7 +187,7 @@ extension AtomicUInt
     case .strong:
       return CASWord(&expect, unsafeBitCast(future, to: Int.self), &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakWord(&expect, unsafeBitCast(future, to: Int.self), &val, orderSuccess.order, orderFailure.order)
+      return WeakCASWord(&expect, unsafeBitCast(future, to: Int.self), &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
@@ -190,8 +196,11 @@ extension AtomicUInt
 
 public struct AtomicInt32
 {
-  fileprivate var val: Int32 = 0
-  public init(_ v: Int32 = 0) { val = v }
+  fileprivate var val = Atomic32()
+  public init(_ value: Int32 = 0)
+  {
+    Store32(value, &val, memory_order_relaxed)
+  }
 
   public var value: Int32 {
     mutating get { return Read32(&val, memory_order_relaxed) }
@@ -271,15 +280,18 @@ extension AtomicInt32
     case .strong:
       return CAS32(&expect, future, &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak32(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS32(&expect, future, &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicUInt32
 {
-  fileprivate var val: Int32 = 0
-  public init(_ v: UInt32 = 0) { val = unsafeBitCast(v, to: Int32.self) }
+  fileprivate var val = Atomic32()
+  public init(_ value: UInt32 = 0)
+  {
+    Store32(unsafeBitCast(value, to: Int32.self), &val, memory_order_relaxed)
+  }
 
   public var value: UInt32 {
     mutating get { return unsafeBitCast(Read32(&val, memory_order_relaxed), to: UInt32.self) }
@@ -359,7 +371,7 @@ extension AtomicUInt32
     case .strong:
       return CAS32(&expect, unsafeBitCast(future, to: Int32.self), &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak32(&expect, unsafeBitCast(future, to: Int32.self), &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS32(&expect, unsafeBitCast(future, to: Int32.self), &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
@@ -368,8 +380,11 @@ extension AtomicUInt32
 
 public struct AtomicInt64
 {
-  fileprivate var val: Int64 = 0
-  public init(_ v: Int64 = 0) { val = v }
+  fileprivate var val = Atomic64()
+  public init(_ value: Int64 = 0)
+  {
+    Store64(value, &val, memory_order_relaxed)
+  }
 
   public var value: Int64 {
     mutating get { return Read64(&val, memory_order_relaxed) }
@@ -449,15 +464,18 @@ extension AtomicInt64
     case .strong:
       return CAS64(&expect, future, &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak64(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS64(&expect, future, &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicUInt64
 {
-  fileprivate var val: Int64 = 0
-  public init(_ v: UInt64 = 0) { val = unsafeBitCast(v, to: Int64.self) }
+  fileprivate var val = Atomic64()
+  public init(_ value: UInt64 = 0)
+  {
+    Store64(unsafeBitCast(value, to: Int64.self), &val, memory_order_relaxed)
+  }
 
   public var value: UInt64 {
     mutating get { return unsafeBitCast(Read64(&val, memory_order_relaxed), to: UInt64.self) }
@@ -537,7 +555,7 @@ extension AtomicUInt64
     case .strong:
       return CAS64(&expect, unsafeBitCast(future, to: Int64.self), &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak64(&expect, unsafeBitCast(future, to: Int64.self), &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS64(&expect, unsafeBitCast(future, to: Int64.self), &val, orderSuccess.order, orderFailure.order)
     }
   }
 }

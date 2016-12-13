@@ -11,8 +11,11 @@ import ClangAtomics
 
 public struct AtomicMutableRawPointer
 {
-  fileprivate var ptr: UnsafeMutableRawPointer?
-  public init(_ ptr: UnsafeMutableRawPointer? = nil) { self.ptr = ptr }
+  fileprivate var ptr = RawPtr()
+  public init(_ p: UnsafeMutableRawPointer? = nil)
+  {
+    StoreRawPtr(p, &ptr, memory_order_relaxed)
+  }
 
   public var pointer: UnsafeMutableRawPointer? {
     mutating get {
@@ -53,15 +56,18 @@ extension AtomicMutableRawPointer
     case .strong:
       return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicRawPointer
 {
-  fileprivate var ptr: UnsafeMutableRawPointer?
-  public init(_ ptr: UnsafeRawPointer? = nil) { self.ptr = UnsafeMutableRawPointer(mutating: ptr) }
+  fileprivate var ptr = RawPtr()
+  public init(_ p: UnsafeRawPointer? = nil)
+  {
+    StoreRawPtr(p, &ptr, memory_order_relaxed)
+  }
 
   public var pointer: UnsafeRawPointer? {
     mutating get {
@@ -102,15 +108,18 @@ extension AtomicRawPointer
     case .strong:
       return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicMutablePointer<Pointee>
 {
-  fileprivate var ptr: UnsafeMutableRawPointer?
-  public init(_ ptr: UnsafeMutablePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
+  fileprivate var ptr = RawPtr()
+  public init(_ p: UnsafeMutablePointer<Pointee>? = nil)
+  {
+    StoreRawPtr(p, &ptr, memory_order_relaxed)
+  }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
     mutating get {
@@ -151,15 +160,18 @@ extension AtomicMutablePointer
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicPointer<Pointee>
 {
-  fileprivate var ptr: UnsafeMutableRawPointer?
-  public init(_ ptr: UnsafePointer<Pointee>? = nil) { self.ptr = UnsafeMutableRawPointer(mutating: ptr) }
+  fileprivate var ptr = RawPtr()
+  public init(_ p: UnsafePointer<Pointee>? = nil)
+  {
+    StoreRawPtr(p, &ptr, memory_order_relaxed)
+  }
 
   public var pointer: UnsafePointer<Pointee>? {
     mutating get {
@@ -200,15 +212,18 @@ extension AtomicPointer
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }
 
 public struct AtomicOpaquePointer
 {
-  fileprivate var ptr: UnsafeMutableRawPointer?
-  public init(_ ptr: OpaquePointer? = nil) { self.ptr = UnsafeMutableRawPointer(ptr) }
+  fileprivate var ptr = RawPtr()
+  public init(_ p: OpaquePointer? = nil)
+  {
+    StoreRawPtr(UnsafeRawPointer(p), &ptr, memory_order_relaxed)
+  }
 
   public var pointer: OpaquePointer? {
     mutating get { return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed)) }
@@ -247,7 +262,7 @@ extension AtomicOpaquePointer
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeakRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
     }
   }
 }

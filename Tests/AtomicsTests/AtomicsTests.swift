@@ -695,14 +695,17 @@ class AtomicsTests: XCTestCase
   }
 #endif
 
-  private struct TestStruct: CustomStringConvertible
+  private struct TestStruct
   {
     var a = AtomicInt(0)
     var b = AtomicInt(1)
     var c = AtomicInt(2)
     var d = AtomicInt(3)
 
-    var description: String { return "\(a) \(b) \(c) \(d)" }
+    mutating func print()
+    {
+      Swift.print("\(a.value) \(b.value) \(c.value) \(d.value)")
+    }
   }
 
   func testExample()
@@ -710,60 +713,58 @@ class AtomicsTests: XCTestCase
     var value = AtomicInt(0)
 
     print(value.swap(1))
-    print(value)
+    print(value.value)
     value.store(2)
-    print(value)
+    print(value.value)
+    print("")
 
     var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-
-    print(p)
+    print(p.pointer!)
 
     var q = AtomicMutablePointer(p.load())
     let r = q.swap(UnsafeMutablePointer<Int>.allocate(capacity: 1))
     p.store(q.pointer)
 
-    print(q)
+    print(q.pointer!)
     print(r!)
-    print(p)
+    print(p.pointer!)
     print("")
 
     var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.allocate(capacity: 1))
 
-    print(pp)
+    print(pp.pointer!)
 
     var qq = AtomicPointer(pp.load())
     let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1)))
     pp.store(qq.pointer)
 
-    print(qq)
+    print(qq.pointer!)
     print(rr!)
-    print(pp)
+    print(pp.pointer!)
     print("")
 
     var i = AtomicInt32(Int32(nzRandom()))
-
-    print(i)
+    print(i.value)
 
     var j = AtomicInt32(i.load())
     let k = j.swap(Int32(nzRandom()))
     i.store(j.value)
 
-    print(j)
+    print(j.value)
     print(k)
-    print(i)
+    print(i.value)
     print("")
 
     var ii = AtomicInt64(Int64(nzRandom()))
-
-    print(ii)
+    print(ii.value)
 
     var jj = AtomicInt64(ii.load())
     let kk = jj.swap(numericCast(nzRandom()))
     ii.store(jj.value)
 
-    print(jj)
+    print(jj.value)
     print(kk)
-    print(ii)
+    print(ii.value)
     print("")
 
     var start = Date()
@@ -793,45 +794,44 @@ class AtomicsTests: XCTestCase
     }
     dt = Date().timeIntervalSince(start)
     print(Int(1e9*dt/Double(iterations)))
+    print("")
 
     var t = TestStruct()
-
-    print(t)
+    t.print()
 
     t.c.store(4)
 
     let g = DispatchGroup()
     DispatchQueue.global().async(group: g) {
-      print(t)
+      t.print()
       let v = t.a.swap(5)
       usleep(1000)
       t.b.store(v, order: .sequential)
     }
 
     usleep(500)
-    print(t)
+    t.print()
     g.wait()
-    print(t)
+    t.print()
 
     print("")
     let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
     pt.pointee = TestStruct()
-
-    print(pt.pointee)
+    pt.pointee.print()
 
     pt.pointee.c.store(4)
 
     DispatchQueue.global().async(group: g) {
-      print(pt.pointee)
+      pt.pointee.print()
       let v = pt.pointee.a.swap(5)
       usleep(1000)
       pt.pointee.b.store(v, order: .sequential)
     }
 
     usleep(500)
-    print(pt.pointee)
+    pt.pointee.print()
     g.wait()
-    print(pt.pointee)
+    pt.pointee.print()
 
     pt.deallocate(capacity: 1)
   }

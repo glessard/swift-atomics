@@ -10,8 +10,11 @@ import ClangAtomics
 
 public struct AtomicBool
 {
-  fileprivate var val: Int32 = 0
-  public init(_ b: Bool = false) { val = b ? 1 : 0 }
+  fileprivate var val = Atomic32()
+  public init(_ b: Bool = false)
+  {
+    Store32(b ? 1 : 0, &val, memory_order_relaxed)
+  }
 
   public var value: Bool {
     mutating get { return Read32(&val, memory_order_relaxed) != 0 }
@@ -68,7 +71,7 @@ extension AtomicBool
     case .strong:
       return CAS32(&expect, future ? 1 : 0, &val, orderSuccess.order, orderFailure.order)
     case .weak:
-      return CASWeak32(&expect, future ? 1 : 0, &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS32(&expect, future ? 1 : 0, &val, orderSuccess.order, orderFailure.order)
     }
   }
 }
