@@ -10,7 +10,7 @@ import Atomics
 
 let iterations = 200_000//_000
 
-struct Point { var x = 0.0, y = 0.0, z = 0.0 }
+private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
 class AtomicsRaceTests: XCTestCase
 {

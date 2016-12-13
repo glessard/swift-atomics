@@ -17,10 +17,11 @@ import func Glibc.usleep
 #endif
 
 import struct Foundation.Date
-import struct Foundation.CGPoint
 import Dispatch
 
 import Atomics
+
+private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
 class AtomicsTests: XCTestCase
 {
@@ -138,13 +139,13 @@ class AtomicsTests: XCTestCase
     let readMRPtr = randMRPtr.load()
     XCTAssert(randMRPtr.pointer == readMRPtr)
 
-    var randPtr = AtomicPointer<CGPoint>(UnsafePointer(bitPattern: nzRandom()))
+    var randPtr = AtomicPointer<Point>(UnsafePointer(bitPattern: nzRandom()))
     let readPtr = randPtr.load()
     XCTAssert(randPtr.pointer == readPtr)
     randPtr = AtomicPointer(nil)
     XCTAssert(randPtr.load() == nil)
 
-    var randMutPtr = AtomicMutablePointer<CGPoint>(UnsafeMutablePointer(bitPattern: nzRandom()))
+    var randMutPtr = AtomicMutablePointer<Point>(UnsafeMutablePointer(bitPattern: nzRandom()))
     let readMutPtr = randMutPtr.load()
     XCTAssert(randMutPtr.pointer == readMutPtr)
     randMutPtr = AtomicMutablePointer(nil)
@@ -198,13 +199,13 @@ class AtomicsTests: XCTestCase
     storMRPtr.store(randMRPtr)
     XCTAssert(storMRPtr.pointer == randMRPtr)
   
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
-    var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
+    let randPtr = UnsafePointer<Point>(bitPattern: nzRandom())
+    var storPtr = AtomicPointer(UnsafePointer<Point>(bitPattern: nzRandom()))
     storPtr.store(randPtr)
     XCTAssert(randPtr == storPtr.pointer)
 
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom())
-    var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom()))
+    let randMutPtr = UnsafeMutablePointer<Point>(bitPattern: nzRandom())
+    var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<Point>(bitPattern: nzRandom()))
     storMutPtr.store(randMutPtr)
     XCTAssert(randMutPtr == storMutPtr.pointer)
 
@@ -269,16 +270,16 @@ class AtomicsTests: XCTestCase
     _ = storMRPtr.swap(nil)
     XCTAssert(storMRPtr.swap(randMRPtr) == nil)
 
-    let randPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
-    var storPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
+    let randPtr = UnsafePointer<Point>(bitPattern: nzRandom())
+    var storPtr = AtomicPointer(UnsafePointer<Point>(bitPattern: nzRandom()))
     let readPtr = storPtr.swap(randPtr)
     XCTAssert(readPtr != randPtr)
     XCTAssert(randPtr == storPtr.pointer)
     _ = storPtr.swap(nil)
     XCTAssert(storPtr.swap(randPtr) == nil)
 
-    let randMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom())
-    var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom()))
+    let randMutPtr = UnsafeMutablePointer<Point>(bitPattern: nzRandom())
+    var storMutPtr = AtomicMutablePointer(UnsafeMutablePointer<Point>(bitPattern: nzRandom()))
     let readMutPtr = storMutPtr.swap(randMutPtr)
     XCTAssert(readMutPtr != randMutPtr)
     XCTAssert(randMutPtr == storMutPtr.pointer)
@@ -599,14 +600,14 @@ class AtomicsTests: XCTestCase
     XCTAssert(randMRPtr.CAS(current: randMRPtr.pointer, future: storMRPtr, type: .weak))
     XCTAssert(randMRPtr.pointer == storMRPtr)
 
-    var randPtr = AtomicPointer(UnsafePointer<CGPoint>(bitPattern: nzRandom()))
-    let storPtr = UnsafePointer<CGPoint>(bitPattern: nzRandom())
+    var randPtr = AtomicPointer(UnsafePointer<Point>(bitPattern: nzRandom()))
+    let storPtr = UnsafePointer<Point>(bitPattern: nzRandom())
     XCTAssert(randPtr.CAS(current: nil, future: randPtr.pointer) == false)
     XCTAssert(randPtr.CAS(current: randPtr.pointer, future: storPtr, type: .weak))
     XCTAssert(randPtr.pointer == storPtr)
 
-    var randMutPtr = AtomicMutablePointer(UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom()))
-    let storMutPtr = UnsafeMutablePointer<CGPoint>(bitPattern: nzRandom())
+    var randMutPtr = AtomicMutablePointer(UnsafeMutablePointer<Point>(bitPattern: nzRandom()))
+    let storMutPtr = UnsafeMutablePointer<Point>(bitPattern: nzRandom())
     XCTAssert(randMutPtr.CAS(current: nil, future: randMutPtr.pointer) == false)
     XCTAssert(randMutPtr.CAS(current: randMutPtr.pointer, future: storMutPtr, type: .weak))
     XCTAssert(randMutPtr.pointer == storMutPtr)
