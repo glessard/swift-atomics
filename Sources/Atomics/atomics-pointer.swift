@@ -46,7 +46,7 @@ extension AtomicMutableRawPointer
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafeMutableRawPointer?, future: UnsafeMutableRawPointer?,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -98,7 +98,7 @@ extension AtomicRawPointer
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafeRawPointer?, future: UnsafeRawPointer?,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -150,7 +150,7 @@ extension AtomicMutablePointer
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafeMutablePointer<Pointee>?, future: UnsafeMutablePointer<Pointee>?,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -202,7 +202,7 @@ extension AtomicPointer
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafePointer<Pointee>?, future: UnsafePointer<Pointee>?,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -252,7 +252,7 @@ extension AtomicOpaquePointer
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: OpaquePointer?, future: OpaquePointer?,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {

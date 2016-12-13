@@ -61,7 +61,7 @@ extension AtomicBool
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Bool, future: Bool,
-                           type: CASType = .strong,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {

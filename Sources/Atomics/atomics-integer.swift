@@ -86,7 +86,8 @@ extension AtomicInt
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int, future: Int, type: CASType = .strong,
+  public mutating func CAS(current: Int, future: Int,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -177,7 +178,8 @@ extension AtomicUInt
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: UInt, future: UInt, type: CASType = .strong,
+  public mutating func CAS(current: UInt, future: UInt,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -270,7 +272,8 @@ extension AtomicInt32
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int32, future: Int32, type: CASType = .strong,
+  public mutating func CAS(current: Int32, future: Int32,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -361,7 +364,8 @@ extension AtomicUInt32
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: UInt32, future: UInt32, type: CASType = .strong,
+  public mutating func CAS(current: UInt32, future: UInt32,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -454,7 +458,8 @@ extension AtomicInt64
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int64, future: Int64, type: CASType = .strong,
+  public mutating func CAS(current: Int64, future: Int64,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
@@ -545,7 +550,8 @@ extension AtomicUInt64
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: UInt64, future: UInt64, type: CASType = .strong,
+  public mutating func CAS(current: UInt64, future: UInt64,
+                           type: CASType = .weak,
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
