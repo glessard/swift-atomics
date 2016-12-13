@@ -1,7 +1,7 @@
 # swift-atomics
 Some atomic functions from Clang in Swift
 
-The atomic functions available in `/usr/include/libkern/OSAtomic.h` are quite limiting in Swift, due to the type system. Furthermore, some simple things such as a synchronized load or a synchronized store are not immediately available.
+The atomic functions available in `/usr/include/libkern/OSAtomic.h` are quite limiting in Swift, due to the type system. Furthermore, some simple things such as a synchronized load or a synchronized store are not immediately available. On top of that, they have now been deprecated.
 
 Clang, on the other hand, has an implementation of the C11 atomic functions built-in.
 
