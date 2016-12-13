@@ -11,10 +11,10 @@ import ClangAtomics
 
 public struct AtomicMutableRawPointer
 {
-  fileprivate var ptr = RawPtr()
-  public init(_ p: UnsafeMutableRawPointer? = nil)
+  fileprivate var ptr = RawPointer()
+  public init(_ pointer: UnsafeMutableRawPointer? = nil)
   {
-    StoreRawPtr(p, &ptr, memory_order_relaxed)
+    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
   }
 
   public var pointer: UnsafeMutableRawPointer? {
@@ -63,10 +63,10 @@ extension AtomicMutableRawPointer
 
 public struct AtomicRawPointer
 {
-  fileprivate var ptr = RawPtr()
-  public init(_ p: UnsafeRawPointer? = nil)
+  fileprivate var ptr = RawPointer()
+  public init(_ pointer: UnsafeRawPointer? = nil)
   {
-    StoreRawPtr(p, &ptr, memory_order_relaxed)
+    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
   }
 
   public var pointer: UnsafeRawPointer? {
@@ -115,10 +115,10 @@ extension AtomicRawPointer
 
 public struct AtomicMutablePointer<Pointee>
 {
-  fileprivate var ptr = RawPtr()
-  public init(_ p: UnsafeMutablePointer<Pointee>? = nil)
+  fileprivate var ptr = RawPointer()
+  public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
-    StoreRawPtr(p, &ptr, memory_order_relaxed)
+    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
   }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
@@ -167,10 +167,10 @@ extension AtomicMutablePointer
 
 public struct AtomicPointer<Pointee>
 {
-  fileprivate var ptr = RawPtr()
-  public init(_ p: UnsafePointer<Pointee>? = nil)
+  fileprivate var ptr = RawPointer()
+  public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
-    StoreRawPtr(p, &ptr, memory_order_relaxed)
+    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
   }
 
   public var pointer: UnsafePointer<Pointee>? {
@@ -219,10 +219,10 @@ extension AtomicPointer
 
 public struct AtomicOpaquePointer
 {
-  fileprivate var ptr = RawPtr()
-  public init(_ p: OpaquePointer? = nil)
+  fileprivate var ptr = RawPointer()
+  public init(_ pointer: OpaquePointer? = nil)
   {
-    StoreRawPtr(UnsafeRawPointer(p), &ptr, memory_order_relaxed)
+    StoreRawPtr(UnsafeRawPointer(pointer), &ptr, memory_order_relaxed)
   }
 
   public var pointer: OpaquePointer? {

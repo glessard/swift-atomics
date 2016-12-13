@@ -15,27 +15,27 @@
 
 // pointer
 
-void* ReadRawPtr(struct RawPtr* ptr, memory_order order)
+void* ReadRawPtr(struct RawPointer* ptr, memory_order order)
 {
   return atomic_load_explicit(&(ptr->a), order);
 }
 
-void StoreRawPtr(const void* val, struct RawPtr* ptr, memory_order order)
+void StoreRawPtr(const void* val, struct RawPointer* ptr, memory_order order)
 {
   atomic_store_explicit(&(ptr->a), (void*)val, order);
 }
 
-void* SwapRawPtr(const void* val, struct RawPtr* ptr, memory_order order)
+void* SwapRawPtr(const void* val, struct RawPointer* ptr, memory_order order)
 {
   return atomic_exchange_explicit(&(ptr->a), (void*)val, order);
 }
 
-_Bool CASRawPtr(void** current, const void* future, struct RawPtr* ptr, memory_order succ, memory_order fail)
+_Bool CASRawPtr(void** current, const void* future, struct RawPointer* ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_strong_explicit(&(ptr->a), (void**)current, (void*)future, succ, fail);
 }
 
-_Bool WeakCASRawPtr(void** current, const void* future, struct RawPtr* ptr, memory_order succ, memory_order fail)
+_Bool WeakCASRawPtr(void** current, const void* future, struct RawPointer* ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_weak_explicit(&(ptr->a), (void**)current, (void*)future, succ, fail);
 }
