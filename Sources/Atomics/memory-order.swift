@@ -12,7 +12,7 @@ public enum MemoryOrder: Int
 {
   case relaxed = 0, consume, acquire, release, acqrel, sequential
 
-  var order: memory_order {
+  public var order: memory_order {
     switch self {
     case .relaxed:    return memory_order_relaxed
     case .consume:    return memory_order_consume
@@ -28,7 +28,7 @@ public enum LoadMemoryOrder: Int
 {
   case relaxed = 0, consume, acquire, sequential = 5
 
-  var order: memory_order {
+  public var order: memory_order {
     switch self {
     case .relaxed:    return memory_order_relaxed
     case .consume:    return memory_order_consume
@@ -42,7 +42,7 @@ public enum StoreMemoryOrder: Int
 {
   case relaxed = 0, release = 3, sequential = 5
 
-  var order: memory_order {
+  public var order: memory_order {
     switch self {
     case .relaxed:    return memory_order_relaxed
     case .release:    return memory_order_release
