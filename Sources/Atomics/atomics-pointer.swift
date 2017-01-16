@@ -11,7 +11,7 @@ import ClangAtomics
 
 public struct AtomicMutableRawPointer
 {
-  fileprivate var ptr = RawPointer()
+  @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeMutableRawPointer? = nil)
   {
     StoreRawPtr(pointer, &ptr, memory_order_relaxed)
@@ -63,7 +63,7 @@ extension AtomicMutableRawPointer
 
 public struct AtomicRawPointer
 {
-  fileprivate var ptr = RawPointer()
+  @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeRawPointer? = nil)
   {
     StoreRawPtr(pointer, &ptr, memory_order_relaxed)
@@ -115,7 +115,7 @@ extension AtomicRawPointer
 
 public struct AtomicMutablePointer<Pointee>
 {
-  fileprivate var ptr = RawPointer()
+  @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
     StoreRawPtr(pointer, &ptr, memory_order_relaxed)
@@ -167,7 +167,7 @@ extension AtomicMutablePointer
 
 public struct AtomicPointer<Pointee>
 {
-  fileprivate var ptr = RawPointer()
+  @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
     StoreRawPtr(pointer, &ptr, memory_order_relaxed)
@@ -219,7 +219,7 @@ extension AtomicPointer
 
 public struct AtomicOpaquePointer
 {
-  fileprivate var ptr = RawPointer()
+  @_versioned internal var ptr = RawPointer()
   public init(_ pointer: OpaquePointer? = nil)
   {
     StoreRawPtr(UnsafeRawPointer(pointer), &ptr, memory_order_relaxed)
