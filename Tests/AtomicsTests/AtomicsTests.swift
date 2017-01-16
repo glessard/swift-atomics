@@ -23,6 +23,16 @@ import Atomics
 
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
+func nzRandom() -> UInt
+{
+  // Return a nonzero, positive Int less than (or equal to) Int32.max/2.
+  #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+    return UInt(arc4random() & 0x3fff_fffe + 1)
+  #else
+    return UInt(random() & 0x3fff_fffe + 1)
+  #endif
+}
+
 class AtomicsTests: XCTestCase
 {
   static var allTests: [(String, (AtomicsTests) -> () throws -> Void)] {
@@ -47,16 +57,6 @@ class AtomicsTests: XCTestCase
       ("testBool", testBool),
       ("testExample", testExample),
     ]
-  }
-
-  func nzRandom() -> UInt
-  {
-    // Return a nonzero, positive Int less than (or equal to) Int32.max/2.
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-    return UInt(arc4random() & 0x3fff_fffe + 1)
-#else
-    return UInt(random() & 0x3fff_fffe + 1)
-#endif
   }
 
   func testBool()
