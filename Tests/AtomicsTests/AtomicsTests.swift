@@ -47,6 +47,7 @@ class AtomicsTests: XCTestCase
     ("testUnsafePointer", testUnsafePointer),
     ("testUnsafeMutablePointer", testUnsafeMutablePointer),
     ("testOpaquePointer", testOpaquePointer),
+    ("testUnmanaged", testUnmanaged),
     ("testExample", testExample),
   ]
 
@@ -602,6 +603,39 @@ class AtomicsTests: XCTestCase
     while(!i.loadCAS(current: &j, future: r3)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
+  }
+
+  private class Thing
+  {
+    let id: UInt
+    init(_ x: UInt = nzRandom()) { id = x }
+    deinit { print("Released     \(id)") }
+  }
+  
+  func testUnmanaged()
+  {
+    var i = nzRandom()
+    var a = AtomicReference(Thing(i))
+    do {
+      let r1 = a.swap(.none)
+      print("Will release \(i)")
+      XCTAssert(r1 != nil)
+    }
+
+    i = nzRandom()
+    XCTAssert(a.swap(Thing(i)) == nil)
+    print("Releasing    \(i)")
+    XCTAssert(a.swap(nil) != nil)
+
+    i = nzRandom()
+    XCTAssert(a.swapIfNil(Thing(i)) == true)
+    let j = nzRandom()
+    print("Will drop    \(j)")
+    XCTAssert(a.swapIfNil(Thing(j)) == false)
+
+    print("Will release \(i)")
+    XCTAssert(a.take() != nil)
+    XCTAssert(a.take() == nil)
   }
 
   private struct TestStruct
