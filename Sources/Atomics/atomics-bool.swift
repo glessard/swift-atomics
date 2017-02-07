@@ -10,7 +10,7 @@ import ClangAtomics
 
 public struct AtomicBool
 {
-  fileprivate var val = Atomic32()
+  @_versioned internal var val = Atomic32()
   public init(_ value: Bool = false)
   {
     Store32(value ? 1 : 0, &val, memory_order_relaxed)

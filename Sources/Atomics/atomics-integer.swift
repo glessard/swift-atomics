@@ -12,7 +12,7 @@ import ClangAtomics
 
 public struct AtomicInt
 {
-  fileprivate var val = AtomicWord()
+  @_versioned internal var val = AtomicWord()
   public init(_ value: Int = 0)
   {
     StoreWord(value, &val, memory_order_relaxed)
@@ -104,7 +104,7 @@ extension AtomicInt
 
 public struct AtomicUInt
 {
-  fileprivate var val = AtomicWord()
+  @_versioned internal var val = AtomicWord()
   public init(_ value: UInt = 0)
   {
     StoreWord(unsafeBitCast(value, to: Int.self), &val, memory_order_relaxed)
@@ -198,7 +198,7 @@ extension AtomicUInt
 
 public struct AtomicInt32
 {
-  fileprivate var val = Atomic32()
+  @_versioned internal var val = Atomic32()
   public init(_ value: Int32 = 0)
   {
     Store32(value, &val, memory_order_relaxed)
@@ -290,7 +290,7 @@ extension AtomicInt32
 
 public struct AtomicUInt32
 {
-  fileprivate var val = Atomic32()
+  @_versioned internal var val = Atomic32()
   public init(_ value: UInt32 = 0)
   {
     Store32(unsafeBitCast(value, to: Int32.self), &val, memory_order_relaxed)
@@ -384,7 +384,7 @@ extension AtomicUInt32
 
 public struct AtomicInt64
 {
-  fileprivate var val = Atomic64()
+  @_versioned internal var val = Atomic64()
   public init(_ value: Int64 = 0)
   {
     Store64(value, &val, memory_order_relaxed)
@@ -476,7 +476,7 @@ extension AtomicInt64
 
 public struct AtomicUInt64
 {
-  fileprivate var val = Atomic64()
+  @_versioned internal var val = Atomic64()
   public init(_ value: UInt64 = 0)
   {
     Store64(unsafeBitCast(value, to: Int64.self), &val, memory_order_relaxed)
