@@ -623,37 +623,41 @@ class AtomicsTests: XCTestCase
 
   func testPerformanceStore()
   {
+    let c = testLoopCount
     var m = AtomicInt(0)
     measure {
       m.store(0)
-      for i in 0..<1_000_000 { m.store(i, order: .relaxed) }
+      for i in 0..<c { m.store(i, order: .relaxed) }
     }
   }
 
   func testPerformanceSynchronizedStore()
   {
+    let c = testLoopCount
     var m = AtomicInt(0)
     measure {
       m.store(0)
-      for i in 0..<1_000_000 { m.store(i, order: .sequential) }
+      for i in 0..<c { m.store(i, order: .sequential) }
     }
   }
 
   func testPerformanceRead()
   {
+    let c = testLoopCount
     var m = AtomicInt(0)
     measure {
       m.store(0)
-      for _ in 0..<1_000_000 { _ = m.load(order: .relaxed) }
+      for _ in 0..<c { _ = m.load(order: .relaxed) }
     }
   }
 
   func testPerformanceSynchronizedRead()
   {
+    let c = testLoopCount
     var m = AtomicInt(0)
     measure {
       m.store(0)
-      for _ in 0..<1_000_000 { _ = m.load(order: .sequential) }
+      for _ in 0..<c { _ = m.load(order: .sequential) }
     }
   }
 
@@ -681,20 +685,22 @@ class AtomicsTests: XCTestCase
 
   func testPerformanceSwiftCASFailure()
   {
+    let c = Int32(testLoopCount)
     var m = AtomicInt32(0)
     measure {
       m.store(0)
-      for i in (m.value)..<1_000_000 { m.CAS(current: i, future: 0) }
+      for i in (m.value)..<c { m.CAS(current: i, future: 0) }
     }
   }
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
   func testPerformanceOSAtomicCASFailure()
   {
+    let c = Int32(testLoopCount)
     var m = Int32(0)
     measure {
       m = 0
-      for i in m..<1_000_000 { OSAtomicCompareAndSwap32(i, 0, &m) }
+      for i in m..<c { OSAtomicCompareAndSwap32(i, 0, &m) }
     }
   }
 #endif
