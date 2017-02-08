@@ -65,7 +65,7 @@ extension AtomicBool
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect: Int32 = current ? 1 : 0
     switch type {
     case .strong:

@@ -91,7 +91,7 @@ extension AtomicInt
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
     switch type {
     case .strong:
@@ -183,7 +183,7 @@ extension AtomicUInt
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = unsafeBitCast(current, to: Int.self)
     switch type {
     case .strong:
@@ -277,7 +277,7 @@ extension AtomicInt32
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
     switch type {
     case .strong:
@@ -369,7 +369,7 @@ extension AtomicUInt32
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = unsafeBitCast(current, to: Int32.self)
     switch type {
     case .strong:
@@ -463,7 +463,7 @@ extension AtomicInt64
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = current
     switch type {
     case .strong:
@@ -555,7 +555,7 @@ extension AtomicUInt64
                            orderSuccess: MemoryOrder = .relaxed,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = unsafeBitCast(current, to: Int64.self)
     switch type {
     case .strong:

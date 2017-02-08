@@ -50,7 +50,7 @@ extension AtomicMutableRawPointer
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
     switch type {
     case .strong:
@@ -102,7 +102,7 @@ extension AtomicRawPointer
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(mutating: current)
     switch type {
     case .strong:
@@ -154,7 +154,7 @@ extension AtomicMutablePointer
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
     switch type {
     case .strong:
@@ -206,7 +206,7 @@ extension AtomicPointer
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(mutating: current)
     switch type {
     case .strong:
@@ -256,7 +256,7 @@ extension AtomicOpaquePointer
                            orderSuccess: MemoryOrder = .sequential,
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
-    precondition(orderFailure.rawValue <= orderSuccess.rawValue)
+    assert(orderFailure.rawValue <= orderSuccess.rawValue)
     var expect = UnsafeMutableRawPointer(current)
     switch type {
     case .strong:
