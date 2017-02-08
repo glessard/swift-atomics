@@ -619,6 +619,8 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr.pointer == storOPtr)
   }
 
+  let testLoopCount = 1_000_000
+
   func testPerformanceStore()
   {
     var m = AtomicInt(0)
@@ -657,20 +659,22 @@ class AtomicsTests: XCTestCase
 
   func testPerformanceSwiftCASSuccess()
   {
+    let c = Int32(testLoopCount)
     var m = AtomicInt32(0)
     measure {
       m.store(0)
-      for i in (m.value)..<1_000_000 { m.CAS(current: m.value, future: i) }
+      for i in (m.value)..<c { m.CAS(current: i, future: i+1) }
     }
   }
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
   func testPerformanceOSAtomicCASSuccess()
   {
+    let c = Int32(testLoopCount)
     var m = Int32(0)
     measure {
       m = 0
-      for i in m..<1_000_000 { OSAtomicCompareAndSwap32(m, i, &m) }
+      for i in m..<c { OSAtomicCompareAndSwap32(i, i+1, &m) }
     }
   }
 #endif
