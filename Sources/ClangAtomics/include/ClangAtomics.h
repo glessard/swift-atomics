@@ -20,7 +20,7 @@
 
 struct RawPointer
 {
-  volatile _Atomic(void*) a;
+  volatile atomic_uintptr_t a;
 };
 
 void* ReadRawPtr(struct RawPointer *ptr, memory_order order);
@@ -33,7 +33,7 @@ _Bool WeakCASRawPtr(void** current, const void* future, struct RawPointer *ptr, 
 
 struct AtomicWord
 {
-  volatile _Atomic(long) a;
+  volatile atomic_long a;
 };
 
 long ReadWord(struct AtomicWord *var, memory_order order);
@@ -51,7 +51,7 @@ _Bool WeakCASWord(long* current, long future, struct AtomicWord *var, memory_ord
 
 struct Atomic32
 {
-  volatile _Atomic(int) a;
+  volatile atomic_int a;
 };
 
 int Read32(struct Atomic32 *var, memory_order order);
@@ -69,7 +69,7 @@ _Bool WeakCAS32(int* current, int future, struct Atomic32 *var, memory_order suc
 
 struct Atomic64
 {
-  volatile _Atomic(long long) a;
+  volatile atomic_llong a;
 };
 
 long long Read64(struct Atomic64 *var, memory_order order);
