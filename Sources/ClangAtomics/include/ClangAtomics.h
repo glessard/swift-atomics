@@ -73,9 +73,7 @@ struct Atomic64
 };
 
 long long Read64(struct Atomic64 *var, memory_order order);
-long long SyncRead64(struct Atomic64 *var, memory_order order);
 void Store64(long long val, struct Atomic64 *var, memory_order order);
-void SyncStore64(long long val, struct Atomic64 *var, memory_order order);
 long long Swap64(long long val, struct Atomic64 *var, memory_order order);
 long long Add64(long long increment, struct Atomic64 *var, memory_order order);
 long long Sub64(long long increment, struct Atomic64 *var, memory_order order);
