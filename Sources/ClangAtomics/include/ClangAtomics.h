@@ -23,6 +23,7 @@ struct RawPointer
   volatile atomic_uintptr_t a;
 };
 
+void InitRawPtr(const void* val, struct RawPointer *ptr);
 void* ReadRawPtr(struct RawPointer *ptr, memory_order order);
 void StoreRawPtr(const void* val, struct RawPointer *ptr, memory_order order);
 void* SwapRawPtr(const void* val, struct RawPointer *ptr, memory_order order);
@@ -36,6 +37,7 @@ struct AtomicWord
   volatile atomic_long a;
 };
 
+void InitWord(long val, struct AtomicWord *var);
 long ReadWord(struct AtomicWord *var, memory_order order);
 void StoreWord(long val, struct AtomicWord *var, memory_order order);
 long SwapWord(long val, struct AtomicWord *var, memory_order order);
@@ -54,6 +56,7 @@ struct Atomic32
   volatile atomic_int a;
 };
 
+void Init32(int val, struct Atomic32 *var);
 int Read32(struct Atomic32 *var, memory_order order);
 void Store32(int val, struct Atomic32 *var, memory_order order);
 int Swap32(int val, struct Atomic32 *var, memory_order order);
@@ -72,6 +75,7 @@ struct Atomic64
   volatile atomic_llong a;
 };
 
+void Init64(long long val, struct Atomic64 *var);
 long long Read64(struct Atomic64 *var, memory_order order);
 void Store64(long long val, struct Atomic64 *var, memory_order order);
 long long Swap64(long long val, struct Atomic64 *var, memory_order order);

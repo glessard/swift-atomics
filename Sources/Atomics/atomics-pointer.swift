@@ -14,7 +14,7 @@ public struct AtomicMutableRawPointer
   @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeMutableRawPointer? = nil)
   {
-    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
+    InitRawPtr(pointer, &ptr)
   }
 
   public var pointer: UnsafeMutableRawPointer? {
@@ -66,7 +66,7 @@ public struct AtomicRawPointer
   @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeRawPointer? = nil)
   {
-    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
+    InitRawPtr(pointer, &ptr)
   }
 
   public var pointer: UnsafeRawPointer? {
@@ -118,7 +118,7 @@ public struct AtomicMutablePointer<Pointee>
   @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
-    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
+    InitRawPtr(pointer, &ptr)
   }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
@@ -170,7 +170,7 @@ public struct AtomicPointer<Pointee>
   @_versioned internal var ptr = RawPointer()
   public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
-    StoreRawPtr(pointer, &ptr, memory_order_relaxed)
+    InitRawPtr(pointer, &ptr)
   }
 
   public var pointer: UnsafePointer<Pointee>? {
@@ -222,7 +222,7 @@ public struct AtomicOpaquePointer
   @_versioned internal var ptr = RawPointer()
   public init(_ pointer: OpaquePointer? = nil)
   {
-    StoreRawPtr(UnsafeRawPointer(pointer), &ptr, memory_order_relaxed)
+    InitRawPtr(UnsafeRawPointer(pointer), &ptr)
   }
 
   public var pointer: OpaquePointer? {

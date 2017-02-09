@@ -15,7 +15,7 @@ public struct AtomicInt
   @_versioned internal var val = AtomicWord()
   public init(_ value: Int = 0)
   {
-    StoreWord(value, &val, memory_order_relaxed)
+    InitWord(value, &val)
   }
 
   public var value: Int {
@@ -107,7 +107,7 @@ public struct AtomicUInt
   @_versioned internal var val = AtomicWord()
   public init(_ value: UInt = 0)
   {
-    StoreWord(unsafeBitCast(value, to: Int.self), &val, memory_order_relaxed)
+    InitWord(unsafeBitCast(value, to: Int.self), &val)
   }
 
   public var value: UInt {
@@ -201,7 +201,7 @@ public struct AtomicInt32
   @_versioned internal var val = Atomic32()
   public init(_ value: Int32 = 0)
   {
-    Store32(value, &val, memory_order_relaxed)
+    Init32(value, &val)
   }
 
   public var value: Int32 {
@@ -293,7 +293,7 @@ public struct AtomicUInt32
   @_versioned internal var val = Atomic32()
   public init(_ value: UInt32 = 0)
   {
-    Store32(unsafeBitCast(value, to: Int32.self), &val, memory_order_relaxed)
+    Init32(unsafeBitCast(value, to: Int32.self), &val)
   }
 
   public var value: UInt32 {
@@ -387,7 +387,7 @@ public struct AtomicInt64
   @_versioned internal var val = Atomic64()
   public init(_ value: Int64 = 0)
   {
-    Store64(value, &val, memory_order_relaxed)
+    Init64(value, &val)
   }
 
   public var value: Int64 {
@@ -479,7 +479,7 @@ public struct AtomicUInt64
   @_versioned internal var val = Atomic64()
   public init(_ value: UInt64 = 0)
   {
-    Store64(unsafeBitCast(value, to: Int64.self), &val, memory_order_relaxed)
+    Init64(unsafeBitCast(value, to: Int64.self), &val)
   }
 
   public var value: UInt64 {

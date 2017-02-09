@@ -15,6 +15,11 @@
 
 // pointer
 
+void InitRawPtr(const void* val, struct RawPointer *ptr)
+{
+  atomic_init(&(ptr->a), (uintptr_t)val);
+}
+
 void* ReadRawPtr(struct RawPointer *ptr, memory_order order)
 {
   return (void*) atomic_load_explicit(&(ptr->a), order);
@@ -41,6 +46,11 @@ _Bool WeakCASRawPtr(void** current, const void* future, struct RawPointer *ptr, 
 }
 
 // pointer-sized integer
+
+void InitWord(long val, struct AtomicWord *ptr)
+{
+  atomic_init(&(ptr->a), val);
+}
 
 long ReadWord(struct AtomicWord *ptr, memory_order order)
 {
@@ -94,6 +104,11 @@ _Bool WeakCASWord(long* current, long future, struct AtomicWord *ptr, memory_ord
 
 // 32-bit integer
 
+void Init32(int val, struct Atomic32 *ptr)
+{
+  atomic_init(&(ptr->a), val);
+}
+
 int Read32(struct Atomic32 *ptr, memory_order order)
 {
   return atomic_load_explicit(&(ptr->a), order);
@@ -145,6 +160,11 @@ _Bool WeakCAS32(int* current, int future, struct Atomic32 *ptr, memory_order suc
 }
 
 // 64-bit integer
+
+void Init64(long long val, struct Atomic64 *ptr)
+{
+  atomic_init(&(ptr->a), val);
+}
 
 long long Read64(struct Atomic64 *ptr, memory_order order)
 {
