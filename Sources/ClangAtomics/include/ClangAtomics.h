@@ -83,4 +83,8 @@ long long And64(long long bits, struct Atomic64 *var, memory_order order);
 _Bool CAS64(long long* current, long long future, struct Atomic64 *var, memory_order succ, memory_order fail);
 _Bool WeakCAS64(long long* current, long long future, struct Atomic64 *var, memory_order succ, memory_order fail);
 
+// fence
+
+void ThreadFence(memory_order order);
+
 #endif
