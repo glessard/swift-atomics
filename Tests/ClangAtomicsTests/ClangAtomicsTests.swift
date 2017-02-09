@@ -12,7 +12,7 @@ import Dispatch
   import func Glibc.random
 #endif
 
-let iterations = 200_000//_000
+private let iterations = 200_000//_000
 
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
