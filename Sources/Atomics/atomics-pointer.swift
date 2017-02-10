@@ -45,19 +45,31 @@ extension AtomicMutableRawPointer
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
+                               future: UnsafeMutableRawPointer?,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafeMutableRawPointer?, future: UnsafeMutableRawPointer?,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .sequential) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeRawPointer(current)
-    switch type {
-    case .strong:
-      return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -97,19 +109,28 @@ extension AtomicRawPointer
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: UnsafeRawPointer?, future: UnsafeRawPointer?,
-                           type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer?>,
+                               future: UnsafeRawPointer?,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = current
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
     switch type {
     case .strong:
-      return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+      return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
+      return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
     }
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: UnsafeRawPointer?, future: UnsafeRawPointer?,
+                           type: CASType = .weak,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -149,19 +170,31 @@ extension AtomicMutablePointer
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutablePointer<Pointee>?>,
+                               future: UnsafeMutablePointer<Pointee>?,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafeMutablePointer<Pointee>?, future: UnsafeMutablePointer<Pointee>?,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .sequential) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeRawPointer(current)
-    switch type {
-    case .strong:
-      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -201,19 +234,31 @@ extension AtomicPointer
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafePointer<Pointee>?>,
+                               future: UnsafePointer<Pointee>?,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UnsafePointer<Pointee>?, future: UnsafePointer<Pointee>?,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .sequential) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeRawPointer(current)
-    switch type {
-    case .strong:
-      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -251,18 +296,30 @@ extension AtomicOpaquePointer
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer?>,
+                               future: OpaquePointer?,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CASRawPtr(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCASRawPtr(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: OpaquePointer?, future: OpaquePointer?,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .sequential,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .sequential) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeRawPointer(current)
-    switch type {
-    case .strong:
-      return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
