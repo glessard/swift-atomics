@@ -27,8 +27,8 @@ void InitRawPtr(const void* val, struct RawPointer *ptr);
 void* ReadRawPtr(struct RawPointer *ptr, memory_order order);
 void StoreRawPtr(const void* val, struct RawPointer *ptr, memory_order order);
 void* SwapRawPtr(const void* val, struct RawPointer *ptr, memory_order order);
-_Bool CASRawPtr(void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail);
-_Bool WeakCASRawPtr(void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail);
+_Bool CASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail);
+_Bool WeakCASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail);
 
 // pointer-sized integer
 

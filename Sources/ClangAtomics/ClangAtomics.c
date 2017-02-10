@@ -35,12 +35,12 @@ void* SwapRawPtr(const void* val, struct RawPointer *ptr, memory_order order)
   return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
 }
 
-_Bool CASRawPtr(void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
+_Bool CASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
 }
 
-_Bool WeakCASRawPtr(void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
+_Bool WeakCASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
 {
   return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
 }

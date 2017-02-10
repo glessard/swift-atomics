@@ -51,7 +51,7 @@ extension AtomicMutableRawPointer
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeMutableRawPointer(current)
+    var expect = UnsafeRawPointer(current)
     switch type {
     case .strong:
       return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
@@ -103,7 +103,7 @@ extension AtomicRawPointer
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeMutableRawPointer(mutating: current)
+    var expect = current
     switch type {
     case .strong:
       return CASRawPtr(&expect, future, &ptr, orderSuccess.order, orderFailure.order)
@@ -155,7 +155,7 @@ extension AtomicMutablePointer
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeMutableRawPointer(current)
+    var expect = UnsafeRawPointer(current)
     switch type {
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
@@ -207,7 +207,7 @@ extension AtomicPointer
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeMutableRawPointer(mutating: current)
+    var expect = UnsafeRawPointer(current)
     switch type {
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
@@ -257,7 +257,7 @@ extension AtomicOpaquePointer
                            orderFailure: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = UnsafeMutableRawPointer(current)
+    var expect = UnsafeRawPointer(current)
     switch type {
     case .strong:
       return CASRawPtr(&expect, UnsafePointer(future), &ptr, orderSuccess.order, orderFailure.order)
