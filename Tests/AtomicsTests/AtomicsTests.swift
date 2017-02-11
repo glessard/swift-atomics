@@ -48,13 +48,8 @@ class AtomicsTests: XCTestCase
       ("testOr", testOr),
       ("testXor", testXor),
       ("testAnd", testAnd),
-      ("testPerformanceRead", testPerformanceRead),
-      ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
-      ("testPerformanceStore", testPerformanceStore),
-      ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
-      ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
-      ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
       ("testBool", testBool),
+      ("testFence", testFence),
       ("testExample", testExample),
     ]
   }
@@ -98,11 +93,16 @@ class AtomicsTests: XCTestCase
     XCTAssert(boolean.swap(true) == false)
 
     boolean.CAS(current: true, future: false)
-    if boolean.CAS(current: false, future: true)
+    if boolean.CAS(current: false, future: true, type: .strong)
     {
       boolean.CAS(current: true, future: false, type: .weak)
       boolean.CAS(current: false, future: true, type: .weak)
     }
+  }
+
+  func testFence()
+  {
+    ThreadFence()
   }
 
   func testLoad()
@@ -554,70 +554,234 @@ class AtomicsTests: XCTestCase
   {
     var randInt = AtomicInt(Int(nzRandom()))
     let storInt = Int(nzRandom())
-    XCTAssert(randInt.CAS(current: 0, future: randInt.value) == false)
-    XCTAssert(randInt.CAS(current: randInt.value, future: storInt, type: .weak))
+    var currInt = Int()
+    XCTAssert(randInt.loadCAS(current: &currInt, future: randInt.value) == false)
+    XCTAssert(randInt.CAS(current: currInt, future: storInt, type: .strong))
     XCTAssert(randInt.value == storInt)
 
     var randUInt = AtomicUInt(UInt(nzRandom()))
     let storUInt = UInt(nzRandom())
-    XCTAssert(randUInt.CAS(current: 0, future: randUInt.value) == false)
-    XCTAssert(randUInt.CAS(current: randUInt.value, future: storUInt, type: .weak))
+    var currUInt = UInt()
+    XCTAssert(randUInt.loadCAS(current: &currUInt, future: randUInt.value) == false)
+    XCTAssert(randUInt.CAS(current: currUInt, future: storUInt, type: .strong))
     XCTAssert(randUInt.value == storUInt)
 
     var randInt32 = AtomicInt32(Int32(nzRandom()))
     let storInt32 = Int32(nzRandom())
-    XCTAssert(randInt32.CAS(current: 0, future: randInt32.value) == false)
-    XCTAssert(randInt32.CAS(current: randInt32.value, future: storInt32, type: .weak))
+    var currInt32 = Int32()
+    XCTAssert(randInt32.loadCAS(current: &currInt32, future: randInt32.value) == false)
+    XCTAssert(randInt32.CAS(current: currInt32, future: storInt32, type: .strong))
     XCTAssert(randInt32.value == storInt32)
 
     var randUInt32 = AtomicUInt32(UInt32(nzRandom()))
     let storUInt32 = UInt32(nzRandom())
-    XCTAssert(randUInt32.CAS(current: 0, future: randUInt32.value) == false)
-    XCTAssert(randUInt32.CAS(current: randUInt32.value, future: storUInt32, type: .weak))
+    var currUInt32 = UInt32()
+    XCTAssert(randUInt32.loadCAS(current: &currUInt32, future: randUInt32.value) == false)
+    XCTAssert(randUInt32.CAS(current: currUInt32, future: storUInt32, type: .strong))
     XCTAssert(randUInt32.value == storUInt32)
 
     var randInt64 = AtomicInt64(Int64(nzRandom()))
     let storInt64 = Int64(nzRandom())
-    XCTAssert(randInt64.CAS(current: 0, future: randInt64.value) == false)
-    XCTAssert(randInt64.CAS(current: randInt64.value, future: storInt64, type: .weak))
+    var currInt64 = Int64()
+    XCTAssert(randInt64.loadCAS(current: &currInt64, future: randInt64.value) == false)
+    XCTAssert(randInt64.CAS(current: currInt64, future: storInt64, type: .strong))
     XCTAssert(randInt64.value == storInt64)
 
     var randUInt64 = AtomicUInt64(UInt64(nzRandom()))
     let storUInt64 = UInt64(nzRandom())
-    XCTAssert(randUInt64.CAS(current: 0, future: randUInt64.value) == false)
-    XCTAssert(randUInt64.CAS(current: randUInt64.value, future: storUInt64, type: .weak))
+    var currUInt64 = UInt64()
+    XCTAssert(randUInt64.loadCAS(current: &currUInt64, future: randUInt64.value) == false)
+    XCTAssert(randUInt64.CAS(current: currUInt64, future: storUInt64, type: .strong))
     XCTAssert(randUInt64.value == storUInt64)
 
     var randRPtr = AtomicRawPointer(UnsafeRawPointer(bitPattern: nzRandom()))
     let storRPtr = UnsafeRawPointer(bitPattern: nzRandom())
-    XCTAssert(randRPtr.CAS(current: nil, future: randRPtr.pointer) == false)
-    XCTAssert(randRPtr.CAS(current: randRPtr.pointer, future: storRPtr, type: .weak))
+    var currRPtr: UnsafeRawPointer? = nil
+    XCTAssert(randRPtr.loadCAS(current: &currRPtr, future: randRPtr.pointer) == false)
+    XCTAssert(randRPtr.CAS(current: currRPtr, future: storRPtr, type: .strong))
     XCTAssert(randRPtr.pointer == storRPtr)
 
     var randMRPtr = AtomicMutableRawPointer(UnsafeMutableRawPointer(bitPattern: nzRandom()))
     let storMRPtr = UnsafeMutableRawPointer(bitPattern: nzRandom())
-    XCTAssert(randMRPtr.CAS(current: nil, future: randMRPtr.pointer) == false)
-    XCTAssert(randMRPtr.CAS(current: randMRPtr.pointer, future: storMRPtr, type: .weak))
+    var currMRPtr: UnsafeMutableRawPointer? = nil
+    XCTAssert(randMRPtr.loadCAS(current: &currMRPtr, future: randMRPtr.pointer) == false)
+    XCTAssert(randMRPtr.CAS(current: currMRPtr, future: storMRPtr, type: .strong))
     XCTAssert(randMRPtr.pointer == storMRPtr)
 
     var randPtr = AtomicPointer(UnsafePointer<Point>(bitPattern: nzRandom()))
     let storPtr = UnsafePointer<Point>(bitPattern: nzRandom())
-    XCTAssert(randPtr.CAS(current: nil, future: randPtr.pointer) == false)
-    XCTAssert(randPtr.CAS(current: randPtr.pointer, future: storPtr, type: .weak))
+    var currPtr: UnsafePointer<Point>? = nil
+    XCTAssert(randPtr.loadCAS(current: &currPtr, future: randPtr.pointer) == false)
+    XCTAssert(randPtr.CAS(current: currPtr, future: storPtr, type: .strong))
     XCTAssert(randPtr.pointer == storPtr)
 
     var randMutPtr = AtomicMutablePointer(UnsafeMutablePointer<Point>(bitPattern: nzRandom()))
     let storMutPtr = UnsafeMutablePointer<Point>(bitPattern: nzRandom())
-    XCTAssert(randMutPtr.CAS(current: nil, future: randMutPtr.pointer) == false)
-    XCTAssert(randMutPtr.CAS(current: randMutPtr.pointer, future: storMutPtr, type: .weak))
+    var currMutPtr: UnsafeMutablePointer<Point>? = nil
+    XCTAssert(randMutPtr.loadCAS(current: &currMutPtr, future: randMutPtr.pointer) == false)
+    XCTAssert(randMutPtr.CAS(current: currMutPtr, future: storMutPtr, type: .strong))
     XCTAssert(randMutPtr.pointer == storMutPtr)
 
     var randOPtr = AtomicOpaquePointer(OpaquePointer(bitPattern: nzRandom()))
     let storOPtr = OpaquePointer(bitPattern: nzRandom())
-    XCTAssert(randOPtr.CAS(current: nil, future: randOPtr.pointer) == false)
-    XCTAssert(randOPtr.CAS(current: randOPtr.pointer, future: storOPtr, type: .weak))
+    var currOPtr: OpaquePointer? = nil
+    XCTAssert(randOPtr.loadCAS(current: &currOPtr, future: randOPtr.pointer) == false)
+    XCTAssert(randOPtr.CAS(current: currOPtr, future: storOPtr, type: .strong))
     XCTAssert(randOPtr.pointer == storOPtr)
   }
+
+  private struct TestStruct
+  {
+    var a = AtomicInt(0)
+    var b = AtomicInt(1)
+    var c = AtomicInt(2)
+    var d = AtomicInt(3)
+
+    mutating func print()
+    {
+      Swift.print("\(a.value) \(b.value) \(c.value) \(d.value)")
+    }
+  }
+
+  func testExample()
+  {
+    var value = AtomicInt(0)
+
+    print(value.swap(1))
+    print(value.value)
+    value.store(2)
+    print(value.value)
+    print("")
+
+    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
+    print(p.pointer!)
+
+    var q = AtomicMutablePointer(p.load())
+    let r = q.swap(UnsafeMutablePointer<Int>.allocate(capacity: 1))
+    p.store(q.pointer)
+
+    print(q.pointer!)
+    print(r!)
+    print(p.pointer!)
+    print("")
+
+    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.allocate(capacity: 1))
+
+    print(pp.pointer!)
+
+    var qq = AtomicPointer(pp.load())
+    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1)))
+    pp.store(qq.pointer)
+
+    print(qq.pointer!)
+    print(rr!)
+    print(pp.pointer!)
+    print("")
+
+    var i = AtomicInt32(Int32(nzRandom()))
+    print(i.value)
+
+    var j = AtomicInt32(i.load())
+    let k = j.swap(Int32(nzRandom()), order: .acqrel)
+    i.store(j.value)
+
+    print(j.value)
+    print(k)
+    print(i.value)
+    print("")
+
+    var ii = AtomicInt64(Int64(nzRandom()))
+    print(ii.value)
+
+    var jj = AtomicInt64(ii.load())
+    let kk = jj.swap(numericCast(nzRandom()))
+    ii.store(jj.value)
+
+    print(jj.value)
+    print(kk)
+    print(ii.value)
+    print("")
+
+    var start = Date()
+    var dt = Date().timeIntervalSince(start)
+    let iterations = 1_000_000
+
+    start = Date()
+    for _ in 1...iterations
+    {
+      value.store(numericCast(nzRandom()))
+    }
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
+
+    start = Date()
+    for _ in 1...iterations
+    {
+      value.store(numericCast(nzRandom()))
+    }
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
+
+    start = Date()
+    for _ in 1...iterations
+    {
+      value.store(numericCast(nzRandom()))
+    }
+    dt = Date().timeIntervalSince(start)
+    print(Int(1e9*dt/Double(iterations)))
+    print("")
+
+    var t = TestStruct()
+    t.print()
+
+    t.c.store(4)
+
+    let g = DispatchGroup()
+    DispatchQueue.global().async(group: g) {
+      t.print()
+      let v = t.a.swap(5)
+      usleep(1000)
+      t.b.store(v, order: .sequential)
+    }
+
+    usleep(500)
+    t.print()
+    g.wait()
+    t.print()
+
+    print("")
+    let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
+    pt.pointee = TestStruct()
+    pt.pointee.print()
+
+    pt.pointee.c.store(4)
+
+    DispatchQueue.global().async(group: g) {
+      pt.pointee.print()
+      let v = pt.pointee.a.swap(5)
+      usleep(1000)
+      pt.pointee.b.store(v, order: .sequential)
+    }
+
+    usleep(500)
+    pt.pointee.print()
+    g.wait()
+    pt.pointee.print()
+    
+    pt.deallocate(capacity: 1)
+  }
+}
+
+class AtomicsPerformanceTests: XCTestCase
+{
+  static var allTests = [
+    ("testPerformanceRead", testPerformanceRead),
+    ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
+    ("testPerformanceStore", testPerformanceStore),
+    ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
+    ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
+    ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
+  ]
 
   let testLoopCount = 1_000_000
 
@@ -704,145 +868,4 @@ class AtomicsTests: XCTestCase
     }
   }
 #endif
-
-  private struct TestStruct
-  {
-    var a = AtomicInt(0)
-    var b = AtomicInt(1)
-    var c = AtomicInt(2)
-    var d = AtomicInt(3)
-
-    mutating func print()
-    {
-      Swift.print("\(a.value) \(b.value) \(c.value) \(d.value)")
-    }
-  }
-
-  func testExample()
-  {
-    var value = AtomicInt(0)
-
-    print(value.swap(1))
-    print(value.value)
-    value.store(2)
-    print(value.value)
-    print("")
-
-    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-    print(p.pointer!)
-
-    var q = AtomicMutablePointer(p.load())
-    let r = q.swap(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-    p.store(q.pointer)
-
-    print(q.pointer!)
-    print(r!)
-    print(p.pointer!)
-    print("")
-
-    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-
-    print(pp.pointer!)
-
-    var qq = AtomicPointer(pp.load())
-    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1)))
-    pp.store(qq.pointer)
-
-    print(qq.pointer!)
-    print(rr!)
-    print(pp.pointer!)
-    print("")
-
-    var i = AtomicInt32(Int32(nzRandom()))
-    print(i.value)
-
-    var j = AtomicInt32(i.load())
-    let k = j.swap(Int32(nzRandom()))
-    i.store(j.value)
-
-    print(j.value)
-    print(k)
-    print(i.value)
-    print("")
-
-    var ii = AtomicInt64(Int64(nzRandom()))
-    print(ii.value)
-
-    var jj = AtomicInt64(ii.load())
-    let kk = jj.swap(numericCast(nzRandom()))
-    ii.store(jj.value)
-
-    print(jj.value)
-    print(kk)
-    print(ii.value)
-    print("")
-
-    var start = Date()
-    var dt = Date().timeIntervalSince(start)
-    let iterations = 1_000_000
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-    print("")
-
-    var t = TestStruct()
-    t.print()
-
-    t.c.store(4)
-
-    let g = DispatchGroup()
-    DispatchQueue.global().async(group: g) {
-      t.print()
-      let v = t.a.swap(5)
-      usleep(1000)
-      t.b.store(v, order: .sequential)
-    }
-
-    usleep(500)
-    t.print()
-    g.wait()
-    t.print()
-
-    print("")
-    let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
-    pt.pointee = TestStruct()
-    pt.pointee.print()
-
-    pt.pointee.c.store(4)
-
-    DispatchQueue.global().async(group: g) {
-      pt.pointee.print()
-      let v = pt.pointee.a.swap(5)
-      usleep(1000)
-      pt.pointee.b.store(v, order: .sequential)
-    }
-
-    usleep(500)
-    pt.pointee.print()
-    g.wait()
-    pt.pointee.print()
-
-    pt.deallocate(capacity: 1)
-  }
 }

@@ -86,19 +86,27 @@ extension AtomicInt
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int, future: Int,
-                           type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int>, future: Int,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = current
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
     switch type {
     case .strong:
-      return CASWord(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return CASWord(current, future, &val, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCASWord(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCASWord(current, future, &val, orderSwap.order, orderLoad.order)
     }
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: Int, future: Int,
+                           type: CASType = .weak,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -178,19 +186,30 @@ extension AtomicUInt
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt>, future: UInt,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Int.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CASWord(current, unsafeBitCast(future, to: Int.self), &val, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCASWord(current, unsafeBitCast(future, to: Int.self), &val, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UInt, future: UInt,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = unsafeBitCast(current, to: Int.self)
-    switch type {
-    case .strong:
-      return CASWord(&expect, unsafeBitCast(future, to: Int.self), &val, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCASWord(&expect, unsafeBitCast(future, to: Int.self), &val, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -272,19 +291,27 @@ extension AtomicInt32
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int32, future: Int32,
-                           type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int32>, future: Int32,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = current
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
     switch type {
     case .strong:
-      return CAS32(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return CAS32(current, future, &val, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCAS32(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS32(current, future, &val, orderSwap.order, orderLoad.order)
     }
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: Int32, future: Int32,
+                           type: CASType = .weak,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -364,19 +391,30 @@ extension AtomicUInt32
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt32>, future: UInt32,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Int32.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CAS32(current, unsafeBitCast(future, to: Int32.self), &val, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCAS32(current, unsafeBitCast(future, to: Int32.self), &val, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UInt32, future: UInt32,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = unsafeBitCast(current, to: Int32.self)
-    switch type {
-    case .strong:
-      return CAS32(&expect, unsafeBitCast(future, to: Int32.self), &val, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCAS32(&expect, unsafeBitCast(future, to: Int32.self), &val, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -458,19 +496,27 @@ extension AtomicInt64
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Int64, future: Int64,
-                           type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int64>, future: Int64,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = current
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
     switch type {
     case .strong:
-      return CAS64(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return CAS64(current, future, &val, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCAS64(&expect, future, &val, orderSuccess.order, orderFailure.order)
+      return WeakCAS64(current, future, &val, orderSwap.order, orderLoad.order)
     }
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: Int64, future: Int64,
+                           type: CASType = .weak,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
 
@@ -550,18 +596,29 @@ extension AtomicUInt64
   }
 
   @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt64>, future: UInt64,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    return current.withMemoryRebound(to: Int64.self, capacity: 1) {
+      current in
+      switch type {
+      case .strong:
+        return CAS64(current, unsafeBitCast(future, to: Int64.self), &val, orderSwap.order, orderLoad.order)
+      case .weak:
+        return WeakCAS64(current, unsafeBitCast(future, to: Int64.self), &val, orderSwap.order, orderLoad.order)
+      }
+    }
+  }
+
+  @inline(__always) @discardableResult
   public mutating func CAS(current: UInt64, future: UInt64,
                            type: CASType = .weak,
-                           orderSuccess: MemoryOrder = .relaxed,
-                           orderFailure: LoadMemoryOrder = .relaxed) -> Bool
+                           order: MemoryOrder = .relaxed) -> Bool
   {
-    assert(orderFailure.rawValue <= orderSuccess.rawValue)
-    var expect = unsafeBitCast(current, to: Int64.self)
-    switch type {
-    case .strong:
-      return CAS64(&expect, unsafeBitCast(future, to: Int64.self), &val, orderSuccess.order, orderFailure.order)
-    case .weak:
-      return WeakCAS64(&expect, unsafeBitCast(future, to: Int64.self), &val, orderSuccess.order, orderFailure.order)
-    }
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
