@@ -133,8 +133,8 @@ class AtomicsRaceTests: XCTestCase
         var c = p.pointer
         while true
         {
-          if p.loadCAS(current: &c, future: nil, type: .weak, orderSwap: .release, orderLoad: .consume),
-            let c = c
+          if p.loadCAS(current: &c, future: nil, type: .weak, orderSwap: .release, orderLoad: .acquire),
+             let c = c
           {
             c.deallocate(capacity: 1)
           }
@@ -162,7 +162,7 @@ class AtomicsRaceTests: XCTestCase
       let closure = {
         while true
         {
-          if let c = p.swap(nil, order: .consume)
+          if let c = p.swap(nil, order: .acquire)
           {
             c.deallocate(capacity: 1)
           }
