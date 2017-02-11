@@ -6,5 +6,6 @@ XCTMain([
   testCase(ClangAtomicsTests.allTests),
   testCase(ClangAtomicsRaceTests.allTests),
   testCase(AtomicsTests.allTests),
+  testCase(AtomicsPerformanceTests.allTests),
   testCase(AtomicsRaceTests.raceTests),
 ])

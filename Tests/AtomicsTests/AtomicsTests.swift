@@ -48,13 +48,8 @@ class AtomicsTests: XCTestCase
       ("testOr", testOr),
       ("testXor", testXor),
       ("testAnd", testAnd),
-      ("testPerformanceRead", testPerformanceRead),
-      ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
-      ("testPerformanceStore", testPerformanceStore),
-      ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
-      ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
-      ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
       ("testBool", testBool),
+      ("testFence", testFence),
       ("testExample", testExample),
     ]
   }
@@ -635,92 +630,6 @@ class AtomicsTests: XCTestCase
     XCTAssert(randOPtr.pointer == storOPtr)
   }
 
-  let testLoopCount = 1_000_000
-
-  func testPerformanceStore()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for i in 0..<c { m.store(i, order: .relaxed) }
-    }
-  }
-
-  func testPerformanceSynchronizedStore()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for i in 0..<c { m.store(i, order: .sequential) }
-    }
-  }
-
-  func testPerformanceRead()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for _ in 0..<c { _ = m.load(order: .relaxed) }
-    }
-  }
-
-  func testPerformanceSynchronizedRead()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for _ in 0..<c { _ = m.load(order: .sequential) }
-    }
-  }
-
-  func testPerformanceSwiftCASSuccess()
-  {
-    let c = Int32(testLoopCount)
-    var m = AtomicInt32(0)
-    measure {
-      m.store(0)
-      for i in (m.value)..<c { m.CAS(current: i, future: i+1) }
-    }
-  }
-
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-  func testPerformanceOSAtomicCASSuccess()
-  {
-    let c = Int32(testLoopCount)
-    var m = Int32(0)
-    measure {
-      m = 0
-      for i in m..<c { OSAtomicCompareAndSwap32(i, i+1, &m) }
-    }
-  }
-#endif
-
-  func testPerformanceSwiftCASFailure()
-  {
-    let c = Int32(testLoopCount)
-    var m = AtomicInt32(0)
-    measure {
-      m.store(0)
-      for i in (m.value)..<c { m.CAS(current: i, future: 0) }
-    }
-  }
-
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-  func testPerformanceOSAtomicCASFailure()
-  {
-    let c = Int32(testLoopCount)
-    var m = Int32(0)
-    measure {
-      m = 0
-      for i in m..<c { OSAtomicCompareAndSwap32(i, 0, &m) }
-    }
-  }
-#endif
-
   private struct TestStruct
   {
     var a = AtomicInt(0)
@@ -858,7 +767,105 @@ class AtomicsTests: XCTestCase
     pt.pointee.print()
     g.wait()
     pt.pointee.print()
-
+    
     pt.deallocate(capacity: 1)
   }
+}
+
+class AtomicsPerformanceTests: XCTestCase
+{
+  static var allTests = [
+    ("testPerformanceRead", testPerformanceRead),
+    ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
+    ("testPerformanceStore", testPerformanceStore),
+    ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
+    ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
+    ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
+  ]
+
+  let testLoopCount = 1_000_000
+
+  func testPerformanceStore()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for i in 0..<c { m.store(i, order: .relaxed) }
+    }
+  }
+
+  func testPerformanceSynchronizedStore()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for i in 0..<c { m.store(i, order: .sequential) }
+    }
+  }
+
+  func testPerformanceRead()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for _ in 0..<c { _ = m.load(order: .relaxed) }
+    }
+  }
+
+  func testPerformanceSynchronizedRead()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for _ in 0..<c { _ = m.load(order: .sequential) }
+    }
+  }
+
+  func testPerformanceSwiftCASSuccess()
+  {
+    let c = Int32(testLoopCount)
+    var m = AtomicInt32(0)
+    measure {
+      m.store(0)
+      for i in (m.value)..<c { m.CAS(current: i, future: i+1) }
+    }
+  }
+
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+  func testPerformanceOSAtomicCASSuccess()
+  {
+    let c = Int32(testLoopCount)
+    var m = Int32(0)
+    measure {
+      m = 0
+      for i in m..<c { OSAtomicCompareAndSwap32(i, i+1, &m) }
+    }
+  }
+#endif
+
+  func testPerformanceSwiftCASFailure()
+  {
+    let c = Int32(testLoopCount)
+    var m = AtomicInt32(0)
+    measure {
+      m.store(0)
+      for i in (m.value)..<c { m.CAS(current: i, future: 0) }
+    }
+  }
+
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+  func testPerformanceOSAtomicCASFailure()
+  {
+    let c = Int32(testLoopCount)
+    var m = Int32(0)
+    measure {
+      m = 0
+      for i in m..<c { OSAtomicCompareAndSwap32(i, 0, &m) }
+    }
+  }
+#endif
 }
