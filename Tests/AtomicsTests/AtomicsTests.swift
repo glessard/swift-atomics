@@ -35,24 +35,22 @@ func nzRandom() -> UInt
 
 class AtomicsTests: XCTestCase
 {
-  static var allTests: [(String, (AtomicsTests) -> () throws -> Void)] {
-    return [
-      ("testLoad", testLoad),
-      ("testStore", testStore),
-      ("testSwap", testSwap),
-      ("testCAS", testCAS),
-      ("testAdd", testAdd),
-      ("testSub", testSub),
-      ("testIncrement", testIncrement),
-      ("testDecrement", testDecrement),
-      ("testOr", testOr),
-      ("testXor", testXor),
-      ("testAnd", testAnd),
-      ("testBool", testBool),
-      ("testFence", testFence),
-      ("testExample", testExample),
-    ]
-  }
+  static var allTests = [
+    ("testLoad", testLoad),
+    ("testStore", testStore),
+    ("testSwap", testSwap),
+    ("testCAS", testCAS),
+    ("testAdd", testAdd),
+    ("testSub", testSub),
+    ("testIncrement", testIncrement),
+    ("testDecrement", testDecrement),
+    ("testOr", testOr),
+    ("testXor", testXor),
+    ("testAnd", testAnd),
+    ("testBool", testBool),
+    ("testFence", testFence),
+    ("testExample", testExample),
+  ]
 
   func testBool()
   {

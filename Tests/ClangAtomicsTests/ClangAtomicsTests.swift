@@ -31,11 +31,9 @@ import ClangAtomics
 
 class ClangAtomicsTests: XCTestCase
 {
-  static var allTests: [(String, (ClangAtomicsTests) -> () throws -> Void)] {
-    return [
-      ("testTest", testTest),
-    ]
-  }
+  static var allTests = [
+    ("testTest", testTest),
+  ]
 
   func testTest()
   {
@@ -51,11 +49,9 @@ class ClangAtomicsTests: XCTestCase
 
 class ClangAtomicsRaceTests: XCTestCase
 {
-  static var allTests: [(String, (ClangAtomicsRaceTests) -> () throws -> Void)] {
-    return [
-      ("testRaceSpinLock", testRaceSpinLock),
-    ]
-  }
+  static var allTests = [
+    ("testRaceSpinLock", testRaceSpinLock),
+  ]
 
   func testRaceSpinLock()
   {
