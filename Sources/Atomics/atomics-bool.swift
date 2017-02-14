@@ -17,6 +17,7 @@ public struct AtomicBool
   }
 
   public var value: Bool {
+    @inline(__always)
     mutating get { return Read32(&val, memory_order_relaxed) != 0 }
   }
 }
