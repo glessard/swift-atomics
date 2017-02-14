@@ -163,13 +163,13 @@ extension AtomicMutablePointer
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(UnsafePointer(pointer), &ptr, order.order)
+    StoreRawPtr(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return SwapRawPtr(UnsafePointer(pointer), &ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
+    return SwapRawPtr(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
   }
 
   @inline(__always) @discardableResult
@@ -234,7 +234,7 @@ extension AtomicPointer
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer(SwapRawPtr(UnsafePointer(pointer), &ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
+    return UnsafePointer(SwapRawPtr(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
   }
 
   @inline(__always) @discardableResult
