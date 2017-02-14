@@ -19,6 +19,7 @@ public struct AtomicInt
   }
 
   public var value: Int {
+    @inline(__always)
     mutating get { return ReadWord(&val, memory_order_relaxed) }
   }
 }
@@ -119,6 +120,7 @@ public struct AtomicUInt
   }
 
   public var value: UInt {
+    @inline(__always)
     mutating get { return unsafeBitCast(ReadWord(&val, memory_order_relaxed), to: UInt.self) }
   }
 }
@@ -224,6 +226,7 @@ public struct AtomicInt32
   }
 
   public var value: Int32 {
+    @inline(__always)
     mutating get { return Read32(&val, memory_order_relaxed) }
   }
 }
@@ -324,6 +327,7 @@ public struct AtomicUInt32
   }
 
   public var value: UInt32 {
+    @inline(__always)
     mutating get { return unsafeBitCast(Read32(&val, memory_order_relaxed), to: UInt32.self) }
   }
 }
@@ -429,6 +433,7 @@ public struct AtomicInt64
   }
 
   public var value: Int64 {
+    @inline(__always)
     mutating get { return Read64(&val, memory_order_relaxed) }
   }
 }
@@ -529,6 +534,7 @@ public struct AtomicUInt64
   }
 
   public var value: UInt64 {
+    @inline(__always)
     mutating get { return unsafeBitCast(Read64(&val, memory_order_relaxed), to: UInt64.self) }
   }
 }

@@ -18,6 +18,7 @@ public struct AtomicMutableRawPointer
   }
 
   public var pointer: UnsafeMutableRawPointer? {
+    @inline(__always)
     mutating get {
       return ReadRawPtr(&ptr, memory_order_relaxed)
     }
@@ -82,6 +83,7 @@ public struct AtomicRawPointer
   }
 
   public var pointer: UnsafeRawPointer? {
+    @inline(__always)
     mutating get {
       return UnsafeRawPointer(ReadRawPtr(&ptr, memory_order_relaxed))
     }
@@ -143,6 +145,7 @@ public struct AtomicMutablePointer<Pointee>
   }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
+    @inline(__always)
     mutating get {
       return ReadRawPtr(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
@@ -207,6 +210,7 @@ public struct AtomicPointer<Pointee>
   }
 
   public var pointer: UnsafePointer<Pointee>? {
+    @inline(__always)
     mutating get {
       return UnsafePointer(ReadRawPtr(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self))
     }
@@ -271,7 +275,10 @@ public struct AtomicOpaquePointer
   }
 
   public var pointer: OpaquePointer? {
-    mutating get { return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed)) }
+    @inline(__always)
+    mutating get {
+      return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed))
+    }
   }
 }
 
