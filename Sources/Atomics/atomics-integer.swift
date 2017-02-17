@@ -116,12 +116,12 @@ public struct AtomicUInt
   @_versioned internal var val = AtomicWord()
   public init(_ value: UInt = 0)
   {
-    InitWord(unsafeBitCast(value, to: Int.self), &val)
+    InitWord(Int(bitPattern: value), &val)
   }
 
   public var value: UInt {
     @inline(__always)
-    mutating get { return unsafeBitCast(ReadWord(&val, memory_order_relaxed), to: UInt.self) }
+    mutating get { return UInt(bitPattern: ReadWord(&val, memory_order_relaxed)) }
   }
 }
 
@@ -130,61 +130,61 @@ extension AtomicUInt
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(ReadWord(&val, order.order), to: UInt.self)
+    return UInt(bitPattern: ReadWord(&val, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    StoreWord(unsafeBitCast(value, to: Int.self), &val, order.order)
+    StoreWord(Int(bitPattern: value), &val, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(SwapWord(unsafeBitCast(value, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: SwapWord(Int(bitPattern: value), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(AddWord(unsafeBitCast(delta, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: AddWord(Int(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(AddWord(1, &val, order.order), to: UInt.self)
+    return UInt(bitPattern: AddWord(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(SubWord(unsafeBitCast(delta, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: SubWord(Int(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(SubWord(1, &val, order.order), to: UInt.self)
+    return UInt(bitPattern: SubWord(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(OrWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: OrWord(Int(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(XorWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: XorWord(Int(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits:UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return unsafeBitCast(AndWord(unsafeBitCast(bits, to: Int.self), &val, order.order), to: UInt.self)
+    return UInt(bitPattern: AndWord(Int(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -198,9 +198,9 @@ extension AtomicUInt
       current in
       switch type {
       case .strong:
-        return CASWord(current, unsafeBitCast(future, to: Int.self), &val, orderSwap.order, orderLoad.order)
+        return CASWord(current, Int(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCASWord(current, unsafeBitCast(future, to: Int.self), &val, orderSwap.order, orderLoad.order)
+        return WeakCASWord(current, Int(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       }
     }
   }
@@ -323,12 +323,12 @@ public struct AtomicUInt32
   @_versioned internal var val = Atomic32()
   public init(_ value: UInt32 = 0)
   {
-    Init32(unsafeBitCast(value, to: Int32.self), &val)
+    Init32(Int32(bitPattern: value), &val)
   }
 
   public var value: UInt32 {
     @inline(__always)
-    mutating get { return unsafeBitCast(Read32(&val, memory_order_relaxed), to: UInt32.self) }
+    mutating get { return UInt32(bitPattern: Read32(&val, memory_order_relaxed)) }
   }
 }
 
@@ -337,61 +337,61 @@ extension AtomicUInt32
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Read32(&val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Read32(&val, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
-    Store32(unsafeBitCast(value, to: Int32.self), &val, order.order)
+    Store32(Int32(bitPattern: value), &val, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Swap32(unsafeBitCast(value, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Swap32(Int32(bitPattern: value), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Add32(unsafeBitCast(delta, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Add32(Int32(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Add32(1, &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Add32(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Sub32(unsafeBitCast(delta, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Sub32(Int32(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Sub32(1, &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Sub32(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits:UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Or32(unsafeBitCast(bits, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Or32(Int32(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits:UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(Xor32(unsafeBitCast(bits, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: Xor32(Int32(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits:UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return unsafeBitCast(And32(unsafeBitCast(bits, to: Int32.self), &val, order.order), to: UInt32.self)
+    return UInt32(bitPattern: And32(Int32(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -405,9 +405,9 @@ extension AtomicUInt32
       current in
       switch type {
       case .strong:
-        return CAS32(current, unsafeBitCast(future, to: Int32.self), &val, orderSwap.order, orderLoad.order)
+        return CAS32(current, Int32(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCAS32(current, unsafeBitCast(future, to: Int32.self), &val, orderSwap.order, orderLoad.order)
+        return WeakCAS32(current, Int32(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       }
     }
   }
@@ -530,12 +530,12 @@ public struct AtomicUInt64
   @_versioned internal var val = Atomic64()
   public init(_ value: UInt64 = 0)
   {
-    Init64(unsafeBitCast(value, to: Int64.self), &val)
+    Init64(Int64(bitPattern: value), &val)
   }
 
   public var value: UInt64 {
     @inline(__always)
-    mutating get { return unsafeBitCast(Read64(&val, memory_order_relaxed), to: UInt64.self) }
+    mutating get { return UInt64(bitPattern: Read64(&val, memory_order_relaxed)) }
   }
 }
 
@@ -544,61 +544,61 @@ extension AtomicUInt64
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Read64(&val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Read64(&val, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    Store64(unsafeBitCast(value, to: Int64.self), &val, order.order)
+    Store64(Int64(bitPattern: value), &val, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Swap64(unsafeBitCast(value, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Swap64(Int64(bitPattern: value), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Add64(unsafeBitCast(delta, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Add64(Int64(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Add64(1, &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Add64(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Sub64(unsafeBitCast(delta, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Sub64(Int64(bitPattern: delta), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Sub64(1, &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Sub64(1, &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Or64(unsafeBitCast(bits, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Or64(Int64(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(Xor64(unsafeBitCast(bits, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: Xor64(Int64(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return unsafeBitCast(And64(unsafeBitCast(bits, to: Int64.self), &val, order.order), to: UInt64.self)
+    return UInt64(bitPattern: And64(Int64(bitPattern: bits), &val, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -612,9 +612,9 @@ extension AtomicUInt64
       current in
       switch type {
       case .strong:
-        return CAS64(current, unsafeBitCast(future, to: Int64.self), &val, orderSwap.order, orderLoad.order)
+        return CAS64(current, Int64(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCAS64(current, unsafeBitCast(future, to: Int64.self), &val, orderSwap.order, orderLoad.order)
+        return WeakCAS64(current, Int64(bitPattern: future), &val, orderSwap.order, orderLoad.order)
       }
     }
   }
