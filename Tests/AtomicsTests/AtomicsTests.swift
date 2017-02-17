@@ -829,7 +829,7 @@ class AtomicsPerformanceTests: XCTestCase
     var m = AtomicInt32(0)
     measure {
       m.store(0)
-      for i in (m.value)..<c { m.CAS(current: i, future: i+1) }
+      for i in (m.value)..<c { m.CAS(current: i, future: i&+1) }
     }
   }
 
@@ -840,7 +840,7 @@ class AtomicsPerformanceTests: XCTestCase
     var m = Int32(0)
     measure {
       m = 0
-      for i in m..<c { OSAtomicCompareAndSwap32(i, i+1, &m) }
+      for i in m..<c { OSAtomicCompareAndSwap32(i, i&+1, &m) }
     }
   }
 #endif
