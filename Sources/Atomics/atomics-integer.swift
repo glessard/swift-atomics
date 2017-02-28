@@ -93,6 +93,7 @@ extension AtomicInt
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
       return CASWord(current, future, &val, orderSwap.order, orderLoad.order)
@@ -194,6 +195,7 @@ extension AtomicUInt
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     return current.withMemoryRebound(to: Int.self, capacity: 1) {
       current in
       switch type {
@@ -300,6 +302,7 @@ extension AtomicInt32
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
       return CAS32(current, future, &val, orderSwap.order, orderLoad.order)
@@ -401,6 +404,7 @@ extension AtomicUInt32
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     return current.withMemoryRebound(to: Int32.self, capacity: 1) {
       current in
       switch type {
@@ -507,6 +511,7 @@ extension AtomicInt64
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
       return CAS64(current, future, &val, orderSwap.order, orderLoad.order)
@@ -608,6 +613,7 @@ extension AtomicUInt64
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     return current.withMemoryRebound(to: Int64.self, capacity: 1) {
       current in
       switch type {

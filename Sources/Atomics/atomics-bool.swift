@@ -63,15 +63,18 @@ extension AtomicBool
   @inline(__always) @discardableResult
   public mutating func CAS(current: Bool, future: Bool,
                            type: CASType = .weak,
-                           order: MemoryOrder = .relaxed) -> Bool
+                           orderSwap: MemoryOrder = .relaxed,
+                           orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
+    assert(orderLoad.rawValue <= orderSwap.rawValue)
+    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     var expect: Int32 = current ? 1 : 0
     let future: Int32 = future  ? 1 : 0
     switch type {
     case .strong:
-      return CAS32(&expect, future, &val, order.order, order.order)
+      return CAS32(&expect, future, &val, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCAS32(&expect, future, &val, order.order, order.order)
+      return WeakCAS32(&expect, future, &val, orderSwap.order, orderLoad.order)
     }
   }
 }
