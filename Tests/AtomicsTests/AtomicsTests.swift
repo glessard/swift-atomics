@@ -454,7 +454,7 @@ class AtomicsTests: XCTestCase
   {
     ThreadFence()
   }
-  
+
   func testRawPointer()
   {
     var i = AtomicRawPointer()
@@ -575,7 +575,7 @@ class AtomicsTests: XCTestCase
     XCTAssert(rando == value)
     r3.deallocate(capacity: 1)
   }
-  
+
   func testOpaquePointer()
   {
     var i = AtomicOpaquePointer()
@@ -740,7 +740,7 @@ class AtomicsTests: XCTestCase
     pt.pointee.print()
     g.wait()
     pt.pointee.print()
-    
+
     pt.deallocate(capacity: 1)
   }
 }
