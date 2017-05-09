@@ -9,6 +9,15 @@
 #ifndef clang_atomics_h
 #define clang_atomics_h
 
+#if !__has_feature(nullability)
+#ifndef _Nullable
+#define _Nullable
+#endif
+#ifndef _Nonnull
+#define _Nonnull
+#endif
+#endif
+
 #include <stdatomic.h>
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
