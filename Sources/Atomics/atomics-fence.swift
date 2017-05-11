@@ -8,7 +8,7 @@
 
 import ClangAtomics
 
-public func ThreadFence(order: MemoryOrder = .sequential)
+public func threadFence(order: MemoryOrder = .sequential)
 {
   ThreadFence(order.order)
 }

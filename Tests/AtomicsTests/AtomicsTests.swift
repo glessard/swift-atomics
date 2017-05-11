@@ -452,7 +452,8 @@ class AtomicsTests: XCTestCase
 
   func testFence()
   {
-    ThreadFence()
+    threadFence()
+    threadFence(order: .sequential)
   }
 
   func testRawPointer()
