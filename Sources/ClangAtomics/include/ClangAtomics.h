@@ -27,17 +27,48 @@
 
 // pointer
 
-struct RawPointer
+typedef struct
 {
   volatile atomic_uintptr_t a;
-};
+} AtomicVoidPointer;
 
-void InitRawPtr(const void* _Nullable val,  struct RawPointer* _Nonnull ptr);
-void* _Nullable ReadRawPtr(struct RawPointer* _Nonnull ptr, memory_order order);
-void StoreRawPtr(const void* _Nullable val, struct RawPointer* _Nonnull ptr, memory_order order);
-void* _Nullable SwapRawPtr(const void* _Nullable val, struct RawPointer* _Nonnull ptr, memory_order order);
-_Bool CASRawPtr(const void* _Nullable* _Nonnull current, const void* _Nullable future, struct RawPointer* _Nonnull ptr, memory_order succ, memory_order fail);
-_Bool WeakCASRawPtr(const void* _Nullable* _Nonnull current, const void* _Nullable future, struct RawPointer* _Nonnull ptr, memory_order succ, memory_order fail);
+static __inline__ __attribute__((__always_inline__))
+void AtomicPointerInit(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr)
+{
+  atomic_init(&(ptr->a), (uintptr_t)val);
+}
+
+static __inline__ __attribute__((__always_inline__))
+void* _Nullable AtomicPointerLoad(AtomicVoidPointer* _Nonnull ptr, memory_order order)
+{
+  return (void*) atomic_load_explicit(&(ptr->a), order);
+}
+
+static __inline__ __attribute__((__always_inline__))
+void AtomicPointerStore(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, memory_order order)
+{
+  atomic_store_explicit(&(ptr->a), (uintptr_t)val, order);
+}
+
+static __inline__ __attribute__((__always_inline__))
+void* _Nullable AtomicPointerSwap(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, memory_order order)
+{
+  return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
+}
+
+static __inline__ __attribute__((__always_inline__))
+_Bool AtomicPointerStrongCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
+                             memory_order succ, memory_order fail)
+{
+  return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
+}
+
+static __inline__ __attribute__((__always_inline__))
+_Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
+                           memory_order succ, memory_order fail)
+{
+  return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
+}
 
 // pointer-sized integer
 

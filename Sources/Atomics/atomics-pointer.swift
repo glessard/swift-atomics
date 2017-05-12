@@ -11,16 +11,16 @@ import ClangAtomics
 
 public struct AtomicMutableRawPointer
 {
-  @_versioned internal var ptr = RawPointer()
+  @_versioned internal var ptr = AtomicVoidPointer()
   public init(_ pointer: UnsafeMutableRawPointer? = nil)
   {
-    InitRawPtr(pointer, &ptr)
+    AtomicPointerInit(pointer, &ptr)
   }
 
   public var pointer: UnsafeMutableRawPointer? {
     @inline(__always)
     mutating get {
-      return ReadRawPtr(&ptr, memory_order_relaxed)
+      return AtomicPointerLoad(&ptr, memory_order_relaxed)
     }
   }
 }
@@ -30,19 +30,19 @@ extension AtomicMutableRawPointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutableRawPointer?
   {
-    return ReadRawPtr(&ptr, order.order)
+    return AtomicPointerLoad(&ptr, order.order)
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutableRawPointer?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(pointer, &ptr, order.order)
+    AtomicPointerStore(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutableRawPointer?, order: MemoryOrder = .sequential) -> UnsafeMutableRawPointer?
   {
-    return SwapRawPtr(pointer, &ptr, order.order)
+    return AtomicPointerSwap(pointer, &ptr, order.order)
   }
 
   @inline(__always) @discardableResult
@@ -58,9 +58,9 @@ extension AtomicMutableRawPointer
       current in
       switch type {
       case .strong:
-        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerStrongCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerWeakCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       }
     }
   }
@@ -77,16 +77,16 @@ extension AtomicMutableRawPointer
 
 public struct AtomicRawPointer
 {
-  @_versioned internal var ptr = RawPointer()
+  @_versioned internal var ptr = AtomicVoidPointer()
   public init(_ pointer: UnsafeRawPointer? = nil)
   {
-    InitRawPtr(pointer, &ptr)
+    AtomicPointerInit(pointer, &ptr)
   }
 
   public var pointer: UnsafeRawPointer? {
     @inline(__always)
     mutating get {
-      return UnsafeRawPointer(ReadRawPtr(&ptr, memory_order_relaxed))
+      return UnsafeRawPointer(AtomicPointerLoad(&ptr, memory_order_relaxed))
     }
   }
 }
@@ -96,19 +96,19 @@ extension AtomicRawPointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeRawPointer?
   {
-    return UnsafeRawPointer(ReadRawPtr(&ptr, order.order))
+    return UnsafeRawPointer(AtomicPointerLoad(&ptr, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafeRawPointer?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(pointer, &ptr, order.order)
+    AtomicPointerStore(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeRawPointer?, order: MemoryOrder = .sequential) -> UnsafeRawPointer?
   {
-    return UnsafeRawPointer(SwapRawPtr(pointer, &ptr, order.order))
+    return UnsafeRawPointer(AtomicPointerSwap(pointer, &ptr, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -122,9 +122,9 @@ extension AtomicRawPointer
     assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
-      return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      return AtomicPointerStrongCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+      return AtomicPointerWeakCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
     }
   }
 
@@ -140,16 +140,16 @@ extension AtomicRawPointer
 
 public struct AtomicMutablePointer<Pointee>
 {
-  @_versioned internal var ptr = RawPointer()
+  @_versioned internal var ptr = AtomicVoidPointer()
   public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
-    InitRawPtr(pointer, &ptr)
+    AtomicPointerInit(pointer, &ptr)
   }
 
   public var pointer: UnsafeMutablePointer<Pointee>? {
     @inline(__always)
     mutating get {
-      return ReadRawPtr(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self)
+      return AtomicPointerLoad(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
   }
 }
@@ -159,19 +159,19 @@ extension AtomicMutablePointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return ReadRawPtr(&ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
+    return AtomicPointerLoad(&ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(pointer, &ptr, order.order)
+    AtomicPointerStore(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return SwapRawPtr(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
+    return AtomicPointerSwap(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self)
   }
 
   @inline(__always) @discardableResult
@@ -187,9 +187,9 @@ extension AtomicMutablePointer
       current in
       switch type {
       case .strong:
-        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerStrongCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerWeakCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       }
     }
   }
@@ -206,16 +206,16 @@ extension AtomicMutablePointer
 
 public struct AtomicPointer<Pointee>
 {
-  @_versioned internal var ptr = RawPointer()
+  @_versioned internal var ptr = AtomicVoidPointer()
   public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
-    InitRawPtr(pointer, &ptr)
+    AtomicPointerInit(pointer, &ptr)
   }
 
   public var pointer: UnsafePointer<Pointee>? {
     @inline(__always)
     mutating get {
-      return UnsafePointer(ReadRawPtr(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self))
+      return UnsafePointer(AtomicPointerLoad(&ptr, memory_order_relaxed)?.assumingMemoryBound(to: Pointee.self))
     }
   }
 }
@@ -225,19 +225,19 @@ extension AtomicPointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer(ReadRawPtr(&ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
+    return UnsafePointer(AtomicPointerLoad(&ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
   }
 
   @inline(__always)
   public mutating func store(_ pointer: UnsafePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(pointer, &ptr, order.order)
+    AtomicPointerStore(pointer, &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer(SwapRawPtr(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
+    return UnsafePointer(AtomicPointerSwap(pointer, &ptr, order.order)?.assumingMemoryBound(to: Pointee.self))
   }
 
   @inline(__always) @discardableResult
@@ -253,9 +253,9 @@ extension AtomicPointer
       current in
       switch type {
       case .strong:
-        return CASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerStrongCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCASRawPtr(current, future, &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerWeakCAS(current, future, &ptr, orderSwap.order, orderLoad.order)
       }
     }
   }
@@ -272,16 +272,16 @@ extension AtomicPointer
 
 public struct AtomicOpaquePointer
 {
-  @_versioned internal var ptr = RawPointer()
+  @_versioned internal var ptr = AtomicVoidPointer()
   public init(_ pointer: OpaquePointer? = nil)
   {
-    InitRawPtr(UnsafeRawPointer(pointer), &ptr)
+    AtomicPointerInit(UnsafeRawPointer(pointer), &ptr)
   }
 
   public var pointer: OpaquePointer? {
     @inline(__always)
     mutating get {
-      return OpaquePointer(ReadRawPtr(&ptr, memory_order_relaxed))
+      return OpaquePointer(AtomicPointerLoad(&ptr, memory_order_relaxed))
     }
   }
 }
@@ -291,19 +291,19 @@ extension AtomicOpaquePointer
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> OpaquePointer?
   {
-    return OpaquePointer(ReadRawPtr(&ptr, order.order))
+    return OpaquePointer(AtomicPointerLoad(&ptr, order.order))
   }
 
   @inline(__always)
   public mutating func store(_ pointer: OpaquePointer?, order: StoreMemoryOrder = .sequential)
   {
-    StoreRawPtr(UnsafePointer(pointer), &ptr, order.order)
+    AtomicPointerStore(UnsafePointer(pointer), &ptr, order.order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: OpaquePointer?, order: MemoryOrder = .sequential) -> OpaquePointer?
   {
-    return OpaquePointer(SwapRawPtr(UnsafePointer(pointer), &ptr, order.order))
+    return OpaquePointer(AtomicPointerSwap(UnsafePointer(pointer), &ptr, order.order))
   }
 
   @inline(__always) @discardableResult
@@ -319,9 +319,9 @@ extension AtomicOpaquePointer
       current in
       switch type {
       case .strong:
-        return CASRawPtr(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerStrongCAS(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
       case .weak:
-        return WeakCASRawPtr(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
+        return AtomicPointerWeakCAS(current, UnsafePointer(future), &ptr, orderSwap.order, orderLoad.order)
       }
     }
   }

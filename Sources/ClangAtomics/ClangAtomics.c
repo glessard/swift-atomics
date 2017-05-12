@@ -13,38 +13,6 @@
 //      http://en.cppreference.com/w/c/atomic
 //      http://en.cppreference.com/w/c/atomic/atomic_compare_exchange
 
-// pointer
-
-void InitRawPtr(const void* val, struct RawPointer *ptr)
-{
-  atomic_init(&(ptr->a), (uintptr_t)val);
-}
-
-void* ReadRawPtr(struct RawPointer *ptr, memory_order order)
-{
-  return (void*) atomic_load_explicit(&(ptr->a), order);
-}
-
-void StoreRawPtr(const void* val, struct RawPointer *ptr, memory_order order)
-{
-  atomic_store_explicit(&(ptr->a), (uintptr_t)val, order);
-}
-
-void* SwapRawPtr(const void* val, struct RawPointer *ptr, memory_order order)
-{
-  return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
-}
-
-_Bool CASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
-{
-  return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
-}
-
-_Bool WeakCASRawPtr(const void** current, const void* future, struct RawPointer *ptr, memory_order succ, memory_order fail)
-{
-  return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
-}
-
 // pointer-sized integer
 
 void InitWord(long val, struct AtomicWord *ptr)
