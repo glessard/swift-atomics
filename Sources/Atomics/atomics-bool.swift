@@ -18,7 +18,7 @@ public struct AtomicBool
 
   public var value: Bool {
     @inline(__always)
-    mutating get { return AtomicBooleanLoad(&val, memory_order_relaxed) }
+    mutating get { return AtomicBooleanLoad(&val, .relaxed) }
   }
 }
 
@@ -27,37 +27,37 @@ extension AtomicBool
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanLoad(&val, order.order)
+    return AtomicBooleanLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    AtomicBooleanStore(value, &val, order.order)
+    AtomicBooleanStore(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanSwap(value, &val, order.order)
+    return AtomicBooleanSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanOr(value, &val, order.order)
+    return AtomicBooleanOr(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanXor(value, &val, order.order)
+    return AtomicBooleanXor(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanAnd(value, &val, order.order)
+    return AtomicBooleanAnd(value, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -71,9 +71,9 @@ extension AtomicBool
     var expect = current
     switch type {
     case .strong:
-      return AtomicBooleanStrongCAS(&expect, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicBooleanStrongCAS(&expect, future, &val, orderSwap, orderLoad)
     case .weak:
-      return AtomicBooleanWeakCAS(&expect, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicBooleanWeakCAS(&expect, future, &val, orderSwap, orderLoad)
     }
   }
 }

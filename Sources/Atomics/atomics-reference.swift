@@ -25,7 +25,7 @@ extension AtomicReference
   public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
   {
     let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    if let pointer = AtomicPointerSwap(u, &ptr, order.order)
+    if let pointer = AtomicPointerSwap(u, &ptr, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }
@@ -37,7 +37,7 @@ extension AtomicReference
   {
     let u = Unmanaged.passUnretained(ref)
     var null: UnsafeRawPointer? = nil
-    if AtomicPointerStrongCAS(&null, u.toOpaque(), &ptr, order.order, memory_order_relaxed)
+    if AtomicPointerStrongCAS(&null, u.toOpaque(), &ptr, order, .relaxed)
     {
       _ = u.retain()
       return true
@@ -48,7 +48,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func take(order: MemoryOrder = .sequential) -> T?
   {
-    if let pointer = AtomicPointerSwap(nil, &ptr, order.order)
+    if let pointer = AtomicPointerSwap(nil, &ptr, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }

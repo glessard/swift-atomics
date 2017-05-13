@@ -18,7 +18,7 @@ public struct AtomicInt
 
   public var value: Int {
     @inline(__always)
-    mutating get { return AtomicWordLoad(&val, memory_order_relaxed) }
+    mutating get { return AtomicWordLoad(&val, .relaxed) }
   }
 }
 
@@ -27,61 +27,61 @@ extension AtomicInt
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordLoad(&val, order.order)
+    return AtomicWordLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    AtomicWordStore(value, &val, order.order)
+    AtomicWordStore(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordSwap(value, &val, order.order)
+    return AtomicWordSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordAdd(delta, &val, order.order)
+    return AtomicWordAdd(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordAdd(1, &val, order.order)
+    return AtomicWordAdd(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordSub(delta, &val, order.order)
+    return AtomicWordSub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordSub(1, &val, order.order)
+    return AtomicWordSub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordOr(bits, &val, order.order)
+    return AtomicWordOr(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordXor(bits, &val, order.order)
+    return AtomicWordXor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return AtomicWordAnd(bits, &val, order.order)
+    return AtomicWordAnd(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -94,9 +94,9 @@ extension AtomicInt
     assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
-      return AtomicWordStrongCAS(current, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicWordStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return AtomicWordWeakCAS(current, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicWordWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
