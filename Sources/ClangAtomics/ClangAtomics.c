@@ -183,10 +183,3 @@ _Bool WeakCAS64(long long* current, long long future, struct Atomic64 *ptr, memo
 {
   return atomic_compare_exchange_weak_explicit(&(ptr->a), current, future, succ, fail);
 }
-
-// fence
-
-void ThreadFence(memory_order order)
-{
-  atomic_thread_fence(order);
-}

@@ -129,6 +129,10 @@ _Bool WeakCAS64(long long* _Nullable current, long long future, struct Atomic64*
 
 // fence
 
-void ThreadFence(memory_order order);
+static __inline__ __attribute__((__always_inline__))
+void ThreadFence(memory_order order)
+{
+  atomic_thread_fence(order);
+}
 
 #endif
