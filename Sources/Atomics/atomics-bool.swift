@@ -10,15 +10,15 @@ import ClangAtomics
 
 public struct AtomicBool
 {
-  @_versioned internal var val = Atomic32()
+  @_versioned internal var val = AtomicBoolean()
   public init(_ value: Bool = false)
   {
-    Init32(value ? 1 : 0, &val)
+    AtomicBoolInit(value, &val)
   }
 
   public var value: Bool {
     @inline(__always)
-    mutating get { return Read32(&val, memory_order_relaxed) != 0 }
+    mutating get { return AtomicBoolLoad(&val, memory_order_relaxed) }
   }
 }
 
@@ -27,37 +27,37 @@ extension AtomicBool
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed)-> Bool
   {
-    return Read32(&val, order.order) != 0
+    return AtomicBoolLoad(&val, order.order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    Store32(value ? 1 : 0, &val, order.order)
+    AtomicBoolStore(value, &val, order.order)
   }
 
   @inline(__always) @discardableResult
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Swap32(value ? 1 : 0, &val, order.order) != 0
+    return AtomicBoolSwap(value, &val, order.order)
   }
 
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Or32(value ? 1 : 0, &val, order.order) != 0
+    return AtomicBoolOr(value, &val, order.order)
   }
 
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return Xor32(value ? 1 : 0, &val, order.order) != 0
+    return AtomicBoolXor(value, &val, order.order)
   }
 
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return And32(value ? 1 : 0, &val, order.order) != 0
+    return AtomicBoolAnd(value, &val, order.order)
   }
 
   @inline(__always) @discardableResult
@@ -68,13 +68,12 @@ extension AtomicBool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
     assert(orderSwap == .release ? orderLoad == .relaxed : true)
-    var expect: Int32 = current ? 1 : 0
-    let future: Int32 = future  ? 1 : 0
+    var expect = current
     switch type {
     case .strong:
-      return CAS32(&expect, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicBoolStrongCAS(&expect, future, &val, orderSwap.order, orderLoad.order)
     case .weak:
-      return WeakCAS32(&expect, future, &val, orderSwap.order, orderLoad.order)
+      return AtomicBoolWeakCAS(&expect, future, &val, orderSwap.order, orderLoad.order)
     }
   }
 }
