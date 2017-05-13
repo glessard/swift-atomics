@@ -27,29 +27,31 @@
 
 // memory order
 
-typedef enum
+#define CF_ENUM(_name) enum _name
+
+typedef CF_ENUM(MemoryOrder)
 {
-  clang_atomics_memory_order_relaxed = __ATOMIC_RELAXED,
-//clang_atomics_memory_order_consume = __ATOMIC_CONSUME,
-  clang_atomics_memory_order_acquire = __ATOMIC_ACQUIRE,
-  clang_atomics_memory_order_release = __ATOMIC_RELEASE,
-  clang_atomics_memory_order_acq_rel = __ATOMIC_ACQ_REL,
-  clang_atomics_memory_order_seq_cst = __ATOMIC_SEQ_CST
+  MemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  // MemoryOrder_consume = __ATOMIC_CONSUME,
+  MemoryOrder_acquire =    __ATOMIC_ACQUIRE,
+  MemoryOrder_release =    __ATOMIC_RELEASE,
+  MemoryOrder_acqrel  =    __ATOMIC_ACQ_REL,
+  MemoryOrder_sequential = __ATOMIC_SEQ_CST
 } MemoryOrder;
 
-typedef enum
+typedef CF_ENUM(LoadMemoryOrder)
 {
-  clang_atomics_load_memory_order_relaxed = __ATOMIC_RELAXED,
-//clang_atomics_load_memory_order_consume = __ATOMIC_CONSUME,
-  clang_atomics_load_memory_order_acquire = __ATOMIC_ACQUIRE,
-  clang_atomics_load_memory_order_seq_cst = __ATOMIC_SEQ_CST
+  LoadMemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  // LoadMemoryOrder_consume = __ATOMIC_CONSUME,
+  LoadMemoryOrder_acquire =    __ATOMIC_ACQUIRE,
+  LoadMemoryOrder_sequential = __ATOMIC_SEQ_CST
 } LoadMemoryOrder;
 
-typedef enum
+typedef CF_ENUM(StoreMemoryOrder)
 {
-  clang_atomics_store_memory_order_relaxed = __ATOMIC_RELAXED,
-  clang_atomics_store_memory_order_release = __ATOMIC_RELEASE,
-  clang_atomics_store_memory_order_seq_cst = __ATOMIC_SEQ_CST
+  StoreMemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  StoreMemoryOrder_release =    __ATOMIC_RELEASE,
+  StoreMemoryOrder_sequential = __ATOMIC_SEQ_CST
 } StoreMemoryOrder;
 
 // pointer

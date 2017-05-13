@@ -38,12 +38,13 @@ class ClangAtomicsTests: XCTestCase
   func testTest()
   {
     var i = AtomicWord()
-    AtomicWordStore(0, &i, clang_atomics_store_memory_order_relaxed)
-    XCTAssert(AtomicWordLoad(&i, clang_atomics_load_memory_order_relaxed) == 0)
+    AtomicWordInit(randomPositive(), &i)
+    AtomicWordStore(0, &i, .relaxed)
+    XCTAssert(AtomicWordLoad(&i, .relaxed) == 0)
 
     let r = randomPositive()
-    AtomicWordStore(r, &i, clang_atomics_store_memory_order_relaxed)
-    XCTAssert(AtomicWordLoad(&i, clang_atomics_load_memory_order_relaxed) == r)
+    AtomicWordStore(r, &i, .relaxed)
+    XCTAssert(AtomicWordLoad(&i, .relaxed) == r)
   }
 }
 
@@ -61,14 +62,14 @@ class ClangAtomicsRaceTests: XCTestCase
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
       var lock = AtomicWord()
-      AtomicWordStore(0, &lock, clang_atomics_store_memory_order_relaxed)
+      AtomicWordStore(0, &lock, .relaxed)
       let closure = {
         while true
         {
           var current = 0
-          if AtomicWordWeakCAS(&current, 1, &lock, clang_atomics_memory_order_seq_cst, clang_atomics_load_memory_order_relaxed)
+          if AtomicWordWeakCAS(&current, 1, &lock, .sequential, .relaxed)
           {
-            defer { AtomicWordStore(0, &lock, clang_atomics_store_memory_order_seq_cst) }
+            defer { AtomicWordStore(0, &lock, .sequential) }
             if let c = p
             {
               p = nil
