@@ -73,73 +73,73 @@ _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* 
 // integer atomics generation
 
 #define CLANG_ATOMIC_STRUCT(sType, mType) \
-        typedef struct \
-        { \
-          volatile mType a; \
-        } sType;
+        typedef struct { volatile mType a; } sType;
 
-#define CLANG_ATOMIC_INIT(sType, sName, pType) \
+#define CLANG_ATOMIC_INIT(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        void Atomic##sName##Init(pType val, sType *_Nonnull ptr) \
-        { atomic_init(&(ptr->a), val); }
+        void sType##Init(pType value, sType *_Nonnull ptr) \
+        { atomic_init(&(ptr->a), value); }
 
-#define CLANG_ATOMIC_LOAD(sType, sName, pType) \
+#define CLANG_ATOMIC_LOAD(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        pType Atomic##sName##Load(sType *_Nonnull ptr, memory_order order) \
+        pType sType##Load(sType *_Nonnull ptr, memory_order order) \
         { return atomic_load_explicit(&(ptr->a), order); }
 
-#define CLANG_ATOMIC_STORE(sType, sName, pType) \
+#define CLANG_ATOMIC_STORE(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        void Atomic##sName##Store(pType val, sType *_Nonnull ptr, memory_order order) \
-        { atomic_store_explicit(&(ptr->a), val, order); }
+        void sType##Store(pType value, sType *_Nonnull ptr, memory_order order) \
+        { atomic_store_explicit(&(ptr->a), value, order); }
 
-#define CLANG_ATOMIC_SWAP(sType, sName, pType) \
+#define CLANG_ATOMIC_RMW(sType, pType, pName, op, opName) \
         static __inline__ __attribute__((__always_inline__)) \
-        pType Atomic##sName##Swap(pType val, sType *_Nonnull ptr, memory_order order) \
-        { return atomic_exchange_explicit(&(ptr->a), val, order); }
+        pType sType##opName(pType pName, sType *_Nonnull ptr, memory_order order) \
+        { return atomic_##op##_explicit(&(ptr->a), pName, order); }
 
-#define CLANG_ATOMIC_RMW(sType, sName, pType, pName, op, opName) \
+#define CLANG_ATOMIC_CAS(sType, pType, strength, strName) \
         static __inline__ __attribute__((__always_inline__)) \
-        pType Atomic##sName##opName(pType pName, sType *_Nonnull ptr, memory_order order) \
-        { return atomic_fetch_##op##_explicit(&(ptr->a), pName, order); }
+        _Bool sType##strName##CAS(pType *_Nonnull current, pType future, sType *_Nonnull ptr, \
+                                  memory_order succ, memory_order fail) \
+        { return atomic_compare_exchange_##strength##_explicit(&(ptr->a), current, future, succ, fail); }
 
-#define CLANG_ATOMIC_CAS(sType, sName, pType, str, strName) \
-        static __inline__ __attribute__((__always_inline__)) \
-        _Bool Atomic##sName##strName##CAS(pType *_Nonnull current, pType future, sType *_Nonnull ptr, \
-                                          memory_order succ, memory_order fail) \
-        { return atomic_compare_exchange_##str##_explicit(&(ptr->a), current, future, succ, fail); }
-
-#define CLANG_ATOMIC_GENERATE(sType, sName, pType) \
-        CLANG_ATOMIC_INIT(sType, sName, pType) \
-        CLANG_ATOMIC_LOAD(sType, sName, pType) \
-        CLANG_ATOMIC_STORE(sType, sName, pType) \
-        CLANG_ATOMIC_SWAP(sType, sName, pType) \
-        CLANG_ATOMIC_RMW(sType, sName, pType, increment, add, Add) \
-        CLANG_ATOMIC_RMW(sType, sName, pType, increment, sub, Sub) \
-        CLANG_ATOMIC_RMW(sType, sName, pType, bits, or, Or) \
-        CLANG_ATOMIC_RMW(sType, sName, pType, bits, xor, Xor) \
-        CLANG_ATOMIC_RMW(sType, sName, pType, bits, and, And) \
-        CLANG_ATOMIC_CAS(sType, sName, pType, strong, Strong) \
-        CLANG_ATOMIC_CAS(sType, sName, pType, weak, Weak)
+#define CLANG_ATOMIC_GENERATE(sType, pType) \
+        CLANG_ATOMIC_INIT(sType, pType) \
+        CLANG_ATOMIC_LOAD(sType, pType) \
+        CLANG_ATOMIC_STORE(sType, pType) \
+        CLANG_ATOMIC_RMW(sType, pType, value, exchange, Swap) \
+        CLANG_ATOMIC_RMW(sType, pType, increment, fetch_add, Add) \
+        CLANG_ATOMIC_RMW(sType, pType, increment, fetch_sub, Sub) \
+        CLANG_ATOMIC_RMW(sType, pType, bits, fetch_or, Or) \
+        CLANG_ATOMIC_RMW(sType, pType, bits, fetch_xor, Xor) \
+        CLANG_ATOMIC_RMW(sType, pType, bits, fetch_and, And) \
+        CLANG_ATOMIC_CAS(sType, pType, strong, Strong) \
+        CLANG_ATOMIC_CAS(sType, pType, weak, Weak)
 
 // integer atomics
 
 CLANG_ATOMIC_STRUCT(AtomicWord, atomic_long)
-CLANG_ATOMIC_GENERATE(AtomicWord, Word, long)
+CLANG_ATOMIC_GENERATE(AtomicWord, long)
 
 CLANG_ATOMIC_STRUCT(Atomic8, atomic_char)
-CLANG_ATOMIC_GENERATE(Atomic8, 8, char)
+CLANG_ATOMIC_GENERATE(Atomic8, char)
 
 CLANG_ATOMIC_STRUCT(Atomic32, atomic_int)
-CLANG_ATOMIC_GENERATE(Atomic32, 32, int)
+CLANG_ATOMIC_GENERATE(Atomic32, int)
 
 CLANG_ATOMIC_STRUCT(Atomic64, atomic_llong)
-CLANG_ATOMIC_GENERATE(Atomic64, 64, long long)
+CLANG_ATOMIC_GENERATE(Atomic64, long long)
 
 // bool atomics
 
 CLANG_ATOMIC_STRUCT(AtomicBoolean, atomic_bool)
-CLANG_ATOMIC_GENERATE(AtomicBoolean, Bool, _Bool)
+CLANG_ATOMIC_INIT(AtomicBoolean, _Bool)
+CLANG_ATOMIC_LOAD(AtomicBoolean, _Bool)
+CLANG_ATOMIC_STORE(AtomicBoolean, _Bool)
+CLANG_ATOMIC_RMW(AtomicBoolean, _Bool, value, exchange, Swap)
+CLANG_ATOMIC_RMW(AtomicBoolean, _Bool, value, fetch_or, Or)
+CLANG_ATOMIC_RMW(AtomicBoolean, _Bool, value, fetch_xor, Xor)
+CLANG_ATOMIC_RMW(AtomicBoolean, _Bool, value, fetch_and, And)
+CLANG_ATOMIC_CAS(AtomicBoolean, _Bool, strong, Strong)
+CLANG_ATOMIC_CAS(AtomicBoolean, _Bool, weak, Weak)
 
 // fence
 
