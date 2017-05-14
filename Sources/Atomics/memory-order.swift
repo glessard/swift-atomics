@@ -8,7 +8,7 @@
 
 import ClangAtomics
 
-public enum MemoryOrder: Int
+public enum MemoryOrder: UInt32
 {
   case relaxed = 0, /* consume, */ acquire = 2, release, acqrel, sequential
 
@@ -24,7 +24,7 @@ public enum MemoryOrder: Int
   }
 }
 
-public enum LoadMemoryOrder: Int
+public enum LoadMemoryOrder: UInt32
 {
   case relaxed = 0, /* consume, */ acquire = 2, sequential = 5
 
@@ -38,7 +38,7 @@ public enum LoadMemoryOrder: Int
   }
 }
 
-public enum StoreMemoryOrder: Int
+public enum StoreMemoryOrder: UInt32
 {
   case relaxed = 0, release = 3, sequential = 5
 

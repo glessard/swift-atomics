@@ -21,6 +21,7 @@
 		037B84271EC686F900F4B44B /* atomics-uint32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B84261EC686F900F4B44B /* atomics-uint32.swift */; };
 		037B84291EC68CB700F4B44B /* atomics-int64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B84281EC68CB700F4B44B /* atomics-int64.swift */; };
 		037B842B1EC68D8900F4B44B /* atomics-uint64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B842A1EC68D8900F4B44B /* atomics-uint64.swift */; };
+		037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */; };
 		03D6A82D1DF20AAB00F4B44B /* ClangAtomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A82B1DF20AAB00F4B44B /* ClangAtomics.c */; };
 		03D6A82F1DF20AAB00F4B44B /* ClangAtomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03D6A82C1DF20AAB00F4B44B /* ClangAtomics.h */; };
 		03D6A8371DF20AF700F4B44B /* atomics-bool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A8321DF20AF700F4B44B /* atomics-bool.swift */; };
@@ -86,6 +87,7 @@
 		037B84261EC686F900F4B44B /* atomics-uint32.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-uint32.swift"; path = "../../Sources/Atomics/atomics-uint32.swift"; sourceTree = "<group>"; };
 		037B84281EC68CB700F4B44B /* atomics-int64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-int64.swift"; path = "../../Sources/Atomics/atomics-int64.swift"; sourceTree = "<group>"; };
 		037B842A1EC68D8900F4B44B /* atomics-uint64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-uint64.swift"; path = "../../Sources/Atomics/atomics-uint64.swift"; sourceTree = "<group>"; };
+		037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemoryOrderTests.swift; path = ../../Tests/AtomicsTests/MemoryOrderTests.swift; sourceTree = "<group>"; };
 		03D6A82B1DF20AAB00F4B44B /* ClangAtomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ClangAtomics.c; path = ../../Sources/ClangAtomics/ClangAtomics.c; sourceTree = "<group>"; };
 		03D6A82C1DF20AAB00F4B44B /* ClangAtomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClangAtomics.h; path = ../../Sources/ClangAtomics/include/ClangAtomics.h; sourceTree = "<group>"; };
 		03D6A8321DF20AF700F4B44B /* atomics-bool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-bool.swift"; path = "../../Sources/Atomics/atomics-bool.swift"; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				03D6A8441DF20B3600F4B44B /* LinuxMain.swift */,
 				03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */,
 				03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */,
+				037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */,
 				03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */,
 				030111001B4B896700F4B44B /* Info.plist */,
 			);
@@ -422,6 +425,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03E976511DFB1E9600F4B44B /* RacetestsDispatch.swift in Sources */,
+				037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */,
 				03D6A8421DF20B2700F4B44B /* AtomicsTests.swift in Sources */,
 				03157DAE1E4C54AA00F4B44B /* ClangAtomicsTests.swift in Sources */,
 			);
