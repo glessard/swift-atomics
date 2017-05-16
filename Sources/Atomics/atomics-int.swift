@@ -11,6 +11,7 @@ import ClangAtomics
 public struct AtomicInt
 {
   @_versioned internal var val = AtomicWord()
+
   public init(_ value: Int = 0)
   {
     AtomicWordInit(value, &val)

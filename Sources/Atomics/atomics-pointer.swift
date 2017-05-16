@@ -12,6 +12,7 @@ import ClangAtomics
 public struct AtomicMutableRawPointer
 {
   @_versioned internal var ptr = AtomicVoidPointer()
+
   public init(_ pointer: UnsafeMutableRawPointer? = nil)
   {
     AtomicPointerInit(pointer, &ptr)
@@ -78,6 +79,7 @@ extension AtomicMutableRawPointer
 public struct AtomicRawPointer
 {
   @_versioned internal var ptr = AtomicVoidPointer()
+
   public init(_ pointer: UnsafeRawPointer? = nil)
   {
     AtomicPointerInit(pointer, &ptr)
@@ -141,6 +143,7 @@ extension AtomicRawPointer
 public struct AtomicMutablePointer<Pointee>
 {
   @_versioned internal var ptr = AtomicVoidPointer()
+
   public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
     AtomicPointerInit(pointer, &ptr)
@@ -207,6 +210,7 @@ extension AtomicMutablePointer
 public struct AtomicPointer<Pointee>
 {
   @_versioned internal var ptr = AtomicVoidPointer()
+
   public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
     AtomicPointerInit(pointer, &ptr)
@@ -273,6 +277,7 @@ extension AtomicPointer
 public struct AtomicOpaquePointer
 {
   @_versioned internal var ptr = AtomicVoidPointer()
+
   public init(_ pointer: OpaquePointer? = nil)
   {
     AtomicPointerInit(UnsafeRawPointer(pointer), &ptr)

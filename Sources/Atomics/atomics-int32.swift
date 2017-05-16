@@ -11,6 +11,7 @@ import ClangAtomics
 public struct AtomicInt32
 {
   @_versioned internal var val = Atomic32()
+
   public init(_ value: Int32 = 0)
   {
     Atomic32Init(value, &val)

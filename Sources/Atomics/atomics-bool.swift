@@ -11,6 +11,7 @@ import ClangAtomics
 public struct AtomicBool
 {
   @_versioned internal var val = AtomicBoolean()
+
   public init(_ value: Bool = false)
   {
     AtomicBooleanInit(value, &val)

@@ -11,6 +11,7 @@ import ClangAtomics
 public struct AtomicUInt
 {
   @_versioned internal var val = AtomicWord()
+
   public init(_ value: UInt = 0)
   {
     AtomicWordInit(Int(bitPattern: value), &val)

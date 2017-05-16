@@ -11,6 +11,7 @@ import ClangAtomics
 public struct AtomicUInt64
 {
   @_versioned internal var val = Atomic64()
+
   public init(_ value: UInt64 = 0)
   {
     Atomic64Init(Int64(bitPattern: value), &val)

@@ -611,7 +611,7 @@ class AtomicsTests: XCTestCase
     init(_ x: UInt = nzRandom()) { id = x }
     deinit { print("Released     \(id)") }
   }
-  
+
   func testUnmanaged()
   {
     var i = nzRandom()
