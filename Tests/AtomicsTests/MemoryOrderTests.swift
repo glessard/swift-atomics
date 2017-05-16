@@ -19,6 +19,10 @@ class MemoryOrderTests: XCTestCase
 
   func testMemoryOrder()
   {
+    let m = MemoryOrder(rawValue: memory_order_relaxed.rawValue)
+    XCTAssert(m == clang_atomics_memory_order_relaxed)
+    XCTAssert(m == .relaxed)
+
     XCTAssert(MemoryOrder.relaxed.rawValue == memory_order_relaxed.rawValue)
     XCTAssert(MemoryOrder.acquire.rawValue == memory_order_acquire.rawValue)
     XCTAssert(MemoryOrder.release.rawValue == memory_order_release.rawValue)

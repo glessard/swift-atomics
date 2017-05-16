@@ -18,7 +18,7 @@ public struct AtomicInt64
 
   public var value: Int64 {
     @inline(__always)
-    mutating get { return Atomic64Load(&val, memory_order_relaxed) }
+    mutating get { return Atomic64Load(&val, .relaxed) }
   }
 }
 
@@ -27,61 +27,61 @@ extension AtomicInt64
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Load(&val, order.order)
+    return Atomic64Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
-    Atomic64Store(value, &val, order.order)
+    Atomic64Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Swap(value, &val, order.order)
+    return Atomic64Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Add(delta, &val, order.order)
+    return Atomic64Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Add(1, &val, order.order)
+    return Atomic64Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Sub(delta, &val, order.order)
+    return Atomic64Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Sub(1, &val, order.order)
+    return Atomic64Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Or(bits, &val, order.order)
+    return Atomic64Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64Xor(bits, &val, order.order)
+    return Atomic64Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return Atomic64And(bits, &val, order.order)
+    return Atomic64And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -94,9 +94,9 @@ extension AtomicInt64
     assert(orderSwap == .release ? orderLoad == .relaxed : true)
     switch type {
     case .strong:
-      return Atomic64StrongCAS(current, future, &val, orderSwap.order, orderLoad.order)
+      return Atomic64StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return Atomic64WeakCAS(current, future, &val, orderSwap.order, orderLoad.order)
+      return Atomic64WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 

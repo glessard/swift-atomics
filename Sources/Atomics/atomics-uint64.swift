@@ -18,7 +18,7 @@ public struct AtomicUInt64
 
   public var value: UInt64 {
     @inline(__always)
-    mutating get { return UInt64(bitPattern: Atomic64Load(&val, memory_order_relaxed)) }
+    mutating get { return UInt64(bitPattern: Atomic64Load(&val, .relaxed)) }
   }
 }
 
@@ -27,61 +27,61 @@ extension AtomicUInt64
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Load(&val, order.order))
+    return UInt64(bitPattern: Atomic64Load(&val, order))
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    Atomic64Store(Int64(bitPattern: value), &val, order.order)
+    Atomic64Store(Int64(bitPattern: value), &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Swap(Int64(bitPattern: value), &val, order.order))
+    return UInt64(bitPattern: Atomic64Swap(Int64(bitPattern: value), &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Add(Int64(bitPattern: value), &val, order.order))
+    return UInt64(bitPattern: Atomic64Add(Int64(bitPattern: value), &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Add(1, &val, order.order))
+    return UInt64(bitPattern: Atomic64Add(1, &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Sub(Int64(bitPattern: value), &val, order.order))
+    return UInt64(bitPattern: Atomic64Sub(Int64(bitPattern: value), &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Sub(1, &val, order.order))
+    return UInt64(bitPattern: Atomic64Sub(1, &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Or(Int64(bitPattern: bits), &val, order.order))
+    return UInt64(bitPattern: Atomic64Or(Int64(bitPattern: bits), &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64Xor(Int64(bitPattern: bits), &val, order.order))
+    return UInt64(bitPattern: Atomic64Xor(Int64(bitPattern: bits), &val, order))
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits:UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return UInt64(bitPattern: Atomic64And(Int64(bitPattern: bits), &val, order.order))
+    return UInt64(bitPattern: Atomic64And(Int64(bitPattern: bits), &val, order))
   }
 
   @inline(__always) @discardableResult
@@ -96,9 +96,9 @@ extension AtomicUInt64
       current in
       switch type {
       case .strong:
-        return Atomic64StrongCAS(current, Int64(bitPattern: future), &val, orderSwap.order, orderLoad.order)
+        return Atomic64StrongCAS(current, Int64(bitPattern: future), &val, orderSwap, orderLoad)
       case .weak:
-        return Atomic64WeakCAS(current, Int64(bitPattern: future), &val, orderSwap.order, orderLoad.order)
+        return Atomic64WeakCAS(current, Int64(bitPattern: future), &val, orderSwap, orderLoad)
       }
     }
   }

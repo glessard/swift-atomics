@@ -10,5 +10,5 @@ import ClangAtomics
 
 public func threadFence(order: MemoryOrder = .sequential)
 {
-  ThreadFence(order.order)
+  ThreadFence(order)
 }
