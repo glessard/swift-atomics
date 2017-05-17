@@ -62,19 +62,27 @@ extension AtomicBool
   }
 
   @inline(__always) @discardableResult
-  public mutating func CAS(current: Bool, future: Bool,
-                           type: CASType = .weak,
-                           orderSwap: MemoryOrder = .relaxed,
-                           orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
     assert(orderLoad.rawValue <= orderSwap.rawValue)
     assert(orderSwap == .release ? orderLoad == .relaxed : true)
-    var expect = current
     switch type {
     case .strong:
-      return AtomicBooleanStrongCAS(&expect, future, &val, orderSwap, orderLoad)
+      return AtomicBooleanStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return AtomicBooleanWeakCAS(&expect, future, &val, orderSwap, orderLoad)
+      return AtomicBooleanWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: Bool, future: Bool,
+                           type: CASType = .weak,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    var expect = current
+    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
   }
 }
