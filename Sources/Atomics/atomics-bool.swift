@@ -67,8 +67,6 @@ extension AtomicBool
                            orderSwap: MemoryOrder = .relaxed,
                            orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    assert(orderLoad.rawValue <= orderSwap.rawValue)
-    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     var expect = current
     switch type {
     case .strong:

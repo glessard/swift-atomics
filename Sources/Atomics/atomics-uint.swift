@@ -91,8 +91,6 @@ extension AtomicUInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    assert(orderLoad.rawValue <= orderSwap.rawValue)
-    assert(orderSwap == .release ? orderLoad == .relaxed : true)
     return current.withMemoryRebound(to: Int.self, capacity: 1) {
       current in
       switch type {
