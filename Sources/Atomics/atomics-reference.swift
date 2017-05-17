@@ -58,7 +58,7 @@ extension AtomicReference
 
 extension Unmanaged
 {
-  public static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
+  @_versioned static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
   {
     guard let reference = optional else { return nil }
     return Unmanaged.passRetained(reference)
