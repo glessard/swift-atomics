@@ -12,9 +12,9 @@ private let iterations = 200_000//_000
 
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
-class AtomicsRaceTests: XCTestCase
+public class AtomicsRaceTests: XCTestCase
 {
-  static var raceTests = [
+  public static var raceTests = [
     ("testRaceCrash", testRaceCrash),
     ("testRaceSpinLock", testRaceSpinLock),
     ("testRacePointerCAS", testRacePointerCAS),
@@ -22,7 +22,7 @@ class AtomicsRaceTests: XCTestCase
     ("testRacePointerSwap", testRacePointerSwap),
   ]
 
-  func testRaceCrash()
+  public func testRaceCrash()
   { // this version is guaranteed to crash with a double-free
     let q = DispatchQueue(label: "", attributes: .concurrent)
 
@@ -55,7 +55,7 @@ class AtomicsRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 
-  func testRaceSpinLock()
+  public func testRaceSpinLock()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)
 
@@ -89,7 +89,7 @@ class AtomicsRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 
-  func testRacePointerCAS()
+  public func testRacePointerCAS()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)
 
@@ -120,7 +120,7 @@ class AtomicsRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 
-  func testRacePointerLoadCAS()
+  public func testRacePointerLoadCAS()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)
 
@@ -150,7 +150,7 @@ class AtomicsRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 
-  func testRacePointerSwap()
+  public func testRacePointerSwap()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)
 

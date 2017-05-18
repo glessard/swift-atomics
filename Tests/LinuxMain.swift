@@ -1,6 +1,6 @@
 import XCTest
-@testable import AtomicsTests
-@testable import ClangAtomicsTests
+import AtomicsTests
+import ClangAtomicsTests
 
 XCTMain([
   testCase(ClangAtomicsTests.allTests),

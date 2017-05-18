@@ -29,13 +29,13 @@ func randomPositive() -> Int
 
 import ClangAtomics
 
-class ClangAtomicsTests: XCTestCase
+public class ClangAtomicsTests: XCTestCase
 {
-  static var allTests = [
+  public static var allTests = [
     ("testTest", testTest),
   ]
 
-  func testTest()
+  public func testTest()
   {
     var i = AtomicWord()
     AtomicWordInit(randomPositive(), &i)
@@ -48,13 +48,13 @@ class ClangAtomicsTests: XCTestCase
   }
 }
 
-class ClangAtomicsRaceTests: XCTestCase
+public class ClangAtomicsRaceTests: XCTestCase
 {
-  static var allTests = [
+  public static var allTests = [
     ("testRaceSpinLock", testRaceSpinLock),
   ]
 
-  func testRaceSpinLock()
+  public func testRaceSpinLock()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)
 
