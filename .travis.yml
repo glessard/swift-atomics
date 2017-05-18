@@ -13,15 +13,27 @@ matrix:
         - sudo update-alternatives --quiet --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
         - chmod ugo+x Tests/install-swift.sh
         - . Tests/install-swift.sh
-        - clang --version
-        - swift --version
+      script:
+        - /bin/bash Tests/script.sh
+
+    - os: linux
+      dist: trusty
+      language: generic
+      sudo: false
+      services: docker
+      before_install:
+        - docker pull swift:3.0.2
+      script:
+        - docker run -v "$(pwd):/src" swift:3.0.2 /bin/bash /src/Tests/script.sh
 
     - os: osx
       osx_image: xcode8.3
       language: swift
-      before_install:
-        - clang --version
-        - swift --version
+      script:
+        - /bin/bash Tests/script.sh
 
-script:
-  - /bin/bash Tests/script.sh
+    - os: osx
+      osx_image: xcode8.2
+      language: swift
+      script:
+        - /bin/bash Tests/script.sh

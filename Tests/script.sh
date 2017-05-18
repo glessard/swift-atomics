@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+clang --version
+swift --version
+
 cd "$(dirname $0)/../"
 
 swift test -s ClangAtomicsTests.ClangAtomicsTests
