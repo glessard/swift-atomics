@@ -157,14 +157,19 @@ _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* 
 // integer atomics
 
 CLANG_ATOMICS_GENERATE(AtomicWord, atomic_long, long)
+CLANG_ATOMICS_GENERATE(AtomicUWord, atomic_ulong, unsigned long)
 
 CLANG_ATOMICS_GENERATE(Atomic8, atomic_schar, signed char)
+CLANG_ATOMICS_GENERATE(AtomicU8, atomic_uchar, unsigned char)
 
 CLANG_ATOMICS_GENERATE(Atomic16, atomic_short, short)
+CLANG_ATOMICS_GENERATE(AtomicU16, atomic_ushort, unsigned short)
 
 CLANG_ATOMICS_GENERATE(Atomic32, atomic_int, int)
+CLANG_ATOMICS_GENERATE(AtomicU32, atomic_uint, unsigned int)
 
 CLANG_ATOMICS_GENERATE(Atomic64, atomic_llong, long long)
+CLANG_ATOMICS_GENERATE(AtomicU64, atomic_ullong, unsigned long long)
 
 // bool atomics
 
