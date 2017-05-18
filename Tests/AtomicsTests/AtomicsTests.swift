@@ -36,6 +36,10 @@ public class AtomicsTests: XCTestCase
   public static var allTests = [
     ("testInt", testInt),
     ("testUInt", testUInt),
+    ("testInt8", testInt8),
+    ("testUInt8", testUInt8),
+    ("testInt16", testInt16),
+    ("testUInt16", testUInt16),
     ("testInt32", testInt32),
     ("testUInt32", testUInt32),
     ("testInt64", testInt64),
@@ -169,6 +173,242 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
+  public func testInt8()
+  {
+    var i = AtomicInt8()
+    XCTAssert(i.value == 0)
+
+    let r1 = Int8(truncatingBitPattern: nzRandom())
+    let r2 = Int8(truncatingBitPattern: nzRandom())
+    let r3 = Int8(truncatingBitPattern: nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    j = i.add(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, i.load())
+
+    j = i.subtract(r2)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, i.load())
+
+    j = i.increment()
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 &+ 1, i.load())
+
+    i.store(r3)
+    j = i.decrement()
+    XCTAssertEqual(r3, j)
+    XCTAssertEqual(r3 &- 1, i.load())
+
+    i.store(r1)
+    j = i.bitwiseOr(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, i.load())
+
+    i.store(r2)
+    j = i.bitwiseXor(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, i.load())
+
+    i.store(r1)
+    j = i.bitwiseAnd(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+  
+  public func testUInt8()
+  {
+    var i = AtomicUInt8()
+    XCTAssert(i.value == 0)
+
+    let r1 = UInt8(truncatingBitPattern: nzRandom())
+    let r2 = UInt8(truncatingBitPattern: nzRandom())
+    let r3 = UInt8(truncatingBitPattern: nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    j = i.add(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, i.load())
+
+    j = i.subtract(r2)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, i.load())
+
+    j = i.increment()
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 &+ 1, i.load())
+
+    i.store(r3)
+    j = i.decrement()
+    XCTAssertEqual(r3, j)
+    XCTAssertEqual(r3 &- 1, i.load())
+
+    i.store(r1)
+    j = i.bitwiseOr(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, i.load())
+
+    i.store(r2)
+    j = i.bitwiseXor(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, i.load())
+
+    i.store(r1)
+    j = i.bitwiseAnd(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+  
+  public func testInt16()
+  {
+    var i = AtomicInt16()
+    XCTAssert(i.value == 0)
+
+    let r1 = Int16(truncatingBitPattern: nzRandom())
+    let r2 = Int16(truncatingBitPattern: nzRandom())
+    let r3 = Int16(truncatingBitPattern: nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    j = i.add(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, i.load())
+
+    j = i.subtract(r2)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, i.load())
+
+    j = i.increment()
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 &+ 1, i.load())
+
+    i.store(r3)
+    j = i.decrement()
+    XCTAssertEqual(r3, j)
+    XCTAssertEqual(r3 &- 1, i.load())
+
+    i.store(r1)
+    j = i.bitwiseOr(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, i.load())
+
+    i.store(r2)
+    j = i.bitwiseXor(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, i.load())
+
+    i.store(r1)
+    j = i.bitwiseAnd(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+  
+  public func testUInt16()
+  {
+    var i = AtomicUInt16()
+    XCTAssert(i.value == 0)
+
+    let r1 = UInt16(truncatingBitPattern: nzRandom())
+    let r2 = UInt16(truncatingBitPattern: nzRandom())
+    let r3 = UInt16(truncatingBitPattern: nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    j = i.add(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, i.load())
+
+    j = i.subtract(r2)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, i.load())
+
+    j = i.increment()
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 &+ 1, i.load())
+
+    i.store(r3)
+    j = i.decrement()
+    XCTAssertEqual(r3, j)
+    XCTAssertEqual(r3 &- 1, i.load())
+
+    i.store(r1)
+    j = i.bitwiseOr(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, i.load())
+
+    i.store(r2)
+    j = i.bitwiseXor(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, i.load())
+
+    i.store(r1)
+    j = i.bitwiseAnd(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+  
   public func testInt32()
   {
     var i = AtomicInt32()
@@ -227,7 +467,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-
+  
   public func testUInt32()
   {
     var i = AtomicUInt32()
