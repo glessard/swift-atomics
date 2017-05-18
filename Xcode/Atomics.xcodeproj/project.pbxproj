@@ -445,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0367F8181E70DF9900F4B44B /* AtomicsTests.swift in Sources */,
+				037B84531ECD601A00F4B44B /* MemoryOrderTests.swift in Sources */,
 				0367F8191E70DF9900F4B44B /* ClangAtomicsTests.swift in Sources */,
 				0367F81A1E70DF9900F4B44B /* RacetestsDispatch.swift in Sources */,
 			);
