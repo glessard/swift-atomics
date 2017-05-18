@@ -19,6 +19,8 @@
 #endif
 
 #include <stdatomic.h>
+#include <stdbool.h>
+#include <assert.h>
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
@@ -27,32 +29,34 @@
 
 // memory order
 
-typedef enum
-{
-  clang_atomics_memory_order_relaxed = __ATOMIC_RELAXED,
-//clang_atomics_memory_order_consume = __ATOMIC_CONSUME,
-  clang_atomics_memory_order_acquire = __ATOMIC_ACQUIRE,
-  clang_atomics_memory_order_release = __ATOMIC_RELEASE,
-  clang_atomics_memory_order_acq_rel = __ATOMIC_ACQ_REL,
-  clang_atomics_memory_order_seq_cst = __ATOMIC_SEQ_CST
-} MemoryOrder;
+#define SWIFT_ENUM(_name) enum _name
 
-typedef enum
+SWIFT_ENUM(MemoryOrder)
 {
-  clang_atomics_load_memory_order_relaxed = __ATOMIC_RELAXED,
-//clang_atomics_load_memory_order_consume = __ATOMIC_CONSUME,
-  clang_atomics_load_memory_order_acquire = __ATOMIC_ACQUIRE,
-  clang_atomics_load_memory_order_seq_cst = __ATOMIC_SEQ_CST
-} LoadMemoryOrder;
+  MemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  // MemoryOrder_consume = __ATOMIC_CONSUME,
+  MemoryOrder_acquire =    __ATOMIC_ACQUIRE,
+  MemoryOrder_release =    __ATOMIC_RELEASE,
+  MemoryOrder_acqrel  =    __ATOMIC_ACQ_REL,
+  MemoryOrder_sequential = __ATOMIC_SEQ_CST
+};
 
-typedef enum
+SWIFT_ENUM(LoadMemoryOrder)
 {
-  clang_atomics_store_memory_order_relaxed = __ATOMIC_RELAXED,
-  clang_atomics_store_memory_order_release = __ATOMIC_RELEASE,
-  clang_atomics_store_memory_order_seq_cst = __ATOMIC_SEQ_CST
-} StoreMemoryOrder;
+  LoadMemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  // LoadMemoryOrder_consume = __ATOMIC_CONSUME,
+  LoadMemoryOrder_acquire =    __ATOMIC_ACQUIRE,
+  LoadMemoryOrder_sequential = __ATOMIC_SEQ_CST
+};
 
-// pointer
+SWIFT_ENUM(StoreMemoryOrder)
+{
+  StoreMemoryOrder_relaxed =    __ATOMIC_RELAXED,
+  StoreMemoryOrder_release =    __ATOMIC_RELEASE,
+  StoreMemoryOrder_sequential = __ATOMIC_SEQ_CST
+};
+
+// pointer atomics
 
 typedef struct
 {
@@ -66,34 +70,38 @@ void AtomicPointerInit(const void* _Nullable val, AtomicVoidPointer* _Nonnull pt
 }
 
 static __inline__ __attribute__((__always_inline__))
-void* _Nullable AtomicPointerLoad(AtomicVoidPointer* _Nonnull ptr, LoadMemoryOrder order)
+void* _Nullable AtomicPointerLoad(AtomicVoidPointer* _Nonnull ptr, enum LoadMemoryOrder order)
 {
   return (void*) atomic_load_explicit(&(ptr->a), order);
 }
 
 static __inline__ __attribute__((__always_inline__))
-void AtomicPointerStore(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, StoreMemoryOrder order)
+void AtomicPointerStore(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, enum StoreMemoryOrder order)
 {
   atomic_store_explicit(&(ptr->a), (uintptr_t)val, order);
 }
 
 static __inline__ __attribute__((__always_inline__))
-void* _Nullable AtomicPointerSwap(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, MemoryOrder order)
+void* _Nullable AtomicPointerSwap(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, enum MemoryOrder order)
 {
   return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
 }
 
 static __inline__ __attribute__((__always_inline__))
 _Bool AtomicPointerStrongCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
-                             MemoryOrder succ, LoadMemoryOrder fail)
+                             enum MemoryOrder succ, enum LoadMemoryOrder fail)
 {
+  assert((unsigned int)fail <= (unsigned int)succ);
+  assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true);
   return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
 }
 
 static __inline__ __attribute__((__always_inline__))
 _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
-                           MemoryOrder succ, LoadMemoryOrder fail)
+                           enum MemoryOrder succ, enum LoadMemoryOrder fail)
 {
+  assert((unsigned int)fail <= (unsigned int)succ);
+  assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true);
   return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
 }
 
@@ -109,24 +117,28 @@ _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* 
 
 #define CLANG_ATOMICS_LOAD(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        pType sType##Load(sType *_Nonnull ptr, LoadMemoryOrder order) \
+        pType sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
         { return atomic_load_explicit(&(ptr->a), order); }
 
 #define CLANG_ATOMICS_STORE(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        void sType##Store(pType value, sType *_Nonnull ptr, StoreMemoryOrder order) \
+        void sType##Store(pType value, sType *_Nonnull ptr, enum StoreMemoryOrder order) \
         { atomic_store_explicit(&(ptr->a), value, order); }
 
 #define CLANG_ATOMICS_RMW(sType, pType, pName, op, opName) \
         static __inline__ __attribute__((__always_inline__)) \
-        pType sType##opName(pType pName, sType *_Nonnull ptr, MemoryOrder order) \
+        pType sType##opName(pType pName, sType *_Nonnull ptr, enum MemoryOrder order) \
         { return atomic_##op##_explicit(&(ptr->a), pName, order); }
 
 #define CLANG_ATOMICS_CAS(sType, pType, strength, strName) \
         static __inline__ __attribute__((__always_inline__)) \
         _Bool sType##strName##CAS(pType *_Nonnull current, pType future, sType *_Nonnull ptr, \
-                                  MemoryOrder succ, LoadMemoryOrder fail) \
-        { return atomic_compare_exchange_##strength##_explicit(&(ptr->a), current, future, succ, fail); }
+                                  enum MemoryOrder succ, enum LoadMemoryOrder fail) \
+        { \
+          assert((unsigned int)fail <= (unsigned int)succ); \
+          assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
+          return atomic_compare_exchange_##strength##_explicit(&(ptr->a), current, future, succ, fail); \
+        }
 
 #define CLANG_ATOMICS_GENERATE(sType, aType, pType) \
         CLANG_ATOMICS_STRUCT(sType, aType) \
@@ -146,7 +158,9 @@ _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* 
 
 CLANG_ATOMICS_GENERATE(AtomicWord, atomic_long, long)
 
-CLANG_ATOMICS_GENERATE(Atomic8, atomic_char, char)
+CLANG_ATOMICS_GENERATE(Atomic8, atomic_schar, signed char)
+
+CLANG_ATOMICS_GENERATE(Atomic16, atomic_short, short)
 
 CLANG_ATOMICS_GENERATE(Atomic32, atomic_int, int)
 
@@ -168,7 +182,7 @@ CLANG_ATOMICS_CAS(AtomicBoolean, _Bool, weak, Weak)
 // fence
 
 static __inline__ __attribute__((__always_inline__))
-void ThreadFence(MemoryOrder order)
+void ThreadFence(enum MemoryOrder order)
 {
   atomic_thread_fence(order);
 }

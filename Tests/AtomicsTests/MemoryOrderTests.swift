@@ -11,16 +11,15 @@ import XCTest
 import ClangAtomics
 import Atomics
 
-class MemoryOrderTests: XCTestCase
+public class MemoryOrderTests: XCTestCase
 {
-  static var allTests = [
+  public static var allTests = [
     ("testMemoryOrder", testMemoryOrder),
   ]
 
-  func testMemoryOrder()
+  public func testMemoryOrder()
   {
     let m = MemoryOrder(rawValue: memory_order_relaxed.rawValue)
-    XCTAssert(m == clang_atomics_memory_order_relaxed)
     XCTAssert(m == .relaxed)
 
     XCTAssert(MemoryOrder.relaxed.rawValue == memory_order_relaxed.rawValue)
