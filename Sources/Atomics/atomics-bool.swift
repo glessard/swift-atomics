@@ -10,16 +10,16 @@ import ClangAtomics
 
 public struct AtomicBool
 {
-  @_versioned internal var val = AtomicBoolean()
+  @_versioned var val = ClangAtomicsBoolean()
 
   public init(_ value: Bool = false)
   {
-    AtomicBooleanInit(value, &val)
+    ClangAtomicsBooleanInit(value, &val)
   }
 
   public var value: Bool {
     @inline(__always)
-    mutating get { return AtomicBooleanLoad(&val, .relaxed) }
+    mutating get { return ClangAtomicsBooleanLoad(&val, .relaxed) }
   }
 }
 
@@ -28,37 +28,37 @@ extension AtomicBool
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanLoad(&val, order)
+    return ClangAtomicsBooleanLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    AtomicBooleanStore(value, &val, order)
+    ClangAtomicsBooleanStore(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanSwap(value, &val, order)
+    return ClangAtomicsBooleanSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanOr(value, &val, order)
+    return ClangAtomicsBooleanOr(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanXor(value, &val, order)
+    return ClangAtomicsBooleanXor(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return AtomicBooleanAnd(value, &val, order)
+    return ClangAtomicsBooleanAnd(value, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -69,9 +69,9 @@ extension AtomicBool
   {
     switch type {
     case .strong:
-      return AtomicBooleanStrongCAS(current, future, &val, orderSwap, orderLoad)
+      return ClangAtomicsBooleanStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return AtomicBooleanWeakCAS(current, future, &val, orderSwap, orderLoad)
+      return ClangAtomicsBooleanWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 

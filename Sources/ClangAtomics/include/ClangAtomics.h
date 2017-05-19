@@ -156,33 +156,33 @@ _Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* 
 
 // integer atomics
 
-CLANG_ATOMICS_GENERATE(AtomicWord, atomic_long, long)
-CLANG_ATOMICS_GENERATE(AtomicUWord, atomic_ulong, unsigned long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsSWord, atomic_long, long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUWord, atomic_ulong, unsigned long)
 
-CLANG_ATOMICS_GENERATE(Atomic8, atomic_schar, signed char)
-CLANG_ATOMICS_GENERATE(AtomicU8, atomic_uchar, unsigned char)
+CLANG_ATOMICS_GENERATE(ClangAtomicsS8, atomic_schar, signed char)
+CLANG_ATOMICS_GENERATE(ClangAtomicsU8, atomic_uchar, unsigned char)
 
-CLANG_ATOMICS_GENERATE(Atomic16, atomic_short, short)
-CLANG_ATOMICS_GENERATE(AtomicU16, atomic_ushort, unsigned short)
+CLANG_ATOMICS_GENERATE(ClangAtomicsS16, atomic_short, short)
+CLANG_ATOMICS_GENERATE(ClangAtomicsU16, atomic_ushort, unsigned short)
 
-CLANG_ATOMICS_GENERATE(Atomic32, atomic_int, int)
-CLANG_ATOMICS_GENERATE(AtomicU32, atomic_uint, unsigned int)
+CLANG_ATOMICS_GENERATE(ClangAtomicsS32, atomic_int, int)
+CLANG_ATOMICS_GENERATE(ClangAtomicsU32, atomic_uint, unsigned int)
 
-CLANG_ATOMICS_GENERATE(Atomic64, atomic_llong, long long)
-CLANG_ATOMICS_GENERATE(AtomicU64, atomic_ullong, unsigned long long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsS64, atomic_llong, long long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsU64, atomic_ullong, unsigned long long)
 
 // bool atomics
 
-CLANG_ATOMICS_STRUCT(AtomicBoolean, atomic_bool)
-CLANG_ATOMICS_INIT(AtomicBoolean, _Bool)
-CLANG_ATOMICS_LOAD(AtomicBoolean, _Bool)
-CLANG_ATOMICS_STORE(AtomicBoolean, _Bool)
-CLANG_ATOMICS_RMW(AtomicBoolean, _Bool, value, exchange, Swap)
-CLANG_ATOMICS_RMW(AtomicBoolean, _Bool, value, fetch_or, Or)
-CLANG_ATOMICS_RMW(AtomicBoolean, _Bool, value, fetch_xor, Xor)
-CLANG_ATOMICS_RMW(AtomicBoolean, _Bool, value, fetch_and, And)
-CLANG_ATOMICS_CAS(AtomicBoolean, _Bool, strong, Strong)
-CLANG_ATOMICS_CAS(AtomicBoolean, _Bool, weak, Weak)
+CLANG_ATOMICS_STRUCT(ClangAtomicsBoolean, atomic_bool)
+CLANG_ATOMICS_INIT(ClangAtomicsBoolean, _Bool)
+CLANG_ATOMICS_LOAD(ClangAtomicsBoolean, _Bool)
+CLANG_ATOMICS_STORE(ClangAtomicsBoolean, _Bool)
+CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, exchange, Swap)
+CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_or, Or)
+CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_xor, Xor)
+CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_and, And)
+CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, strong, Strong)
+CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, weak, Weak)
 
 // fence
 
