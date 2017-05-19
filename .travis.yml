@@ -26,4 +26,5 @@ before_install:
   - . Tests/install-swift.sh
 
 script:
+  - /bin/bash Tests/test-gyb.sh
   - /bin/bash Tests/test-script.sh
