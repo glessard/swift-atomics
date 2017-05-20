@@ -231,7 +231,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-  
+
   public func testUInt8()
   {
     var i = AtomicUInt8()
@@ -290,7 +290,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-  
+
   public func testInt16()
   {
     var i = AtomicInt16()
@@ -349,7 +349,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-  
+
   public func testUInt16()
   {
     var i = AtomicUInt16()
@@ -408,7 +408,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-  
+
   public func testInt32()
   {
     var i = AtomicInt32()
@@ -467,7 +467,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
-  
+
   public func testUInt32()
   {
     var i = AtomicUInt32()

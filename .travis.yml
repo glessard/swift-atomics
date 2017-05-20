@@ -1,39 +1,30 @@
+language: swift
+
 matrix:
   include:
     - os: linux
       dist: trusty
       language: generic
       sudo: required
-      before_install:
-        - sudo /bin/rm -rf /usr/local/clang-3.5.0
-        - sudo /bin/rm -f  /usr/local/clang
-        - sudo apt-get update -qq
-        - sudo apt-get install -qq -y clang-3.8
-        - sudo update-alternatives --quiet --install /usr/bin/clang clang /usr/bin/clang-3.8 100
-        - sudo update-alternatives --quiet --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.8 100
-        - chmod ugo+x Tests/install-swift.sh
-        - . Tests/install-swift.sh
-      script:
-        - /bin/bash Tests/script.sh
+      env: SWIFT_VERSION=3.1.1 CLANG_VERSION=3.8
 
     - os: linux
       dist: trusty
       language: generic
-      sudo: false
-      services: docker
-      before_install:
-        - docker pull swift:3.0.2
-      script:
-        - docker run -v "$(pwd):/src" swift:3.0.2 /bin/bash /src/Tests/script.sh
+      sudo: required
+      env: SWIFT_VERSION=3.0.2 CLANG_VERSION=3.6
 
     - os: osx
       osx_image: xcode8.3
-      language: swift
-      script:
-        - /bin/bash Tests/script.sh
 
     - os: osx
       osx_image: xcode8.2
-      language: swift
-      script:
-        - /bin/bash Tests/script.sh
+
+before_install:
+  - sudo /bin/bash Tests/install-clang.sh
+  - chmod u+x Tests/install-swift.sh
+  - . Tests/install-swift.sh
+
+script:
+  - /bin/bash Tests/test-gyb.sh
+  - /bin/bash Tests/test-script.sh
