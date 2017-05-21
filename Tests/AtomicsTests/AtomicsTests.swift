@@ -44,15 +44,14 @@ public class AtomicsTests: XCTestCase
     ("testUInt32", testUInt32),
     ("testInt64", testInt64),
     ("testUInt64", testUInt64),
-    ("testBool", testBool),
-    ("testFence", testFence),
     ("testRawPointer", testRawPointer),
     ("testMutableRawPointer", testMutableRawPointer),
     ("testUnsafePointer", testUnsafePointer),
     ("testUnsafeMutablePointer", testUnsafeMutablePointer),
     ("testOpaquePointer", testOpaquePointer),
+    ("testBool", testBool),
+    ("testFence", testFence),
     ("testUnmanaged", testUnmanaged),
-    ("testExample", testExample),
   ]
 
   public func testInt()
@@ -645,58 +644,6 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
-  public func testBool()
-  {
-    var boolean = AtomicBool(false)
-    _ = AtomicBool(true)
-    XCTAssert(boolean.value == false)
-
-    boolean.store(false)
-    XCTAssert(boolean.value == false)
-
-    boolean.store(true)
-    XCTAssert(boolean.value == true)
-    XCTAssert(boolean.value == boolean.load())
-
-    boolean.store(true)
-    boolean.or(true)
-    XCTAssert(boolean.value == true)
-    boolean.or(false)
-    XCTAssert(boolean.value == true)
-    boolean.store(false)
-    boolean.or(false)
-    XCTAssert(boolean.value == false)
-    boolean.or(true)
-    XCTAssert(boolean.value == true)
-
-    boolean.and(false)
-    XCTAssert(boolean.value == false)
-    boolean.and(true)
-    XCTAssert(boolean.value == false)
-
-    boolean.xor(false)
-    XCTAssert(boolean.value == false)
-    boolean.xor(true)
-    XCTAssert(boolean.value == true)
-
-    let old = boolean.swap(false)
-    XCTAssert(old == true)
-    XCTAssert(boolean.swap(true) == false)
-
-    boolean.CAS(current: true, future: false)
-    if boolean.CAS(current: false, future: true, type: .strong)
-    {
-      boolean.CAS(current: true, future: false, type: .weak)
-      boolean.CAS(current: false, future: true, type: .weak)
-    }
-  }
-
-  public func testFence()
-  {
-    threadFence()
-    threadFence(order: .sequential)
-  }
-
   public func testRawPointer()
   {
     var i = AtomicRawPointer()
@@ -845,6 +792,58 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
+  public func testBool()
+  {
+    var boolean = AtomicBool(false)
+    _ = AtomicBool(true)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(false)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(true)
+    XCTAssert(boolean.value == true)
+    XCTAssert(boolean.value == boolean.load())
+
+    boolean.store(true)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+    boolean.or(false)
+    XCTAssert(boolean.value == true)
+    boolean.store(false)
+    boolean.or(false)
+    XCTAssert(boolean.value == false)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+
+    boolean.and(false)
+    XCTAssert(boolean.value == false)
+    boolean.and(true)
+    XCTAssert(boolean.value == false)
+
+    boolean.xor(false)
+    XCTAssert(boolean.value == false)
+    boolean.xor(true)
+    XCTAssert(boolean.value == true)
+
+    let old = boolean.swap(false)
+    XCTAssert(old == true)
+    XCTAssert(boolean.swap(true) == false)
+
+    boolean.CAS(current: true, future: false)
+    if boolean.CAS(current: false, future: true, type: .strong)
+    {
+      boolean.CAS(current: true, future: false, type: .weak)
+      boolean.CAS(current: false, future: true, type: .weak)
+    }
+  }
+
+  public func testFence()
+  {
+    threadFence()
+    threadFence(order: .sequential)
+  }
+  
   private class Thing
   {
     let id: UInt
@@ -876,250 +875,5 @@ public class AtomicsTests: XCTestCase
     print("Will release \(i)")
     XCTAssert(a.take() != nil)
     XCTAssert(a.take() == nil)
-  }
-
-  private struct TestStruct
-  {
-    var a = AtomicInt(0)
-    var b = AtomicInt(1)
-    var c = AtomicInt(2)
-    var d = AtomicInt(3)
-
-    mutating func print()
-    {
-      Swift.print("\(a.value) \(b.value) \(c.value) \(d.value)")
-    }
-  }
-
-  public func testExample()
-  {
-    var value = AtomicInt(0)
-
-    print(value.swap(1))
-    print(value.value)
-    value.store(2)
-    print(value.value)
-    print("")
-
-    var p = AtomicMutablePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-    print(p.pointer!)
-
-    var q = AtomicMutablePointer(p.load())
-    let r = q.swap(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-    p.store(q.pointer)
-
-    print(q.pointer!)
-    print(r!)
-    print(p.pointer!)
-    print("")
-
-    var pp = AtomicPointer<Int>(UnsafeMutablePointer<Int>.allocate(capacity: 1))
-
-    print(pp.pointer!)
-
-    var qq = AtomicPointer(pp.load())
-    let rr = qq.swap(UnsafePointer(UnsafeMutablePointer<Int>.allocate(capacity: 1)))
-    pp.store(qq.pointer)
-
-    print(qq.pointer!)
-    print(rr!)
-    print(pp.pointer!)
-    print("")
-
-    var i = AtomicInt32(Int32(nzRandom()))
-    print(i.value)
-
-    var j = AtomicInt32(i.load())
-    let k = j.swap(Int32(nzRandom()), order: .acqrel)
-    i.store(j.value)
-
-    print(j.value)
-    print(k)
-    print(i.value)
-    print("")
-
-    var ii = AtomicInt64(Int64(nzRandom()))
-    print(ii.value)
-
-    var jj = AtomicInt64(ii.load())
-    let kk = jj.swap(numericCast(nzRandom()))
-    ii.store(jj.value)
-
-    print(jj.value)
-    print(kk)
-    print(ii.value)
-    print("")
-
-    var start = Date()
-    var dt = Date().timeIntervalSince(start)
-    let iterations = 1_000_000
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-
-    start = Date()
-    for _ in 1...iterations
-    {
-      value.store(numericCast(nzRandom()))
-    }
-    dt = Date().timeIntervalSince(start)
-    print(Int(1e9*dt/Double(iterations)))
-    print("")
-
-    var t = TestStruct()
-    t.print()
-
-    t.c.store(4)
-
-    let g = DispatchGroup()
-    DispatchQueue.global().async(group: g) {
-      t.print()
-      let v = t.a.swap(5)
-      usleep(1000)
-      t.b.store(v, order: .sequential)
-    }
-
-    usleep(500)
-    t.print()
-    g.wait()
-    t.print()
-
-    print("")
-    let pt = UnsafeMutablePointer<TestStruct>.allocate(capacity: 1)
-    pt.pointee = TestStruct()
-    pt.pointee.print()
-
-    pt.pointee.c.store(4)
-
-    DispatchQueue.global().async(group: g) {
-      pt.pointee.print()
-      let v = pt.pointee.a.swap(5)
-      usleep(1000)
-      pt.pointee.b.store(v, order: .sequential)
-    }
-
-    usleep(500)
-    pt.pointee.print()
-    g.wait()
-    pt.pointee.print()
-
-    pt.deallocate(capacity: 1)
-  }
-}
-
-public class AtomicsPerformanceTests: XCTestCase
-{
-  public static var allTests = [
-    ("testPerformanceRead", testPerformanceRead),
-    ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
-    ("testPerformanceStore", testPerformanceStore),
-    ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
-    ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
-    ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
-    ("testPerformanceOSAtomicCASSuccess", testPerformanceOSAtomicCASSuccess),
-    ("testPerformanceOSAtomicCASFailure", testPerformanceOSAtomicCASFailure),
-  ]
-
-  let testLoopCount = 1_000_000
-
-  public func testPerformanceStore()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for i in 0..<c { m.store(i, order: .relaxed) }
-    }
-  }
-
-  public func testPerformanceSynchronizedStore()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for i in 0..<c { m.store(i, order: .sequential) }
-    }
-  }
-
-  public func testPerformanceRead()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for _ in 0..<c { _ = m.load(order: .relaxed) }
-    }
-  }
-
-  public func testPerformanceSynchronizedRead()
-  {
-    let c = testLoopCount
-    var m = AtomicInt(0)
-    measure {
-      m.store(0)
-      for _ in 0..<c { _ = m.load(order: .sequential) }
-    }
-  }
-
-  public func testPerformanceSwiftCASSuccess()
-  {
-    let c = Int32(testLoopCount)
-    var m = AtomicInt32(0)
-    measure {
-      m.store(0)
-      for i in (m.value)..<c { m.CAS(current: i, future: i&+1) }
-    }
-  }
-
-  public func testPerformanceOSAtomicCASSuccess()
-  {
-    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      let c = Int32(testLoopCount)
-      var m = Int32(0)
-      measure {
-        m = 0
-        for i in m..<c { OSAtomicCompareAndSwap32(i, i&+1, &m) }
-      }
-    #else
-      print("test not supported on Linux")
-    #endif
-  }
-
-  public func testPerformanceSwiftCASFailure()
-  {
-    let c = Int32(testLoopCount)
-    var m = AtomicInt32(0)
-    measure {
-      m.store(0)
-      for i in (m.value)..<c { m.CAS(current: i, future: 0) }
-    }
-  }
-
-  public func testPerformanceOSAtomicCASFailure()
-  {
-    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      let c = Int32(testLoopCount)
-      var m = Int32(0)
-      measure {
-        m = 0
-        for i in m..<c { OSAtomicCompareAndSwap32(i, 0, &m) }
-      }
-    #else
-      print("test not supported on Linux")
-    #endif
   }
 }

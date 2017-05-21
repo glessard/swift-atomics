@@ -1,0 +1,114 @@
+//
+//  AtomicsPerformanceTests.swift
+//  Atomics
+//
+//  Created by Guillaume Lessard on 2015-07-06.
+//  Copyright © 2015 Guillaume Lessard. All rights reserved.
+//
+
+import XCTest
+import Atomics
+
+public class AtomicsPerformanceTests: XCTestCase
+{
+  public static var allTests = [
+    ("testPerformanceRead", testPerformanceRead),
+    ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
+    ("testPerformanceStore", testPerformanceStore),
+    ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
+    ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
+    ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
+    ("testPerformanceOSAtomicCASSuccess", testPerformanceOSAtomicCASSuccess),
+    ("testPerformanceOSAtomicCASFailure", testPerformanceOSAtomicCASFailure),
+  ]
+
+  let testLoopCount = 1_000_000
+
+  public func testPerformanceStore()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for i in 0..<c { m.store(i, order: .relaxed) }
+    }
+  }
+
+  public func testPerformanceSynchronizedStore()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for i in 0..<c { m.store(i, order: .sequential) }
+    }
+  }
+
+  public func testPerformanceRead()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for _ in 0..<c { _ = m.load(order: .relaxed) }
+    }
+  }
+
+  public func testPerformanceSynchronizedRead()
+  {
+    let c = testLoopCount
+    var m = AtomicInt(0)
+    measure {
+      m.store(0)
+      for _ in 0..<c { _ = m.load(order: .sequential) }
+    }
+  }
+
+  public func testPerformanceSwiftCASSuccess()
+  {
+    let c = Int32(testLoopCount)
+    var m = AtomicInt32(0)
+    measure {
+      m.store(0)
+      for i in (m.value)..<c { m.CAS(current: i, future: i&+1) }
+    }
+  }
+
+  public func testPerformanceOSAtomicCASSuccess()
+  {
+    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+      let c = Int32(testLoopCount)
+      var m = Int32(0)
+      measure {
+        m = 0
+        for i in m..<c { OSAtomicCompareAndSwap32(i, i&+1, &m) }
+      }
+    #else
+      print("test not supported on Linux")
+    #endif
+  }
+
+  public func testPerformanceSwiftCASFailure()
+  {
+    let c = Int32(testLoopCount)
+    var m = AtomicInt32(0)
+    measure {
+      m.store(0)
+      for i in (m.value)..<c { m.CAS(current: i, future: 0) }
+    }
+  }
+
+  public func testPerformanceOSAtomicCASFailure()
+  {
+    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+      let c = Int32(testLoopCount)
+      var m = Int32(0)
+      measure {
+        m = 0
+        for i in m..<c { OSAtomicCompareAndSwap32(i, 0, &m) }
+      }
+    #else
+      print("test not supported on Linux")
+    #endif
+  }
+}
