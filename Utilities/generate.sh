@@ -4,23 +4,34 @@ set -e
 
 if [[ -z ${PROJECT_DIR} ]]
 then
-  SOURCE_DIR="${PWD}/Sources"
-  GYB="${PWD}/Utilities/gyb.py"
+  SOURCES="${PWD}/Sources"
+  UTILITIES="${PWD}/Utilities"
 else
-  SOURCE_DIR="${PROJECT_DIR}/../Sources"
-  GYB="${PROJECT_DIR}/../Utilities/gyb.py"
+  SOURCES="${PROJECT_DIR}/../Sources"
+  UTILITIES="${PROJECT_DIR}/../Utilities"
 fi
 
-INPUT_FILE_LIST=`find ${SOURCE_DIR} -name "*.gyb"`
+if [[ ! -d ${SOURCES} || ! -d ${UTILITIES} ]]
+then
+  echo "Missing some directories, assuming the worst and exiting"
+  exit 1
+fi
+
+GYB="${UTILITIES}/gyb.py"
+if [[ ! -x ${GYB} ]]
+then
+  GITHUB=https://raw.githubusercontent.com/apple/swift/master/utils/gyb.py
+  echo "Retrieving gyb.py from ${GITHUB}"
+  /usr/bin/curl ${GITHUB} -o ${GYB}
+  chmod u+x ${GYB}
+fi
+
+INPUT_FILE_LIST=`find ${SOURCES} -name "*.gyb"`
 
 echo "Starting generation of boilerplate:"
 for INPUT_FILE in $INPUT_FILE_LIST
 do
-  INPUT_FILE_PATH=${INPUT_FILE%/*}
-  INPUT_FILE_NAME=${INPUT_FILE##*/}
-  INPUT_FILE_BASE=${INPUT_FILE_NAME%.*}
-
-  OUTPUT_FILE="${INPUT_FILE_PATH}/${INPUT_FILE_BASE}"
+  OUTPUT_FILE=${INPUT_FILE%.*}
 
   if [[ $OUTPUT_FILE -ot $INPUT_FILE ]]
   then # output file is either older or doesn't exist yet

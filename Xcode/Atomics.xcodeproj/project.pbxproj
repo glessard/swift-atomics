@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
 		030F599F1ED04A4600F4B44B /* atomics-pointer.swift.gyb in Resources */ = {isa = PBXBuildFile; fileRef = 030F599E1ED04A4600F4B44B /* atomics-pointer.swift.gyb */; };
+		030F59A41ED1AB7700F4B44B /* generate.sh in Resources */ = {isa = PBXBuildFile; fileRef = 030F59A31ED1AB7700F4B44B /* generate.sh */; };
 		03157DAB1E4C4C6D00F4B44B /* atomics-fence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */; };
 		03157DAE1E4C54AA00F4B44B /* ClangAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */; };
 		031D7C461ECF61A800F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D7C451ECF61A800F4B44B /* atomics-integer.swift */; };
@@ -76,7 +77,8 @@
 		030110F91B4B896700F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		030111001B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		030F599E1ED04A4600F4B44B /* atomics-pointer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-pointer.swift.gyb"; path = "../../Sources/Atomics/atomics-pointer.swift.gyb"; sourceTree = "<group>"; };
-		030F59A01ED0580000F4B44B /* generate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = generate.sh; path = ../utils/generate.sh; sourceTree = "<group>"; };
+		030F59A31ED1AB7700F4B44B /* generate.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = generate.sh; path = ../Utilities/generate.sh; sourceTree = "<group>"; };
+		030F59A51ED1AB8700F4B44B /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-fence.swift"; path = "../../Sources/Atomics/atomics-fence.swift"; sourceTree = "<group>"; };
 		03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClangAtomicsTests.swift; path = ../../Tests/ClangAtomicsTests/ClangAtomicsTests.swift; sourceTree = "<group>"; };
 		031D7C431ECF59B100F4B44B /* atomics-integer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-integer.swift.gyb"; path = "../../Sources/Atomics/atomics-integer.swift.gyb"; sourceTree = "<group>"; };
@@ -140,7 +142,8 @@
 		030110E51B4B896700F4B44B = {
 			isa = PBXGroup;
 			children = (
-				030F59A01ED0580000F4B44B /* generate.sh */,
+				030F59A51ED1AB8700F4B44B /* Package.swift */,
+				030F59A31ED1AB7700F4B44B /* generate.sh */,
 				030110F11B4B896700F4B44B /* Atomics */,
 				030110FD1B4B896700F4B44B /* AtomicsTests */,
 				03DB46F41B4C7AFC00F4B44B /* Atomics_TestApp */,
@@ -365,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				030F599F1ED04A4600F4B44B /* atomics-pointer.swift.gyb in Resources */,
+				030F59A41ED1AB7700F4B44B /* generate.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,7 +410,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../utils/generate.sh";
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
