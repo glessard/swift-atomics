@@ -5,6 +5,8 @@ set -e
 
 INPUT_LIST=`find Sources -name "*.gyb"`
 
+GYB="${TRAVIS_BUILD_DIR}/Utilities/gyb.py"
+
 for INPUT_FILE in $INPUT_LIST
 do
   INPUT_FILE_PATH=${INPUT_FILE%/*}
@@ -14,7 +16,7 @@ do
   OUTPUT_TMP="/tmp/${INPUT_FILE_BASE}"
   OUT_TARGET="${INPUT_FILE_PATH}/${INPUT_FILE_BASE}"
 
-  ./utils/gyb --line-directive="" "${INPUT_FILE}" -o "${OUTPUT_TMP}"
+  ${GYB} --line-directive="" "${INPUT_FILE}" -o "${OUTPUT_TMP}"
   echo "Comparing ${OUT_TARGET} with ${OUTPUT_TMP}"
   /usr/bin/diff "${OUTPUT_TMP}" "${OUT_TARGET}"
   /bin/rm -f "${OUTPUT_TMP}"

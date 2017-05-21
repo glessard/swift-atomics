@@ -5,10 +5,10 @@ set -e
 if [[ -z ${PROJECT_DIR} ]]
 then
   SOURCE_DIR="${PWD}/Sources"
-  GYB="${PWD}/utils/gyb"
+  GYB="${PWD}/Utilities/gyb.py"
 else
   SOURCE_DIR="${PROJECT_DIR}/../Sources"
-  GYB="${PROJECT_DIR}/../utils/gyb"
+  GYB="${PROJECT_DIR}/../Utilities/gyb.py"
 fi
 
 INPUT_FILE_LIST=`find ${SOURCE_DIR} -name "*.gyb"`
