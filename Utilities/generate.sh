@@ -5,13 +5,15 @@ set -e
 if [[ -z ${PROJECT_DIR} ]]
 then
   SOURCES="${PWD}/Sources"
+  TESTS="${PWD}/Tests"
   UTILITIES="${PWD}/Utilities"
 else
   SOURCES="${PROJECT_DIR}/../Sources"
+  TESTS="${PROJECT_DIR}/../Tests"
   UTILITIES="${PROJECT_DIR}/../Utilities"
 fi
 
-if [[ ! -d ${SOURCES} || ! -d ${UTILITIES} ]]
+if [[ ! -d ${SOURCES} || ! -d ${TESTS} || ! -d ${UTILITIES} ]]
 then
   echo "Missing some directories, assuming the worst and exiting"
   exit 1
@@ -26,7 +28,7 @@ then
   chmod u+x ${GYB}
 fi
 
-INPUT_FILE_LIST=`find ${SOURCES} -name "*.gyb"`
+INPUT_FILE_LIST=`find ${SOURCES} ${TESTS} -name "*.gyb"`
 
 echo "Starting generation of boilerplate:"
 for INPUT_FILE in $INPUT_FILE_LIST

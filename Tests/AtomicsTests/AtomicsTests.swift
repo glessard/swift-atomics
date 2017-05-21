@@ -31,6 +31,7 @@ func nzRandom() -> UInt
   #endif
 }
 
+
 public class AtomicsTests: XCTestCase
 {
   public static var allTests = [
@@ -44,8 +45,8 @@ public class AtomicsTests: XCTestCase
     ("testUInt32", testUInt32),
     ("testInt64", testInt64),
     ("testUInt64", testUInt64),
-    ("testRawPointer", testRawPointer),
-    ("testMutableRawPointer", testMutableRawPointer),
+    ("testUnsafeRawPointer", testUnsafeRawPointer),
+    ("testUnsafeMutableRawPointer", testUnsafeMutableRawPointer),
     ("testUnsafePointer", testUnsafePointer),
     ("testUnsafeMutablePointer", testUnsafeMutablePointer),
     ("testOpaquePointer", testOpaquePointer),
@@ -413,9 +414,9 @@ public class AtomicsTests: XCTestCase
     var i = AtomicInt32()
     XCTAssert(i.value == 0)
 
-    let r1 = Int32(nzRandom())
-    let r2 = Int32(nzRandom())
-    let r3 = Int32(nzRandom())
+    let r1 = Int32(truncatingBitPattern: nzRandom())
+    let r2 = Int32(truncatingBitPattern: nzRandom())
+    let r3 = Int32(truncatingBitPattern: nzRandom())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -472,9 +473,9 @@ public class AtomicsTests: XCTestCase
     var i = AtomicUInt32()
     XCTAssert(i.value == 0)
 
-    let r1 = UInt32(nzRandom())
-    let r2 = UInt32(nzRandom())
-    let r3 = UInt32(nzRandom())
+    let r1 = UInt32(truncatingBitPattern: nzRandom())
+    let r2 = UInt32(truncatingBitPattern: nzRandom())
+    let r3 = UInt32(truncatingBitPattern: nzRandom())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -644,7 +645,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
-  public func testRawPointer()
+  public func testUnsafeRawPointer()
   {
     var i = AtomicRawPointer()
     XCTAssert(i.pointer == nil)
@@ -671,17 +672,14 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
-  public func testMutableRawPointer()
+  public func testUnsafeMutableRawPointer()
   {
     var i = AtomicMutableRawPointer()
     XCTAssert(i.pointer == nil)
 
     let r1 = UnsafeMutableRawPointer(bitPattern: nzRandom())
     let r2 = UnsafeMutableRawPointer(bitPattern: nzRandom())
-    let r3 = UnsafeMutableRawPointer.allocate(bytes: 8, alignedTo: 8)
-    let intp = r3.assumingMemoryBound(to: UInt.self)
-    let rando = nzRandom()
-    intp.pointee = rando
+    let r3 = UnsafeMutableRawPointer(bitPattern: nzRandom())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -699,20 +697,16 @@ public class AtomicsTests: XCTestCase
     while(!i.loadCAS(current: &j, future: r3)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
-
-    let value = i.pointer?.assumingMemoryBound(to: UInt.self).pointee
-    XCTAssert(rando == value)
-    r3.deallocate(bytes: 8, alignedTo: 8)
   }
 
   public func testUnsafePointer()
   {
-    var i = AtomicPointer<Int8>()
+    var i = AtomicPointer<Int64>()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafePointer<Int8>(bitPattern: nzRandom())
-    let r2 = UnsafePointer<Int8>(bitPattern: nzRandom())
-    let r3 = UnsafePointer<Int8>(bitPattern: nzRandom())
+    let r1 = UnsafePointer<Int64>(bitPattern: nzRandom())
+    let r2 = UnsafePointer<Int64>(bitPattern: nzRandom())
+    let r3 = UnsafePointer<Int64>(bitPattern: nzRandom())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -734,14 +728,12 @@ public class AtomicsTests: XCTestCase
 
   public func testUnsafeMutablePointer()
   {
-    var i = AtomicMutablePointer<Int>()
+    var i = AtomicMutablePointer<Int64>()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafeMutablePointer<Int>(bitPattern: nzRandom())
-    let r2 = UnsafeMutablePointer<Int>(bitPattern: nzRandom())
-    let r3 = UnsafeMutablePointer<Int>.allocate(capacity: 1)
-    let rando = Int(bitPattern: nzRandom())
-    r3.pointee = rando
+    let r1 = UnsafeMutablePointer<Int64>(bitPattern: nzRandom())
+    let r2 = UnsafeMutablePointer<Int64>(bitPattern: nzRandom())
+    let r3 = UnsafeMutablePointer<Int64>(bitPattern: nzRandom())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -759,10 +751,6 @@ public class AtomicsTests: XCTestCase
     while(!i.loadCAS(current: &j, future: r3)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
-
-    let value = i.pointer?.pointee
-    XCTAssert(rando == value)
-    r3.deallocate(capacity: 1)
   }
 
   public func testOpaquePointer()
@@ -791,6 +779,7 @@ public class AtomicsTests: XCTestCase
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, i.load())
   }
+
 
   public func testBool()
   {

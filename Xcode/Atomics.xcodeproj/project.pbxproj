@@ -81,6 +81,7 @@
 		030F59A31ED1AB7700F4B44B /* generate.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = generate.sh; path = ../Utilities/generate.sh; sourceTree = "<group>"; };
 		030F59A51ED1AB8700F4B44B /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsPerformanceTests.swift; path = ../../Tests/AtomicsTests/AtomicsPerformanceTests.swift; sourceTree = "<group>"; };
+		030F59A91ED1AEAC00F4B44B /* AtomicsTests.swift.gyb */ = {isa = PBXFileReference; lastKnownFileType = text; name = AtomicsTests.swift.gyb; path = ../../Tests/AtomicsTests/AtomicsTests.swift.gyb; sourceTree = "<group>"; };
 		03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-fence.swift"; path = "../../Sources/Atomics/atomics-fence.swift"; sourceTree = "<group>"; };
 		03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClangAtomicsTests.swift; path = ../../Tests/ClangAtomicsTests/ClangAtomicsTests.swift; sourceTree = "<group>"; };
 		031D7C431ECF59B100F4B44B /* atomics-integer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-integer.swift.gyb"; path = "../../Sources/Atomics/atomics-integer.swift.gyb"; sourceTree = "<group>"; };
@@ -186,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				03D6A8441DF20B3600F4B44B /* LinuxMain.swift */,
+				030F59A91ED1AEAC00F4B44B /* AtomicsTests.swift.gyb */,
 				03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */,
 				030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */,
 				03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */,
@@ -264,6 +266,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 030111061B4B896700F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTests" */;
 			buildPhases = (
+				030F59AA1ED1B0BE00F4B44B /* ShellScript */,
 				030110F51B4B896700F4B44B /* Sources */,
 				030110F61B4B896700F4B44B /* Frameworks */,
 				030110F71B4B896700F4B44B /* Resources */,
@@ -403,6 +406,20 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 		030F599D1ECF80B600F4B44B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh";
+			showEnvVarsInLog = 0;
+		};
+		030F59AA1ED1B0BE00F4B44B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

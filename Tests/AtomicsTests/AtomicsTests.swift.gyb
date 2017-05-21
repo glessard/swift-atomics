@@ -1,0 +1,230 @@
+//
+//  AtomicsTests.swift
+//  AtomicsTests
+//
+//  Created by Guillaume Lessard on 2015-07-06.
+//  Copyright © 2015 Guillaume Lessard. All rights reserved.
+//
+
+import XCTest
+
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+import func Darwin.libkern.OSAtomic.OSAtomicCompareAndSwap32
+import func Darwin.C.stdlib.arc4random
+#else // assuming os(Linux)
+import func Glibc.random
+import func Glibc.usleep
+#endif
+
+import struct Foundation.Date
+import Dispatch
+
+import Atomics
+
+func nzRandom() -> UInt
+{
+  // Return a nonzero, positive Int less than (or equal to) Int32.max/2.
+  #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+    return UInt(arc4random() & 0x3fff_fffe + 1)
+  #else
+    return UInt(random() & 0x3fff_fffe + 1)
+  #endif
+}
+
+% pointers = ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']
+% integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
+
+public class AtomicsTests: XCTestCase
+{
+  public static var allTests = [
+% for i in integers:
+    ("test${i}", test${i}),
+% end
+% for p in pointers:
+% unsafe = 'Unsafe' if p != 'Opaque' else ''
+    ("test${unsafe}${p}Pointer", test${unsafe}${p}Pointer),
+% end
+    ("testBool", testBool),
+    ("testFence", testFence),
+    ("testUnmanaged", testUnmanaged),
+  ]
+
+% for i in integers:
+% truncating = '' if (i == 'Int' or i == 'UInt' or i == 'Int64' or i == 'UInt64') else 'truncatingBitPattern: '
+  public func test${i}()
+  {
+    var i = Atomic${i}()
+    XCTAssert(i.value == 0)
+
+    let r1 = ${i}(${truncating}nzRandom())
+    let r2 = ${i}(${truncating}nzRandom())
+    let r3 = ${i}(${truncating}nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    j = i.add(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, i.load())
+
+    j = i.subtract(r2)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, i.load())
+
+    j = i.increment()
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 &+ 1, i.load())
+
+    i.store(r3)
+    j = i.decrement()
+    XCTAssertEqual(r3, j)
+    XCTAssertEqual(r3 &- 1, i.load())
+
+    i.store(r1)
+    j = i.bitwiseOr(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, i.load())
+
+    i.store(r2)
+    j = i.bitwiseXor(r1)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, i.load())
+
+    i.store(r1)
+    j = i.bitwiseAnd(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+
+%end
+% for p in pointers:
+% unsafe = 'Unsafe' if p != 'Opaque' else ''
+% pointee = '<Int64>' if (p == '' or p == 'Mutable') else ''
+  public func test${unsafe}${p}Pointer()
+  {
+    var i = Atomic${p}Pointer${pointee}()
+    XCTAssert(i.pointer == nil)
+
+    let r1 = ${unsafe}${p}Pointer${pointee}(bitPattern: nzRandom())
+    let r2 = ${unsafe}${p}Pointer${pointee}(bitPattern: nzRandom())
+    let r3 = ${unsafe}${p}Pointer${pointee}(bitPattern: nzRandom())
+
+    i.store(r1)
+    XCTAssert(r1 == i.load())
+
+    var j = i.swap(r2)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, i.load())
+
+    i.store(r1)
+    XCTAssertTrue(i.CAS(current: r1, future: r2, type: .strong))
+    XCTAssertEqual(r2, i.load())
+
+    j = r2
+    i.store(r1)
+    while(!i.loadCAS(current: &j, future: r3)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, i.load())
+  }
+
+%end
+
+  public func testBool()
+  {
+    var boolean = AtomicBool(false)
+    _ = AtomicBool(true)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(false)
+    XCTAssert(boolean.value == false)
+
+    boolean.store(true)
+    XCTAssert(boolean.value == true)
+    XCTAssert(boolean.value == boolean.load())
+
+    boolean.store(true)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+    boolean.or(false)
+    XCTAssert(boolean.value == true)
+    boolean.store(false)
+    boolean.or(false)
+    XCTAssert(boolean.value == false)
+    boolean.or(true)
+    XCTAssert(boolean.value == true)
+
+    boolean.and(false)
+    XCTAssert(boolean.value == false)
+    boolean.and(true)
+    XCTAssert(boolean.value == false)
+
+    boolean.xor(false)
+    XCTAssert(boolean.value == false)
+    boolean.xor(true)
+    XCTAssert(boolean.value == true)
+
+    let old = boolean.swap(false)
+    XCTAssert(old == true)
+    XCTAssert(boolean.swap(true) == false)
+
+    boolean.CAS(current: true, future: false)
+    if boolean.CAS(current: false, future: true, type: .strong)
+    {
+      boolean.CAS(current: true, future: false, type: .weak)
+      boolean.CAS(current: false, future: true, type: .weak)
+    }
+  }
+
+  public func testFence()
+  {
+    threadFence()
+    threadFence(order: .sequential)
+  }
+  
+  private class Thing
+  {
+    let id: UInt
+    init(_ x: UInt = nzRandom()) { id = x }
+    deinit { print("Released     \(id)") }
+  }
+
+  public func testUnmanaged()
+  {
+    var i = nzRandom()
+    var a = AtomicReference(Thing(i))
+    do {
+      let r1 = a.swap(.none)
+      print("Will release \(i)")
+      XCTAssert(r1 != nil)
+    }
+
+    i = nzRandom()
+    XCTAssert(a.swap(Thing(i)) == nil)
+    print("Releasing    \(i)")
+    XCTAssert(a.swap(nil) != nil)
+
+    i = nzRandom()
+    XCTAssert(a.swapIfNil(Thing(i)) == true)
+    let j = nzRandom()
+    print("Will drop    \(j)")
+    XCTAssert(a.swapIfNil(Thing(j)) == false)
+
+    print("Will release \(i)")
+    XCTAssert(a.take() != nil)
+    XCTAssert(a.take() == nil)
+  }
+}
