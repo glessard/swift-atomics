@@ -13,10 +13,8 @@ import func Darwin.libkern.OSAtomic.OSAtomicCompareAndSwap32
 import func Darwin.C.stdlib.arc4random
 #else // assuming os(Linux)
 import func Glibc.random
-import func Glibc.usleep
 #endif
 
-import struct Foundation.Date
 import Dispatch
 
 import Atomics
