@@ -28,6 +28,11 @@ then
   chmod u+x ${GYB}
 fi
 
+if [[ ${1} == "-f" ]]
+then
+  FORCE="-f"
+fi
+
 INPUT_FILE_LIST=`find ${SOURCES} ${TESTS} -name "*.gyb"`
 
 echo "Starting generation of boilerplate:"
@@ -35,7 +40,7 @@ for INPUT_FILE in $INPUT_FILE_LIST
 do
   OUTPUT_FILE=${INPUT_FILE%.*}
 
-  if [[ $OUTPUT_FILE -ot $INPUT_FILE ]]
+  if [[ -n $FORCE || $OUTPUT_FILE -ot $INPUT_FILE ]]
   then # output file is either older or doesn't exist yet
     echo "Generating ${OUTPUT_FILE}"
     ${GYB} --line-directive="" "${INPUT_FILE}" -o "${OUTPUT_FILE}"
