@@ -1,11 +1,18 @@
 #!/bin/bash
 set -e
 
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-  if [[ -n "$SWIFT_VERSION" ]]; then
-    VERSION=swift-${SWIFT_VERSION}-RELEASE
-    BRANCH=swift-${SWIFT_VERSION}-release
-    URLBASE="https://swift.org/builds/${BRANCH}/"
+if [[ -n "$SWIFT_VERSION" ]]; then
+  if [[ -n "$SNAPSHOT" ]]; then
+    ID="DEVELOPMENT-SNAPSHOT-${SNAPSHOT}"
+    VERSION="swift-${SWIFT_VERSION}-${ID}"
+    BRANCH="swift-${SWIFT_VERSION}-branch"
+  else
+    VERSION="swift-${SWIFT_VERSION}-RELEASE"
+    BRANCH="swift-${SWIFT_VERSION}-release"
+  fi
+  URLBASE="https://swift.org/builds/${BRANCH}"
+
+  if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     PLATFORM="ubuntu1404"
     BASENAME="${VERSION}-ubuntu14.04"
 
@@ -17,6 +24,21 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     cd "${TRAVIS_BUILD_DIR}"
 
     echo ""
+  elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    PLATFORM="xcode"
+    BASENAME="${VERSION}-osx"
+
+    # install swift
+    curl -O ${URLBASE}/${PLATFORM}/${VERSION}/${BASENAME}.pkg
+    sudo installer -pkg ${BASENAME}.pkg -target /
+    # SWIFT_PATH=/Library/Developer/Toolchains/${BASENAME}.xctoolchain
+    # export PATH="${SWIFT_PATH}/usr/bin:${PATH}"
+    export TOOLCHAINS=swift
+  fi
+else
+  if [[ -z $(which swift) ]]; then
+    echo "Set SWIFT_VERSION to define which version to install"
+    exit 1
   fi
 fi
 
