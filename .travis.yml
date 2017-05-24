@@ -6,7 +6,16 @@ matrix:
       dist: trusty
       language: generic
       sudo: required
+      env: SWIFT_VERSION=3.0.2 CLANG_VERSION=3.6
+
+    - os: linux
+      dist: trusty
+      language: generic
+      sudo: required
       env: SWIFT_VERSION=4.0 SNAPSHOT=2017-05-17-a CLANG_VERSION=3.8
+
+    - os: osx
+      osx_image: xcode8.2
 
     - os: osx
       osx_image: xcode8.3
