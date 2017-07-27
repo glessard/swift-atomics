@@ -1,0 +1,7 @@
+#if swift(>=4.0)
+print(4)
+#elseif swift(>=3.0)
+print(3)
+#else
+print(2)
+#endif
