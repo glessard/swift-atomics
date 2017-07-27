@@ -18,8 +18,7 @@ matrix:
       osx_image: xcode8.2
 
     - os: osx
-      osx_image: xcode8.3
-      env: SWIFT_VERSION=4.0 SNAPSHOT=2017-07-24-a
+      osx_image: xcode9
 
 before_install:
   - sudo /bin/bash Tests/install-clang.sh
