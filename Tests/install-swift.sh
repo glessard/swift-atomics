@@ -33,7 +33,7 @@ then
     BASENAME="${VERSION}-osx"
 
     # install swift
-    curl -O ${URLBASE}/${PLATFORM}/${VERSION}/${BASENAME}.pkg
+    curl -s -O ${URLBASE}/${PLATFORM}/${VERSION}/${BASENAME}.pkg
     sudo installer -pkg ${BASENAME}.pkg -target /
     export TOOLCHAINS=swift
   fi
