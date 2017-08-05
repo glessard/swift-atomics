@@ -30,9 +30,9 @@ extension FixedWidthInteger
     for _ in 0...((t.bitWidth-1)/32)
     {
     #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      t = t<<32 &+ Self(extendingOrTruncating: arc4random())
+      t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
     #else // probably Linux
-      t = t<<32 &+ Self(extendingOrTruncating: random())
+      t = t<<32 &+ Self(truncatingIfNeeded: random())
     #endif
     }
     return (t|1) & (Self.max>>1)
