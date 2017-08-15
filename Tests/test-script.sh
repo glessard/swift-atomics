@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+if [[ "${TRAVIS_OS_NAME}" == "osx" && -n "${SWIFT_VERSION}" ]]
+then
+  swift package tools-version --set "${SWIFT_VERSION}"
+fi
+
 VERSION=`swift Tests/swiftpm-version`
 if [ $VERSION == "4" ]
 then
