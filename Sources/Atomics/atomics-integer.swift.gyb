@@ -7,7 +7,9 @@
 //
 
 import ClangAtomics
-% for (AtomicType, ClangAtomicsType, IntType) in [('AtomicInt', 'ClangAtomicsSWord', 'Int'), ('AtomicUInt', 'ClangAtomicsUWord', 'UInt'), ('AtomicInt8', 'ClangAtomicsS8', 'Int8'), ('AtomicUInt8', 'ClangAtomicsU8', 'UInt8'), ('AtomicInt16', 'ClangAtomicsS16', 'Int16'), ('AtomicUInt16', 'ClangAtomicsU16', 'UInt16'), ('AtomicInt32', 'ClangAtomicsS32', 'Int32'), ('AtomicUInt32', 'ClangAtomicsU32', 'UInt32'), ('AtomicInt64', 'ClangAtomicsS64', 'Int64'), ('AtomicUInt64', 'ClangAtomicsU64', 'UInt64')]:
+% for IntType in ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']:
+% AtomicType = 'Atomic' + IntType
+% ClangAtomicsType = 'ClangAtomics' + IntType
 
 public struct ${AtomicType}
 {

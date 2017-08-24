@@ -156,20 +156,20 @@ _Bool ClangAtomicsPointerWeakCAS(const void* _Nullable* _Nonnull current, const 
 
 // integer atomics
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsSWord, atomic_long, long)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUWord, atomic_ulong, unsigned long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsInt, atomic_long, long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUInt, atomic_ulong, unsigned long)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsS8, atomic_schar, signed char)
-CLANG_ATOMICS_GENERATE(ClangAtomicsU8, atomic_uchar, unsigned char)
+CLANG_ATOMICS_GENERATE(ClangAtomicsInt8, atomic_schar, signed char)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUInt8, atomic_uchar, unsigned char)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsS16, atomic_short, short)
-CLANG_ATOMICS_GENERATE(ClangAtomicsU16, atomic_ushort, unsigned short)
+CLANG_ATOMICS_GENERATE(ClangAtomicsInt16, atomic_short, short)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUInt16, atomic_ushort, unsigned short)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsS32, atomic_int, int)
-CLANG_ATOMICS_GENERATE(ClangAtomicsU32, atomic_uint, unsigned int)
+CLANG_ATOMICS_GENERATE(ClangAtomicsInt32, atomic_int, int)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUInt32, atomic_uint, unsigned int)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsS64, atomic_llong, long long)
-CLANG_ATOMICS_GENERATE(ClangAtomicsU64, atomic_ullong, unsigned long long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsInt64, atomic_llong, long long)
+CLANG_ATOMICS_GENERATE(ClangAtomicsUInt64, atomic_ullong, unsigned long long)
 
 // bool atomics
 

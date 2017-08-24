@@ -37,14 +37,14 @@ public class ClangAtomicsTests: XCTestCase
 
   public func testTest()
   {
-    var i = ClangAtomicsSWord()
-    ClangAtomicsSWordInit(randomPositive(), &i)
-    ClangAtomicsSWordStore(0, &i, .relaxed)
-    XCTAssert(ClangAtomicsSWordLoad(&i, .relaxed) == 0)
+    var i = ClangAtomicsInt()
+    ClangAtomicsIntInit(randomPositive(), &i)
+    ClangAtomicsIntStore(0, &i, .relaxed)
+    XCTAssert(ClangAtomicsIntLoad(&i, .relaxed) == 0)
 
     let r = randomPositive()
-    ClangAtomicsSWordStore(r, &i, .relaxed)
-    XCTAssert(ClangAtomicsSWordLoad(&i, .relaxed) == r)
+    ClangAtomicsIntStore(r, &i, .relaxed)
+    XCTAssert(ClangAtomicsIntLoad(&i, .relaxed) == r)
   }
 }
 
@@ -61,15 +61,15 @@ public class ClangAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
-      var lock = ClangAtomicsSWord()
-      ClangAtomicsSWordStore(0, &lock, .relaxed)
+      var lock = ClangAtomicsInt()
+      ClangAtomicsIntStore(0, &lock, .relaxed)
       let closure = {
         while true
         {
           var current = 0
-          if ClangAtomicsSWordWeakCAS(&current, 1, &lock, .sequential, .relaxed)
+          if ClangAtomicsIntWeakCAS(&current, 1, &lock, .sequential, .relaxed)
           {
-            defer { ClangAtomicsSWordStore(0, &lock, .sequential) }
+            defer { ClangAtomicsIntStore(0, &lock, .sequential) }
             if let c = p
             {
               p = nil
