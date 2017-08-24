@@ -19,7 +19,7 @@
 		03433D941EC2150200F4B44B /* atomics-reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03433D931EC2150200F4B44B /* atomics-reference.swift */; };
 		0367F8181E70DF9900F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */; };
 		0367F8191E70DF9900F4B44B /* ClangAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */; };
-		0367F81A1E70DF9900F4B44B /* RacetestsDispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */; };
+		0367F81A1E70DF9900F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */; };
 		0367F81E1E70E0CA00F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
 		0367F81F1E70E25F00F4B44B /* Atomics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */; };
@@ -35,7 +35,7 @@
 		03DB46FB1B4C7AFC00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46F91B4C7AFC00F4B44B /* Main.storyboard */; };
 		03DB46FD1B4C7AFC00F4B44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FC1B4C7AFC00F4B44B /* Assets.xcassets */; };
 		03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */; };
-		03E976511DFB1E9600F4B44B /* RacetestsDispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */; };
+		03E976511DFB1E9600F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,7 +109,7 @@
 		03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Atomics_TestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03DB470C1B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		03E4BEEB1BFD994D00F4B44B /* module.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.map; sourceTree = "<group>"; };
-		03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RacetestsDispatch.swift; path = ../../Tests/AtomicsTests/RacetestsDispatch.swift; sourceTree = "<group>"; };
+		03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsRaceTests.swift; path = ../../Tests/AtomicsTests/AtomicsRaceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,10 +194,10 @@
 				03D6A8441DF20B3600F4B44B /* LinuxMain.swift */,
 				030F59A91ED1AEAC00F4B44B /* AtomicsTests.swift.gyb */,
 				03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */,
+				03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */,
 				030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */,
 				03157DAD1E4C54AA00F4B44B /* ClangAtomicsTests.swift */,
 				037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */,
-				03E976501DFB1E9600F4B44B /* RacetestsDispatch.swift */,
 				030111001B4B896700F4B44B /* Info.plist */,
 			);
 			path = AtomicsTests;
@@ -460,7 +460,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03E976511DFB1E9600F4B44B /* RacetestsDispatch.swift in Sources */,
+				03E976511DFB1E9600F4B44B /* AtomicsRaceTests.swift in Sources */,
 				037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */,
 				03D6A8421DF20B2700F4B44B /* AtomicsTests.swift in Sources */,
 				030F59A81ED1AD0200F4B44B /* AtomicsPerformanceTests.swift in Sources */,
@@ -485,7 +485,7 @@
 				0339F2A31F292DAD00F4B44B /* MemoryOrderTests.swift in Sources */,
 				0367F8191E70DF9900F4B44B /* ClangAtomicsTests.swift in Sources */,
 				0339F2A41F292DB000F4B44B /* AtomicsPerformanceTests.swift in Sources */,
-				0367F81A1E70DF9900F4B44B /* RacetestsDispatch.swift in Sources */,
+				0367F81A1E70DF9900F4B44B /* AtomicsRaceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

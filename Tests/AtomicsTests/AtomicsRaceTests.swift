@@ -1,5 +1,5 @@
 //
-//  RacetestsDispatch.swift
+//  AtomicsRaceTests.swift
 //  AtomicsTests
 //
 
