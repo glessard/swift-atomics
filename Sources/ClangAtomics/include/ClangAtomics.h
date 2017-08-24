@@ -61,34 +61,34 @@ SWIFT_ENUM(StoreMemoryOrder)
 typedef struct
 {
   volatile atomic_uintptr_t a;
-} AtomicVoidPointer;
+} ClangAtomicsPointer;
 
 static __inline__ __attribute__((__always_inline__))
-void AtomicPointerInit(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr)
+void ClangAtomicsPointerInit(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr)
 {
   atomic_init(&(ptr->a), (uintptr_t)val);
 }
 
 static __inline__ __attribute__((__always_inline__))
-void* _Nullable AtomicPointerLoad(AtomicVoidPointer* _Nonnull ptr, enum LoadMemoryOrder order)
+void* _Nullable ClangAtomicsPointerLoad(ClangAtomicsPointer* _Nonnull ptr, enum LoadMemoryOrder order)
 {
   return (void*) atomic_load_explicit(&(ptr->a), order);
 }
 
 static __inline__ __attribute__((__always_inline__))
-void AtomicPointerStore(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, enum StoreMemoryOrder order)
+void ClangAtomicsPointerStore(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr, enum StoreMemoryOrder order)
 {
   atomic_store_explicit(&(ptr->a), (uintptr_t)val, order);
 }
 
 static __inline__ __attribute__((__always_inline__))
-void* _Nullable AtomicPointerSwap(const void* _Nullable val, AtomicVoidPointer* _Nonnull ptr, enum MemoryOrder order)
+void* _Nullable ClangAtomicsPointerSwap(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr, enum MemoryOrder order)
 {
   return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
 }
 
 static __inline__ __attribute__((__always_inline__))
-_Bool AtomicPointerStrongCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
+_Bool ClangAtomicsPointerStrongCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, ClangAtomicsPointer* _Nonnull ptr,
                              enum MemoryOrder succ, enum LoadMemoryOrder fail)
 {
   assert((unsigned int)fail <= (unsigned int)succ);
@@ -97,7 +97,7 @@ _Bool AtomicPointerStrongCAS(const void* _Nullable* _Nonnull current, const void
 }
 
 static __inline__ __attribute__((__always_inline__))
-_Bool AtomicPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, AtomicVoidPointer* _Nonnull ptr,
+_Bool ClangAtomicsPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, ClangAtomicsPointer* _Nonnull ptr,
                            enum MemoryOrder succ, enum LoadMemoryOrder fail)
 {
   assert((unsigned int)fail <= (unsigned int)succ);

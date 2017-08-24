@@ -10,36 +10,36 @@ import ClangAtomics
 
 public struct ${AtomicType}
 {
-  @_versioned var ptr = AtomicVoidPointer()
+  @_versioned var ptr = ClangAtomicsPointer()
 
   public init(_ pointer: ${PointerType}? = nil)
   {
-    AtomicPointerInit(UnsafeRawPointer(pointer), &ptr)
+    ClangAtomicsPointerInit(UnsafeRawPointer(pointer), &ptr)
   }
 
   public var pointer: ${PointerType}? {
     @inline(__always)
     mutating get {
-      return ${PointerType}(AtomicPointerLoad(&ptr, .relaxed)${MemoryBinding})
+      return ${PointerType}(ClangAtomicsPointerLoad(&ptr, .relaxed)${MemoryBinding})
     }
   }
 
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ${PointerType}(AtomicPointerLoad(&ptr, order)${MemoryBinding})
+    return ${PointerType}(ClangAtomicsPointerLoad(&ptr, order)${MemoryBinding})
   }
 
   @inline(__always)
   public mutating func store(_ pointer: ${PointerType}?, order: StoreMemoryOrder = .sequential)
   {
-    AtomicPointerStore(UnsafeRawPointer(pointer), &ptr, order)
+    ClangAtomicsPointerStore(UnsafeRawPointer(pointer), &ptr, order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: ${PointerType}?, order: MemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ${PointerType}(AtomicPointerSwap(UnsafeRawPointer(pointer), &ptr, order)${MemoryBinding})
+    return ${PointerType}(ClangAtomicsPointerSwap(UnsafeRawPointer(pointer), &ptr, order)${MemoryBinding})
   }
 
   @inline(__always) @discardableResult
@@ -53,9 +53,9 @@ public struct ${AtomicType}
       current in
       switch type {
       case .strong:
-        return AtomicPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
+        return ClangAtomicsPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
       case .weak:
-        return AtomicPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
+        return ClangAtomicsPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
       }
     }
   }
