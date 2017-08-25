@@ -56,56 +56,7 @@ SWIFT_ENUM(StoreMemoryOrder)
   StoreMemoryOrder_sequential = __ATOMIC_SEQ_CST
 };
 
-// pointer atomics
-
-typedef struct
-{
-  volatile atomic_uintptr_t a;
-} ClangAtomicsPointer;
-
-static __inline__ __attribute__((__always_inline__))
-void ClangAtomicsPointerInit(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr)
-{
-  atomic_init(&(ptr->a), (uintptr_t)val);
-}
-
-static __inline__ __attribute__((__always_inline__))
-void* _Nullable ClangAtomicsPointerLoad(ClangAtomicsPointer* _Nonnull ptr, enum LoadMemoryOrder order)
-{
-  return (void*) atomic_load_explicit(&(ptr->a), order);
-}
-
-static __inline__ __attribute__((__always_inline__))
-void ClangAtomicsPointerStore(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr, enum StoreMemoryOrder order)
-{
-  atomic_store_explicit(&(ptr->a), (uintptr_t)val, order);
-}
-
-static __inline__ __attribute__((__always_inline__))
-void* _Nullable ClangAtomicsPointerSwap(const void* _Nullable val, ClangAtomicsPointer* _Nonnull ptr, enum MemoryOrder order)
-{
-  return (void*) atomic_exchange_explicit(&(ptr->a), (uintptr_t)val, order);
-}
-
-static __inline__ __attribute__((__always_inline__))
-_Bool ClangAtomicsPointerStrongCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, ClangAtomicsPointer* _Nonnull ptr,
-                             enum MemoryOrder succ, enum LoadMemoryOrder fail)
-{
-  assert((unsigned int)fail <= (unsigned int)succ);
-  assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true);
-  return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
-}
-
-static __inline__ __attribute__((__always_inline__))
-_Bool ClangAtomicsPointerWeakCAS(const void* _Nullable* _Nonnull current, const void* _Nullable future, ClangAtomicsPointer* _Nonnull ptr,
-                           enum MemoryOrder succ, enum LoadMemoryOrder fail)
-{
-  assert((unsigned int)fail <= (unsigned int)succ);
-  assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true);
-  return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail);
-}
-
-// integer atomics generation
+// atomic integer generation
 
 #define CLANG_ATOMICS_STRUCT(sType, aType) \
         typedef struct { volatile aType a; } sType;
@@ -183,6 +134,54 @@ CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_xor, Xor)
 CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_and, And)
 CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, strong, Strong)
 CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, weak, Weak)
+
+// pointer atomics
+
+#define CLANG_ATOMICS_POINTER_INIT(sType, pType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        void sType##Init(pType _Nullable value, sType *_Nonnull ptr) \
+        { atomic_init(&(ptr->a), (uintptr_t)value); }
+
+#define CLANG_ATOMICS_POINTER_LOAD(sType, pType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        pType _Nullable sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
+        { return (pType) atomic_load_explicit(&(ptr->a), order); }
+
+#define CLANG_ATOMICS_POINTER_STORE(sType, pType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        void sType##Store(pType _Nullable value, sType *_Nonnull ptr, enum StoreMemoryOrder order) \
+        { atomic_store_explicit(&(ptr->a), (uintptr_t)value, order); }
+
+#define CLANG_ATOMICS_POINTER_SWAP(sType, pType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        pType _Nullable sType##Swap(pType _Nullable value, sType *_Nonnull ptr, enum MemoryOrder order) \
+        { return (pType) atomic_exchange_explicit(&(ptr->a), (uintptr_t)value, order); }
+
+#define CLANG_ATOMICS_POINTER_CAS(sType, pType, strength, strName) \
+        static __inline__ __attribute__((__always_inline__)) \
+        _Bool sType##strName##CAS(pType _Nullable* _Nonnull current, pType _Nullable future, sType *_Nonnull ptr, \
+                                  enum MemoryOrder succ, enum LoadMemoryOrder fail) \
+        { \
+          assert((unsigned int)fail <= (unsigned int)succ); \
+          assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
+          return atomic_compare_exchange_##strength##_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
+        }
+
+CLANG_ATOMICS_STRUCT(ClangAtomicsMutablePointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(ClangAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_LOAD(ClangAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_STORE(ClangAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_SWAP(ClangAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_CAS(ClangAtomicsMutablePointer, void*, strong, Strong)
+CLANG_ATOMICS_POINTER_CAS(ClangAtomicsMutablePointer, void*, weak, Weak)
+
+CLANG_ATOMICS_STRUCT(ClangAtomicsPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(ClangAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_LOAD(ClangAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_STORE(ClangAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_SWAP(ClangAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_CAS(ClangAtomicsPointer, const void*, strong, Strong)
+CLANG_ATOMICS_POINTER_CAS(ClangAtomicsPointer, const void*, weak, Weak)
 
 // fence
 

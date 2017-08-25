@@ -1,0 +1,215 @@
+//
+//  ClangAtomicsTests.swift
+//  AtomicsTests
+//
+
+import XCTest
+import Dispatch
+
+#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+import func Darwin.C.stdlib.arc4random
+#else // assuming os(Linux)
+import func Glibc.random
+#endif
+
+import ClangAtomics
+
+#if swift(>=4.0)
+extension FixedWidthInteger
+{
+  // returns a positive random integer greater than 0 and less-than-or-equal to Self.max/2
+  // the least significant bit is always set.
+  static func randomPositive() -> Self
+  {
+    var t = Self()
+    for _ in 0...((t.bitWidth-1)/32)
+    {
+    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+      t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
+    #else // probably Linux
+      t = t<<32 &+ Self(truncatingIfNeeded: random())
+    #endif
+    }
+    return (t|1) & (Self.max>>1)
+  }
+}
+#else
+extension UInt
+{
+  // returns a positive random integer greater than 0 and less-than-or-equal to UInt32.max/2
+  // the least significant bit is always set.
+  static func randomPositive() -> UInt
+  {
+  #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
+    return UInt(arc4random() & 0x3fff_fffe + 1)
+  #else
+    return UInt(random() & 0x3fff_fffe + 1)
+  #endif
+  }
+}
+#endif
+% integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
+% pointers = ['Mutable', '']
+
+public class ClangAtomicsTests: XCTestCase
+{
+  public static var allTests = [
+% for integer in integers:
+% end
+% for mutable in pointers:
+    ("test${mutable}Pointer", test${mutable}Pointer),
+% end
+    ("testBool", testBool),
+    ("testFence", testFence),
+  ]
+
+% for i in integers:
+  public func test${i}()
+  {
+    var i = ClangAtomics${i}()
+    ClangAtomics${i}Init(0, &i)
+    XCTAssert(ClangAtomics${i}Load(&i, .relaxed) == 0)
+
+#if swift(>=4.0)
+    let r1 = ${i}.randomPositive()
+    let r2 = ${i}.randomPositive()
+    let r3 = ${i}.randomPositive()
+#else
+% truncating = '' if (i == 'Int' or i == 'UInt' or i == 'Int64' or i == 'UInt64') else 'truncatingBitPattern: '
+    let r1 = ${i}(${truncating}UInt.randomPositive())
+    let r2 = ${i}(${truncating}UInt.randomPositive())
+    let r3 = ${i}(${truncating}UInt.randomPositive())
+#endif
+
+    ClangAtomics${i}Store(r1, &i, .relaxed)
+    XCTAssert(r1 == ClangAtomics${i}Load(&i, .relaxed))
+
+    var j = ClangAtomics${i}Swap(r2, &i, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    j = ClangAtomics${i}Add(r1, &i, .relaxed)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 &+ r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    j = ClangAtomics${i}Sub(r2, &i, .relaxed)
+    XCTAssertEqual(r1 &+ r2, j)
+    XCTAssertEqual(r1, ClangAtomics${i}Load(&i, .relaxed))
+
+    ClangAtomics${i}Store(r1, &i, .relaxed)
+    j = ClangAtomics${i}Or(r2, &i, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 | r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    ClangAtomics${i}Store(r2, &i, .relaxed)
+    j = ClangAtomics${i}Xor(r1, &i, .relaxed)
+    XCTAssertEqual(r2, j)
+    XCTAssertEqual(r1 ^ r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    ClangAtomics${i}Store(r1, &i, .relaxed)
+    j = ClangAtomics${i}And(r2, &i, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r1 & r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    j = r1
+    ClangAtomics${i}Store(r1, &i, .relaxed)
+    XCTAssertTrue(ClangAtomics${i}StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertEqual(r2, ClangAtomics${i}Load(&i, .relaxed))
+
+    j = r2
+    ClangAtomics${i}Store(r1, &i, .relaxed)
+    while(!ClangAtomics${i}WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, ClangAtomics${i}Load(&i, .relaxed))
+  }
+
+% end
+% for mutable in pointers:
+  public func test${mutable}Pointer()
+  {
+    var p = ClangAtomics${mutable}Pointer()
+    ClangAtomics${mutable}PointerInit(nil, &p)
+    XCTAssert(ClangAtomics${mutable}PointerLoad(&p, .relaxed) == nil)
+
+    let r1 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
+    let r2 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
+    let r3 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
+
+    ClangAtomics${mutable}PointerStore(r1, &p, .relaxed)
+    XCTAssert(r1 == ClangAtomics${mutable}PointerLoad(&p, .relaxed))
+
+    var j = ClangAtomics${mutable}PointerSwap(r2, &p, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, ClangAtomics${mutable}PointerLoad(&p, .relaxed))
+
+    j = r1
+    ClangAtomics${mutable}PointerStore(r1, &p, .relaxed)
+    XCTAssertTrue(ClangAtomics${mutable}PointerStrongCAS(&j, r2, &p, .relaxed, .relaxed))
+    XCTAssertEqual(r2, ClangAtomics${mutable}PointerLoad(&p, .relaxed))
+
+    j = r2
+    ClangAtomics${mutable}PointerStore(r1, &p, .relaxed)
+    while(!ClangAtomics${mutable}PointerWeakCAS(&j, r3, &p, .relaxed, .relaxed)) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, ClangAtomics${mutable}PointerLoad(&p, .relaxed))
+  }
+
+% end
+  public func testBool()
+  {
+    var boolean = ClangAtomicsBoolean()
+    ClangAtomicsBooleanInit(false, &boolean)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+
+    ClangAtomicsBooleanStore(false, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+
+    ClangAtomicsBooleanStore(true, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == true)
+
+    ClangAtomicsBooleanStore(false, &boolean, .relaxed)
+    ClangAtomicsBooleanOr(true, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == true)
+    ClangAtomicsBooleanOr(false, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == true)
+    ClangAtomicsBooleanStore(false, &boolean, .relaxed)
+    ClangAtomicsBooleanOr(false, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    ClangAtomicsBooleanOr(true, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == true)
+
+    ClangAtomicsBooleanAnd(false, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    ClangAtomicsBooleanAnd(true, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+
+    ClangAtomicsBooleanXor(false, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    ClangAtomicsBooleanXor(true, &boolean, .relaxed)
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == true)
+
+    let old = ClangAtomicsBooleanSwap(false, &boolean, .relaxed)
+    XCTAssert(old == true)
+    XCTAssert(ClangAtomicsBooleanSwap(true, &boolean, .relaxed) == false)
+
+    var current = true
+    XCTAssert(ClangAtomicsBooleanLoad(&boolean, .relaxed) == current)
+    ClangAtomicsBooleanStrongCAS(&current, false, &boolean, .relaxed, .relaxed)
+    current = ClangAtomicsBooleanLoad(&boolean, .relaxed)
+    XCTAssert(current == false)
+    if ClangAtomicsBooleanStrongCAS(&current, true, &boolean, .relaxed, .relaxed)
+    {
+      current = !current
+      XCTAssert(ClangAtomicsBooleanWeakCAS(&current, false, &boolean, .relaxed, .relaxed))
+      current = !current
+      XCTAssert(ClangAtomicsBooleanWeakCAS(&current, true, &boolean, .relaxed, .relaxed))
+    }
+  }
+
+public func testFence()
+  {
+    ThreadFence(.release)
+    ThreadFence(.acquire)
+  }
+}
+
