@@ -5,41 +5,41 @@
 //  Copyright © 2015, 2016 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
-% for (AtomicType, PointerType, MemoryBinding) in [('AtomicMutableRawPointer', 'UnsafeMutableRawPointer', ''), ('AtomicRawPointer', 'UnsafeRawPointer', ''), ('AtomicMutablePointer<Pointee>', 'UnsafeMutablePointer<Pointee>', '?.assumingMemoryBound(to: Pointee.self)'), ('AtomicPointer<Pointee>', 'UnsafePointer<Pointee>', '?.assumingMemoryBound(to: Pointee.self)'), ('AtomicOpaquePointer', 'OpaquePointer', '')]:
+import CAtomics
+% for (AtomicType, PointerType, MemoryBinding, Mutable) in [('AtomicMutableRawPointer', 'UnsafeMutableRawPointer', '', 'Mutable'), ('AtomicRawPointer', 'UnsafeRawPointer', '', ''), ('AtomicMutablePointer<Pointee>', 'UnsafeMutablePointer<Pointee>', '?.assumingMemoryBound(to: Pointee.self)', 'Mutable'), ('AtomicPointer<Pointee>', 'UnsafePointer<Pointee>', '?.assumingMemoryBound(to: Pointee.self)', ''), ('AtomicOpaquePointer', 'OpaquePointer', '', '')]:
 
 public struct ${AtomicType}
 {
-  @_versioned var ptr = AtomicVoidPointer()
+  @_versioned var ptr = CAtomics${Mutable}Pointer()
 
   public init(_ pointer: ${PointerType}? = nil)
   {
-    AtomicPointerInit(UnsafeRawPointer(pointer), &ptr)
+    CAtomics${Mutable}PointerInit(Unsafe${Mutable}RawPointer(pointer), &ptr)
   }
 
   public var pointer: ${PointerType}? {
     @inline(__always)
     mutating get {
-      return ${PointerType}(AtomicPointerLoad(&ptr, .relaxed)${MemoryBinding})
+      return ${PointerType}(CAtomics${Mutable}PointerLoad(&ptr, .relaxed)${MemoryBinding})
     }
   }
 
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ${PointerType}(AtomicPointerLoad(&ptr, order)${MemoryBinding})
+    return ${PointerType}(CAtomics${Mutable}PointerLoad(&ptr, order)${MemoryBinding})
   }
 
   @inline(__always)
   public mutating func store(_ pointer: ${PointerType}?, order: StoreMemoryOrder = .sequential)
   {
-    AtomicPointerStore(UnsafeRawPointer(pointer), &ptr, order)
+    CAtomics${Mutable}PointerStore(Unsafe${Mutable}RawPointer(pointer), &ptr, order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: ${PointerType}?, order: MemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ${PointerType}(AtomicPointerSwap(UnsafeRawPointer(pointer), &ptr, order)${MemoryBinding})
+    return ${PointerType}(CAtomics${Mutable}PointerSwap(Unsafe${Mutable}RawPointer(pointer), &ptr, order)${MemoryBinding})
   }
 
   @inline(__always) @discardableResult
@@ -49,13 +49,13 @@ public struct ${AtomicType}
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
+    return current.withMemoryRebound(to: Optional<Unsafe${Mutable}RawPointer>.self, capacity: 1) {
       current in
       switch type {
       case .strong:
-        return AtomicPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
+        return CAtomics${Mutable}PointerStrongCAS(current, Unsafe${Mutable}RawPointer(future), &ptr, orderSwap, orderLoad)
       case .weak:
-        return AtomicPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
+        return CAtomics${Mutable}PointerWeakCAS(current, Unsafe${Mutable}RawPointer(future), &ptr, orderSwap, orderLoad)
       }
     }
   }

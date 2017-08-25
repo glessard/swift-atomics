@@ -8,12 +8,13 @@ let package = Package(
   name: "Atomics",
   products: [
     .library(name: "Atomics", type: .static, targets: ["Atomics"]),
+    .library(name: "CAtomics", type: .static, targets: ["CAtomics"]),
   ],
   targets: [
-    .target(name: "Atomics", dependencies: ["ClangAtomics"]),
+    .target(name: "Atomics", dependencies: ["CAtomics"]),
     .testTarget(name: "AtomicsTests", dependencies: ["Atomics"]),
-    .target(name: "ClangAtomics", dependencies: []),
-    .testTarget(name: "ClangAtomicsTests", dependencies: ["ClangAtomics"]),
+    .target(name: "CAtomics", dependencies: []),
+    .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
   ]
 )
 
@@ -22,7 +23,7 @@ let package = Package(
 let package = Package(
   name: "Atomics",
   targets: [
-    Target(name: "Atomics", dependencies: ["ClangAtomics"]),
+    Target(name: "Atomics", dependencies: ["CAtomics"]),
   ]
 )
 

@@ -1,5 +1,5 @@
-module ClangAtomics [system]
+module CAtomics [system]
 {
-  header "../../Sources/ClangAtomics/include/ClangAtomics.h"
+  header "../../Sources/CAtomics/include/CAtomics.h"
   export *
 }

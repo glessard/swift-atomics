@@ -7,15 +7,13 @@
 //
 
 import XCTest
+import Dispatch
 
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-import func Darwin.libkern.OSAtomic.OSAtomicCompareAndSwap32
 import func Darwin.C.stdlib.arc4random
 #else // assuming os(Linux)
 import func Glibc.random
 #endif
-
-import Dispatch
 
 import Atomics
 

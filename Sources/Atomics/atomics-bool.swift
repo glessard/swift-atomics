@@ -6,20 +6,20 @@
 //  Copyright © 2016 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
+import CAtomics
 
 public struct AtomicBool
 {
-  @_versioned var val = ClangAtomicsBoolean()
+  @_versioned var val = CAtomicsBoolean()
 
   public init(_ value: Bool = false)
   {
-    ClangAtomicsBooleanInit(value, &val)
+    CAtomicsBooleanInit(value, &val)
   }
 
   public var value: Bool {
     @inline(__always)
-    mutating get { return ClangAtomicsBooleanLoad(&val, .relaxed) }
+    mutating get { return CAtomicsBooleanLoad(&val, .relaxed) }
   }
 }
 
@@ -28,37 +28,37 @@ extension AtomicBool
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed)-> Bool
   {
-    return ClangAtomicsBooleanLoad(&val, order)
+    return CAtomicsBooleanLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsBooleanStore(value, &val, order)
+    CAtomicsBooleanStore(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return ClangAtomicsBooleanSwap(value, &val, order)
+    return CAtomicsBooleanSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return ClangAtomicsBooleanOr(value, &val, order)
+    return CAtomicsBooleanOr(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return ClangAtomicsBooleanXor(value, &val, order)
+    return CAtomicsBooleanXor(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed)-> Bool
   {
-    return ClangAtomicsBooleanAnd(value, &val, order)
+    return CAtomicsBooleanAnd(value, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -69,9 +69,9 @@ extension AtomicBool
   {
     switch type {
     case .strong:
-      return ClangAtomicsBooleanStrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsBooleanStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsBooleanWeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsBooleanWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
