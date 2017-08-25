@@ -6,16 +6,16 @@
 //  Copyright © 2017 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
+import CAtomics
 
 public struct AtomicReference<T: AnyObject>
 {
-  @_versioned internal var ptr = ClangAtomicsPointer()
+  @_versioned internal var ptr = CAtomicsPointer()
 
   public init(_ ref: T? = nil)
   {
     let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    ClangAtomicsPointerInit(u, &ptr)
+    CAtomicsPointerInit(u, &ptr)
   }
 }
 
@@ -25,7 +25,7 @@ extension AtomicReference
   public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
   {
     let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    if let pointer = ClangAtomicsPointerSwap(u, &ptr, order)
+    if let pointer = CAtomicsPointerSwap(u, &ptr, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }
@@ -37,7 +37,7 @@ extension AtomicReference
   {
     let u = Unmanaged.passUnretained(ref)
     var null: UnsafeRawPointer? = nil
-    if ClangAtomicsPointerStrongCAS(&null, u.toOpaque(), &ptr, order, .relaxed)
+    if CAtomicsPointerStrongCAS(&null, u.toOpaque(), &ptr, order, .relaxed)
     {
       _ = u.retain()
       return true
@@ -48,7 +48,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func take(order: MemoryOrder = .sequential) -> T?
   {
-    if let pointer = ClangAtomicsPointerSwap(nil, &ptr, order)
+    if let pointer = CAtomicsPointerSwap(nil, &ptr, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }

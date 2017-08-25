@@ -1,9 +1,8 @@
 //
-//  clang-atomics.h
-//  Test23
+//  CAtomics.h
 //
 //  Created by Guillaume Lessard on 2015-05-21.
-//  Copyright (c) 2015 Guillaume Lessard. All rights reserved.
+//  Copyright (c) 2015-2017 Guillaume Lessard. All rights reserved.
 //
 
 #ifndef clang_atomics_h
@@ -107,33 +106,33 @@ SWIFT_ENUM(StoreMemoryOrder)
 
 // integer atomics
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsInt, atomic_long, long)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUInt, atomic_ulong, unsigned long)
+CLANG_ATOMICS_GENERATE(CAtomicsInt, atomic_long, long)
+CLANG_ATOMICS_GENERATE(CAtomicsUInt, atomic_ulong, unsigned long)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsInt8, atomic_schar, signed char)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUInt8, atomic_uchar, unsigned char)
+CLANG_ATOMICS_GENERATE(CAtomicsInt8, atomic_schar, signed char)
+CLANG_ATOMICS_GENERATE(CAtomicsUInt8, atomic_uchar, unsigned char)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsInt16, atomic_short, short)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUInt16, atomic_ushort, unsigned short)
+CLANG_ATOMICS_GENERATE(CAtomicsInt16, atomic_short, short)
+CLANG_ATOMICS_GENERATE(CAtomicsUInt16, atomic_ushort, unsigned short)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsInt32, atomic_int, int)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUInt32, atomic_uint, unsigned int)
+CLANG_ATOMICS_GENERATE(CAtomicsInt32, atomic_int, int)
+CLANG_ATOMICS_GENERATE(CAtomicsUInt32, atomic_uint, unsigned int)
 
-CLANG_ATOMICS_GENERATE(ClangAtomicsInt64, atomic_llong, long long)
-CLANG_ATOMICS_GENERATE(ClangAtomicsUInt64, atomic_ullong, unsigned long long)
+CLANG_ATOMICS_GENERATE(CAtomicsInt64, atomic_llong, long long)
+CLANG_ATOMICS_GENERATE(CAtomicsUInt64, atomic_ullong, unsigned long long)
 
 // bool atomics
 
-CLANG_ATOMICS_STRUCT(ClangAtomicsBoolean, atomic_bool)
-CLANG_ATOMICS_INIT(ClangAtomicsBoolean, _Bool)
-CLANG_ATOMICS_LOAD(ClangAtomicsBoolean, _Bool)
-CLANG_ATOMICS_STORE(ClangAtomicsBoolean, _Bool)
-CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, exchange, Swap)
-CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_or, Or)
-CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_xor, Xor)
-CLANG_ATOMICS_RMW(ClangAtomicsBoolean, _Bool, value, fetch_and, And)
-CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, strong, Strong)
-CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, weak, Weak)
+CLANG_ATOMICS_STRUCT(CAtomicsBoolean, atomic_bool)
+CLANG_ATOMICS_INIT(CAtomicsBoolean, _Bool)
+CLANG_ATOMICS_LOAD(CAtomicsBoolean, _Bool)
+CLANG_ATOMICS_STORE(CAtomicsBoolean, _Bool)
+CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, exchange, Swap)
+CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_or, Or)
+CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_xor, Xor)
+CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_and, And)
+CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool, strong, Strong)
+CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool, weak, Weak)
 
 // pointer atomics
 
@@ -167,26 +166,26 @@ CLANG_ATOMICS_CAS(ClangAtomicsBoolean, _Bool, weak, Weak)
           return atomic_compare_exchange_##strength##_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
         }
 
-CLANG_ATOMICS_STRUCT(ClangAtomicsMutablePointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(ClangAtomicsMutablePointer, void*)
-CLANG_ATOMICS_POINTER_LOAD(ClangAtomicsMutablePointer, void*)
-CLANG_ATOMICS_POINTER_STORE(ClangAtomicsMutablePointer, void*)
-CLANG_ATOMICS_POINTER_SWAP(ClangAtomicsMutablePointer, void*)
-CLANG_ATOMICS_POINTER_CAS(ClangAtomicsMutablePointer, void*, strong, Strong)
-CLANG_ATOMICS_POINTER_CAS(ClangAtomicsMutablePointer, void*, weak, Weak)
+CLANG_ATOMICS_STRUCT(CAtomicsMutablePointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(CAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_LOAD(CAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_STORE(CAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_SWAP(CAtomicsMutablePointer, void*)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsMutablePointer, void*, strong, Strong)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsMutablePointer, void*, weak, Weak)
 
-CLANG_ATOMICS_STRUCT(ClangAtomicsPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(ClangAtomicsPointer, const void*)
-CLANG_ATOMICS_POINTER_LOAD(ClangAtomicsPointer, const void*)
-CLANG_ATOMICS_POINTER_STORE(ClangAtomicsPointer, const void*)
-CLANG_ATOMICS_POINTER_SWAP(ClangAtomicsPointer, const void*)
-CLANG_ATOMICS_POINTER_CAS(ClangAtomicsPointer, const void*, strong, Strong)
-CLANG_ATOMICS_POINTER_CAS(ClangAtomicsPointer, const void*, weak, Weak)
+CLANG_ATOMICS_STRUCT(CAtomicsPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(CAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_LOAD(CAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_STORE(CAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_SWAP(CAtomicsPointer, const void*)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsPointer, const void*, strong, Strong)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsPointer, const void*, weak, Weak)
 
 // fence
 
 static __inline__ __attribute__((__always_inline__))
-void ThreadFence(enum MemoryOrder order)
+void CAtomicsThreadFence(enum MemoryOrder order)
 {
   atomic_thread_fence(order);
 }

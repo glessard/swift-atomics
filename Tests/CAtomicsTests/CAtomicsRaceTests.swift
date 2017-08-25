@@ -1,18 +1,18 @@
 //
-//  ClangAtomicsRaceTests.swift
+//  CAtomicsRaceTests.swift
 //  AtomicsTests
 //
 
 import XCTest
 import Dispatch
 
-import ClangAtomics
+import CAtomics
 
 private let iterations = 200_000//_000
 
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
-public class ClangAtomicsRaceTests: XCTestCase
+public class CAtomicsRaceTests: XCTestCase
 {
   public static var allTests = [
     ("testRaceCrash", testRaceCrash),
@@ -61,16 +61,16 @@ public class ClangAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
-      var lock = ClangAtomicsInt()
-      ClangAtomicsIntInit(0, &lock)
+      var lock = CAtomicsInt()
+      CAtomicsIntInit(0, &lock)
 
       let closure = {
         while true
         {
           var current = 0
-          if ClangAtomicsIntWeakCAS(&current, 1, &lock, .sequential, .relaxed)
+          if CAtomicsIntWeakCAS(&current, 1, &lock, .sequential, .relaxed)
           {
-            defer { ClangAtomicsIntStore(0, &lock, .sequential) }
+            defer { CAtomicsIntStore(0, &lock, .sequential) }
             if let c = p
             {
               p = nil
@@ -97,14 +97,14 @@ public class ClangAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = ClangAtomicsPointer()
-      ClangAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = CAtomicsPointer()
+      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
 
       let closure = {
         var c = UnsafeRawPointer(bitPattern: 0x1)
         while true
         {
-          if ClangAtomicsPointerWeakCAS(&c, nil, &p, .release, .relaxed)
+          if CAtomicsPointerWeakCAS(&c, nil, &p, .release, .relaxed)
           {
             if let c = UnsafeMutableRawPointer(mutating: c)
             {
@@ -133,13 +133,13 @@ public class ClangAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = ClangAtomicsPointer()
-      ClangAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = CAtomicsPointer()
+      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
 
       let closure = {
         while true
         {
-          if let c = ClangAtomicsPointerSwap(nil, &p, .acquire)
+          if let c = CAtomicsPointerSwap(nil, &p, .acquire)
           {
             let pointer = UnsafeMutableRawPointer(mutating: c).assumingMemoryBound(to: Point.self)
             pointer.deallocate(capacity: 1)

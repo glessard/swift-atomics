@@ -6,9 +6,9 @@
 //  Copyright © 2017 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
+import CAtomics
 
 public func threadFence(order: MemoryOrder = .sequential)
 {
-  ThreadFence(order)
+  CAtomicsThreadFence(order)
 }

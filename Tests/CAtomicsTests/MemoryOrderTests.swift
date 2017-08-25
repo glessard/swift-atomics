@@ -8,7 +8,7 @@
 
 import XCTest
 
-import ClangAtomics
+import CAtomics
 
 public class MemoryOrderTests: XCTestCase
 {

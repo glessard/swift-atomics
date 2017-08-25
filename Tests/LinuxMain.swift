@@ -1,11 +1,11 @@
 import XCTest
 import AtomicsTests
-import ClangAtomicsTests
+import CAtomicsTests
 
 XCTMain([
-  testCase(ClangAtomicsTests.allTests),
-  testCase(ClangAtomicsRaceTests.allTests),
   testCase(MemoryOrderTests.allTests),
+  testCase(CAtomicsTests.allTests),
+  testCase(CAtomicsRaceTests.allTests),
   testCase(AtomicsTests.allTests),
   testCase(AtomicsRaceTests.raceTests),
 ])

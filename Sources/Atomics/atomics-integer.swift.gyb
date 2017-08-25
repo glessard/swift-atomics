@@ -6,23 +6,23 @@
 //  Copyright © 2016 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
+import CAtomics
 % for IntType in ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']:
 % AtomicType = 'Atomic' + IntType
-% ClangAtomicsType = 'ClangAtomics' + IntType
+% CAtomicsType = 'CAtomics' + IntType
 
 public struct ${AtomicType}
 {
-  @_versioned var val = ${ClangAtomicsType}()
+  @_versioned var val = ${CAtomicsType}()
 
   public init(_ value: ${IntType} = 0)
   {
-    ${ClangAtomicsType}Init(value, &val)
+    ${CAtomicsType}Init(value, &val)
   }
 
   public var value: ${IntType} {
     @inline(__always)
-    mutating get { return ${ClangAtomicsType}Load(&val, .relaxed) }
+    mutating get { return ${CAtomicsType}Load(&val, .relaxed) }
   }
 }
 
@@ -31,26 +31,26 @@ extension ${AtomicType}
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${ClangAtomicsType}Load(&val, order)
+    return ${CAtomicsType}Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: ${IntType}, order: StoreMemoryOrder = .relaxed)
   {
-    ${ClangAtomicsType}Store(value, &val, order)
+    ${CAtomicsType}Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: ${IntType}, order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${ClangAtomicsType}Swap(value, &val, order)
+    return ${CAtomicsType}Swap(value, &val, order)
   }
 
 % for (rmwMethod, rmwFunc, rmwParam) in [('add', 'Add', 'delta'), ('subtract', 'Sub', 'delta'), ('bitwiseOr', 'Or', 'bits'), ('bitwiseXor', 'Xor', 'bits'), ('bitwiseAnd', 'And', 'bits')]:
   @inline(__always) @discardableResult
   public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${ClangAtomicsType}${rmwFunc}(${rmwParam}, &val, order)
+    return ${CAtomicsType}${rmwFunc}(${rmwParam}, &val, order)
   }
 
 % end
@@ -58,7 +58,7 @@ extension ${AtomicType}
   @inline(__always) @discardableResult
   public mutating func ${inc}(order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${ClangAtomicsType}${op}(1, &val, order)
+    return ${CAtomicsType}${op}(1, &val, order)
   }
 
 % end
@@ -70,9 +70,9 @@ extension ${AtomicType}
   {
     switch type {
     case .strong:
-      return ${ClangAtomicsType}StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return ${CAtomicsType}StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ${ClangAtomicsType}WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return ${CAtomicsType}WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
