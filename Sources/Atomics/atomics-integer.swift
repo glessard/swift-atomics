@@ -6,20 +6,20 @@
 //  Copyright © 2016 Guillaume Lessard. All rights reserved.
 //
 
-import ClangAtomics
+import CAtomics
 
 public struct AtomicInt
 {
-  @_versioned var val = ClangAtomicsSWord()
+  @_versioned var val = CAtomicsInt()
 
   public init(_ value: Int = 0)
   {
-    ClangAtomicsSWordInit(value, &val)
+    CAtomicsIntInit(value, &val)
   }
 
   public var value: Int {
     @inline(__always)
-    mutating get { return ClangAtomicsSWordLoad(&val, .relaxed) }
+    mutating get { return CAtomicsIntLoad(&val, .relaxed) }
   }
 }
 
@@ -28,61 +28,61 @@ extension AtomicInt
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordLoad(&val, order)
+    return CAtomicsIntLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsSWordStore(value, &val, order)
+    CAtomicsIntStore(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordSwap(value, &val, order)
+    return CAtomicsIntSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordAdd(delta, &val, order)
+    return CAtomicsIntAdd(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordSub(delta, &val, order)
+    return CAtomicsIntSub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordOr(bits, &val, order)
+    return CAtomicsIntOr(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordXor(bits, &val, order)
+    return CAtomicsIntXor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordAnd(bits, &val, order)
+    return CAtomicsIntAnd(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordAdd(1, &val, order)
+    return CAtomicsIntAdd(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return ClangAtomicsSWordSub(1, &val, order)
+    return CAtomicsIntSub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -93,9 +93,9 @@ extension AtomicInt
   {
     switch type {
     case .strong:
-      return ClangAtomicsSWordStrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsIntStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsSWordWeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsIntWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -111,16 +111,16 @@ extension AtomicInt
 
 public struct AtomicUInt
 {
-  @_versioned var val = ClangAtomicsUWord()
+  @_versioned var val = CAtomicsUInt()
 
   public init(_ value: UInt = 0)
   {
-    ClangAtomicsUWordInit(value, &val)
+    CAtomicsUIntInit(value, &val)
   }
 
   public var value: UInt {
     @inline(__always)
-    mutating get { return ClangAtomicsUWordLoad(&val, .relaxed) }
+    mutating get { return CAtomicsUIntLoad(&val, .relaxed) }
   }
 }
 
@@ -129,61 +129,61 @@ extension AtomicUInt
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordLoad(&val, order)
+    return CAtomicsUIntLoad(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsUWordStore(value, &val, order)
+    CAtomicsUIntStore(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordSwap(value, &val, order)
+    return CAtomicsUIntSwap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordAdd(delta, &val, order)
+    return CAtomicsUIntAdd(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordSub(delta, &val, order)
+    return CAtomicsUIntSub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordOr(bits, &val, order)
+    return CAtomicsUIntOr(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordXor(bits, &val, order)
+    return CAtomicsUIntXor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordAnd(bits, &val, order)
+    return CAtomicsUIntAnd(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordAdd(1, &val, order)
+    return CAtomicsUIntAdd(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return ClangAtomicsUWordSub(1, &val, order)
+    return CAtomicsUIntSub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -194,9 +194,9 @@ extension AtomicUInt
   {
     switch type {
     case .strong:
-      return ClangAtomicsUWordStrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUIntStrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsUWordWeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUIntWeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -212,16 +212,16 @@ extension AtomicUInt
 
 public struct AtomicInt8
 {
-  @_versioned var val = ClangAtomicsS8()
+  @_versioned var val = CAtomicsInt8()
 
   public init(_ value: Int8 = 0)
   {
-    ClangAtomicsS8Init(value, &val)
+    CAtomicsInt8Init(value, &val)
   }
 
   public var value: Int8 {
     @inline(__always)
-    mutating get { return ClangAtomicsS8Load(&val, .relaxed) }
+    mutating get { return CAtomicsInt8Load(&val, .relaxed) }
   }
 }
 
@@ -230,61 +230,61 @@ extension AtomicInt8
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Load(&val, order)
+    return CAtomicsInt8Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsS8Store(value, &val, order)
+    CAtomicsInt8Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Swap(value, &val, order)
+    return CAtomicsInt8Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Add(delta, &val, order)
+    return CAtomicsInt8Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Sub(delta, &val, order)
+    return CAtomicsInt8Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Or(bits, &val, order)
+    return CAtomicsInt8Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Xor(bits, &val, order)
+    return CAtomicsInt8Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8And(bits, &val, order)
+    return CAtomicsInt8And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Add(1, &val, order)
+    return CAtomicsInt8Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
   {
-    return ClangAtomicsS8Sub(1, &val, order)
+    return CAtomicsInt8Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -295,9 +295,9 @@ extension AtomicInt8
   {
     switch type {
     case .strong:
-      return ClangAtomicsS8StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt8StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsS8WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt8WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -313,16 +313,16 @@ extension AtomicInt8
 
 public struct AtomicUInt8
 {
-  @_versioned var val = ClangAtomicsU8()
+  @_versioned var val = CAtomicsUInt8()
 
   public init(_ value: UInt8 = 0)
   {
-    ClangAtomicsU8Init(value, &val)
+    CAtomicsUInt8Init(value, &val)
   }
 
   public var value: UInt8 {
     @inline(__always)
-    mutating get { return ClangAtomicsU8Load(&val, .relaxed) }
+    mutating get { return CAtomicsUInt8Load(&val, .relaxed) }
   }
 }
 
@@ -331,61 +331,61 @@ extension AtomicUInt8
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Load(&val, order)
+    return CAtomicsUInt8Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsU8Store(value, &val, order)
+    CAtomicsUInt8Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Swap(value, &val, order)
+    return CAtomicsUInt8Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Add(delta, &val, order)
+    return CAtomicsUInt8Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Sub(delta, &val, order)
+    return CAtomicsUInt8Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Or(bits, &val, order)
+    return CAtomicsUInt8Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Xor(bits, &val, order)
+    return CAtomicsUInt8Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8And(bits, &val, order)
+    return CAtomicsUInt8And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Add(1, &val, order)
+    return CAtomicsUInt8Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return ClangAtomicsU8Sub(1, &val, order)
+    return CAtomicsUInt8Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -396,9 +396,9 @@ extension AtomicUInt8
   {
     switch type {
     case .strong:
-      return ClangAtomicsU8StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt8StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsU8WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt8WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -414,16 +414,16 @@ extension AtomicUInt8
 
 public struct AtomicInt16
 {
-  @_versioned var val = ClangAtomicsS16()
+  @_versioned var val = CAtomicsInt16()
 
   public init(_ value: Int16 = 0)
   {
-    ClangAtomicsS16Init(value, &val)
+    CAtomicsInt16Init(value, &val)
   }
 
   public var value: Int16 {
     @inline(__always)
-    mutating get { return ClangAtomicsS16Load(&val, .relaxed) }
+    mutating get { return CAtomicsInt16Load(&val, .relaxed) }
   }
 }
 
@@ -432,61 +432,61 @@ extension AtomicInt16
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Load(&val, order)
+    return CAtomicsInt16Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsS16Store(value, &val, order)
+    CAtomicsInt16Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Swap(value, &val, order)
+    return CAtomicsInt16Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Add(delta, &val, order)
+    return CAtomicsInt16Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Sub(delta, &val, order)
+    return CAtomicsInt16Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Or(bits, &val, order)
+    return CAtomicsInt16Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Xor(bits, &val, order)
+    return CAtomicsInt16Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16And(bits, &val, order)
+    return CAtomicsInt16And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Add(1, &val, order)
+    return CAtomicsInt16Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
   {
-    return ClangAtomicsS16Sub(1, &val, order)
+    return CAtomicsInt16Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -497,9 +497,9 @@ extension AtomicInt16
   {
     switch type {
     case .strong:
-      return ClangAtomicsS16StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt16StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsS16WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt16WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -515,16 +515,16 @@ extension AtomicInt16
 
 public struct AtomicUInt16
 {
-  @_versioned var val = ClangAtomicsU16()
+  @_versioned var val = CAtomicsUInt16()
 
   public init(_ value: UInt16 = 0)
   {
-    ClangAtomicsU16Init(value, &val)
+    CAtomicsUInt16Init(value, &val)
   }
 
   public var value: UInt16 {
     @inline(__always)
-    mutating get { return ClangAtomicsU16Load(&val, .relaxed) }
+    mutating get { return CAtomicsUInt16Load(&val, .relaxed) }
   }
 }
 
@@ -533,61 +533,61 @@ extension AtomicUInt16
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Load(&val, order)
+    return CAtomicsUInt16Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsU16Store(value, &val, order)
+    CAtomicsUInt16Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Swap(value, &val, order)
+    return CAtomicsUInt16Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Add(delta, &val, order)
+    return CAtomicsUInt16Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Sub(delta, &val, order)
+    return CAtomicsUInt16Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Or(bits, &val, order)
+    return CAtomicsUInt16Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Xor(bits, &val, order)
+    return CAtomicsUInt16Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16And(bits, &val, order)
+    return CAtomicsUInt16And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Add(1, &val, order)
+    return CAtomicsUInt16Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return ClangAtomicsU16Sub(1, &val, order)
+    return CAtomicsUInt16Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -598,9 +598,9 @@ extension AtomicUInt16
   {
     switch type {
     case .strong:
-      return ClangAtomicsU16StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt16StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsU16WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt16WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -616,16 +616,16 @@ extension AtomicUInt16
 
 public struct AtomicInt32
 {
-  @_versioned var val = ClangAtomicsS32()
+  @_versioned var val = CAtomicsInt32()
 
   public init(_ value: Int32 = 0)
   {
-    ClangAtomicsS32Init(value, &val)
+    CAtomicsInt32Init(value, &val)
   }
 
   public var value: Int32 {
     @inline(__always)
-    mutating get { return ClangAtomicsS32Load(&val, .relaxed) }
+    mutating get { return CAtomicsInt32Load(&val, .relaxed) }
   }
 }
 
@@ -634,61 +634,61 @@ extension AtomicInt32
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Load(&val, order)
+    return CAtomicsInt32Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsS32Store(value, &val, order)
+    CAtomicsInt32Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Swap(value, &val, order)
+    return CAtomicsInt32Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Add(delta, &val, order)
+    return CAtomicsInt32Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Sub(delta, &val, order)
+    return CAtomicsInt32Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Or(bits, &val, order)
+    return CAtomicsInt32Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Xor(bits, &val, order)
+    return CAtomicsInt32Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32And(bits, &val, order)
+    return CAtomicsInt32And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Add(1, &val, order)
+    return CAtomicsInt32Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
   {
-    return ClangAtomicsS32Sub(1, &val, order)
+    return CAtomicsInt32Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -699,9 +699,9 @@ extension AtomicInt32
   {
     switch type {
     case .strong:
-      return ClangAtomicsS32StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt32StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsS32WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt32WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -717,16 +717,16 @@ extension AtomicInt32
 
 public struct AtomicUInt32
 {
-  @_versioned var val = ClangAtomicsU32()
+  @_versioned var val = CAtomicsUInt32()
 
   public init(_ value: UInt32 = 0)
   {
-    ClangAtomicsU32Init(value, &val)
+    CAtomicsUInt32Init(value, &val)
   }
 
   public var value: UInt32 {
     @inline(__always)
-    mutating get { return ClangAtomicsU32Load(&val, .relaxed) }
+    mutating get { return CAtomicsUInt32Load(&val, .relaxed) }
   }
 }
 
@@ -735,61 +735,61 @@ extension AtomicUInt32
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Load(&val, order)
+    return CAtomicsUInt32Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsU32Store(value, &val, order)
+    CAtomicsUInt32Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Swap(value, &val, order)
+    return CAtomicsUInt32Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Add(delta, &val, order)
+    return CAtomicsUInt32Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Sub(delta, &val, order)
+    return CAtomicsUInt32Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Or(bits, &val, order)
+    return CAtomicsUInt32Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Xor(bits, &val, order)
+    return CAtomicsUInt32Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32And(bits, &val, order)
+    return CAtomicsUInt32And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Add(1, &val, order)
+    return CAtomicsUInt32Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return ClangAtomicsU32Sub(1, &val, order)
+    return CAtomicsUInt32Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -800,9 +800,9 @@ extension AtomicUInt32
   {
     switch type {
     case .strong:
-      return ClangAtomicsU32StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt32StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsU32WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt32WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -818,16 +818,16 @@ extension AtomicUInt32
 
 public struct AtomicInt64
 {
-  @_versioned var val = ClangAtomicsS64()
+  @_versioned var val = CAtomicsInt64()
 
   public init(_ value: Int64 = 0)
   {
-    ClangAtomicsS64Init(value, &val)
+    CAtomicsInt64Init(value, &val)
   }
 
   public var value: Int64 {
     @inline(__always)
-    mutating get { return ClangAtomicsS64Load(&val, .relaxed) }
+    mutating get { return CAtomicsInt64Load(&val, .relaxed) }
   }
 }
 
@@ -836,61 +836,61 @@ extension AtomicInt64
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Load(&val, order)
+    return CAtomicsInt64Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsS64Store(value, &val, order)
+    CAtomicsInt64Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Swap(value, &val, order)
+    return CAtomicsInt64Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Add(delta, &val, order)
+    return CAtomicsInt64Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Sub(delta, &val, order)
+    return CAtomicsInt64Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Or(bits, &val, order)
+    return CAtomicsInt64Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Xor(bits, &val, order)
+    return CAtomicsInt64Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64And(bits, &val, order)
+    return CAtomicsInt64And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Add(1, &val, order)
+    return CAtomicsInt64Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
-    return ClangAtomicsS64Sub(1, &val, order)
+    return CAtomicsInt64Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -901,9 +901,9 @@ extension AtomicInt64
   {
     switch type {
     case .strong:
-      return ClangAtomicsS64StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt64StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsS64WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsInt64WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
@@ -919,16 +919,16 @@ extension AtomicInt64
 
 public struct AtomicUInt64
 {
-  @_versioned var val = ClangAtomicsU64()
+  @_versioned var val = CAtomicsUInt64()
 
   public init(_ value: UInt64 = 0)
   {
-    ClangAtomicsU64Init(value, &val)
+    CAtomicsUInt64Init(value, &val)
   }
 
   public var value: UInt64 {
     @inline(__always)
-    mutating get { return ClangAtomicsU64Load(&val, .relaxed) }
+    mutating get { return CAtomicsUInt64Load(&val, .relaxed) }
   }
 }
 
@@ -937,61 +937,61 @@ extension AtomicUInt64
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Load(&val, order)
+    return CAtomicsUInt64Load(&val, order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    ClangAtomicsU64Store(value, &val, order)
+    CAtomicsUInt64Store(value, &val, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Swap(value, &val, order)
+    return CAtomicsUInt64Swap(value, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Add(delta, &val, order)
+    return CAtomicsUInt64Add(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Sub(delta, &val, order)
+    return CAtomicsUInt64Sub(delta, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Or(bits, &val, order)
+    return CAtomicsUInt64Or(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Xor(bits, &val, order)
+    return CAtomicsUInt64Xor(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64And(bits, &val, order)
+    return CAtomicsUInt64And(bits, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Add(1, &val, order)
+    return CAtomicsUInt64Add(1, &val, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return ClangAtomicsU64Sub(1, &val, order)
+    return CAtomicsUInt64Sub(1, &val, order)
   }
 
   @inline(__always) @discardableResult
@@ -1002,9 +1002,9 @@ extension AtomicUInt64
   {
     switch type {
     case .strong:
-      return ClangAtomicsU64StrongCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt64StrongCAS(current, future, &val, orderSwap, orderLoad)
     case .weak:
-      return ClangAtomicsU64WeakCAS(current, future, &val, orderSwap, orderLoad)
+      return CAtomicsUInt64WeakCAS(current, future, &val, orderSwap, orderLoad)
     }
   }
 
