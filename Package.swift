@@ -8,6 +8,7 @@ let package = Package(
   name: "Atomics",
   products: [
     .library(name: "Atomics", type: .static, targets: ["Atomics"]),
+    .library(name: "CAtomics", type: .static, targets: ["CAtomics"]),
   ],
   targets: [
     .target(name: "Atomics", dependencies: ["CAtomics"]),
