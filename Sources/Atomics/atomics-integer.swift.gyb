@@ -68,12 +68,7 @@ extension ${AtomicType}
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    switch type {
-    case .strong:
-      return ${CAtomicsType}StrongCAS(current, future, &val, orderSwap, orderLoad)
-    case .weak:
-      return ${CAtomicsType}WeakCAS(current, future, &val, orderSwap, orderLoad)
-    }
+    return ${CAtomicsType}CAS(current, future, &val, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult

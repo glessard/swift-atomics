@@ -37,7 +37,7 @@ extension AtomicReference
   {
     let u = Unmanaged.passUnretained(ref)
     var null: UnsafeRawPointer? = nil
-    if CAtomicsPointerStrongCAS(&null, u.toOpaque(), &ptr, order, .relaxed)
+    if CAtomicsPointerCAS(&null, u.toOpaque(), &ptr, .strong, order, .relaxed)
     {
       _ = u.retain()
       return true

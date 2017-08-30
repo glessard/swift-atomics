@@ -49,13 +49,7 @@ public struct AtomicMutableRawPointer
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<UnsafeMutableRawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomicsMutablePointerStrongCAS(current, UnsafeMutableRawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomicsMutablePointerWeakCAS(current, UnsafeMutableRawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomicsMutablePointerCAS($0, UnsafeMutableRawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
@@ -111,13 +105,7 @@ public struct AtomicRawPointer
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomicsPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomicsPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomicsPointerCAS($0, UnsafeRawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
@@ -173,13 +161,7 @@ public struct AtomicMutablePointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<UnsafeMutableRawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomicsMutablePointerStrongCAS(current, UnsafeMutableRawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomicsMutablePointerWeakCAS(current, UnsafeMutableRawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomicsMutablePointerCAS($0, UnsafeMutableRawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
@@ -235,13 +217,7 @@ public struct AtomicPointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomicsPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomicsPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomicsPointerCAS($0, UnsafeRawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
@@ -297,13 +273,7 @@ public struct AtomicOpaquePointer
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<UnsafeRawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomicsPointerStrongCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomicsPointerWeakCAS(current, UnsafeRawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomicsPointerCAS($0, UnsafeRawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
