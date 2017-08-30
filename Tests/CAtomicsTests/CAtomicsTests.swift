@@ -106,12 +106,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsIntStore(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsIntStrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsIntCAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsIntLoad(&i, .relaxed))
 
     j = r2
     CAtomicsIntStore(r1, &i, .relaxed)
-    while(!CAtomicsIntWeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsIntCAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsIntLoad(&i, .relaxed))
   }
@@ -164,12 +164,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsUIntStore(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsUIntStrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsUIntCAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsUIntLoad(&i, .relaxed))
 
     j = r2
     CAtomicsUIntStore(r1, &i, .relaxed)
-    while(!CAtomicsUIntWeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsUIntCAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsUIntLoad(&i, .relaxed))
   }
@@ -222,12 +222,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsInt8Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsInt8StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsInt8CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsInt8Load(&i, .relaxed))
 
     j = r2
     CAtomicsInt8Store(r1, &i, .relaxed)
-    while(!CAtomicsInt8WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsInt8CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsInt8Load(&i, .relaxed))
   }
@@ -280,12 +280,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsUInt8Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsUInt8StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsUInt8CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsUInt8Load(&i, .relaxed))
 
     j = r2
     CAtomicsUInt8Store(r1, &i, .relaxed)
-    while(!CAtomicsUInt8WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsUInt8CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsUInt8Load(&i, .relaxed))
   }
@@ -338,12 +338,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsInt16Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsInt16StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsInt16CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsInt16Load(&i, .relaxed))
 
     j = r2
     CAtomicsInt16Store(r1, &i, .relaxed)
-    while(!CAtomicsInt16WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsInt16CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsInt16Load(&i, .relaxed))
   }
@@ -396,12 +396,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsUInt16Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsUInt16StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsUInt16CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsUInt16Load(&i, .relaxed))
 
     j = r2
     CAtomicsUInt16Store(r1, &i, .relaxed)
-    while(!CAtomicsUInt16WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsUInt16CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsUInt16Load(&i, .relaxed))
   }
@@ -454,12 +454,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsInt32Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsInt32StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsInt32CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsInt32Load(&i, .relaxed))
 
     j = r2
     CAtomicsInt32Store(r1, &i, .relaxed)
-    while(!CAtomicsInt32WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsInt32CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsInt32Load(&i, .relaxed))
   }
@@ -512,12 +512,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsUInt32Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsUInt32StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsUInt32CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsUInt32Load(&i, .relaxed))
 
     j = r2
     CAtomicsUInt32Store(r1, &i, .relaxed)
-    while(!CAtomicsUInt32WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsUInt32CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsUInt32Load(&i, .relaxed))
   }
@@ -570,12 +570,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsInt64Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsInt64StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsInt64CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsInt64Load(&i, .relaxed))
 
     j = r2
     CAtomicsInt64Store(r1, &i, .relaxed)
-    while(!CAtomicsInt64WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsInt64CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsInt64Load(&i, .relaxed))
   }
@@ -628,12 +628,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsUInt64Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomicsUInt64StrongCAS(&j, r2, &i, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsUInt64CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsUInt64Load(&i, .relaxed))
 
     j = r2
     CAtomicsUInt64Store(r1, &i, .relaxed)
-    while(!CAtomicsUInt64WeakCAS(&j, r3, &i, .relaxed, .relaxed)) {}
+    while(!CAtomicsUInt64CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsUInt64Load(&i, .relaxed))
   }
@@ -657,12 +657,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsMutablePointerStore(r1, &p, .relaxed)
-    XCTAssertTrue(CAtomicsMutablePointerStrongCAS(&j, r2, &p, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsMutablePointerCAS(&j, r2, &p, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsMutablePointerLoad(&p, .relaxed))
 
     j = r2
     CAtomicsMutablePointerStore(r1, &p, .relaxed)
-    while(!CAtomicsMutablePointerWeakCAS(&j, r3, &p, .relaxed, .relaxed)) {}
+    while(!CAtomicsMutablePointerCAS(&j, r3, &p, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsMutablePointerLoad(&p, .relaxed))
   }
@@ -686,12 +686,12 @@ public class CAtomicsTests: XCTestCase
 
     j = r1
     CAtomicsPointerStore(r1, &p, .relaxed)
-    XCTAssertTrue(CAtomicsPointerStrongCAS(&j, r2, &p, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsPointerCAS(&j, r2, &p, .strong, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsPointerLoad(&p, .relaxed))
 
     j = r2
     CAtomicsPointerStore(r1, &p, .relaxed)
-    while(!CAtomicsPointerWeakCAS(&j, r3, &p, .relaxed, .relaxed)) {}
+    while(!CAtomicsPointerCAS(&j, r3, &p, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsPointerLoad(&p, .relaxed))
   }
@@ -735,15 +735,15 @@ public class CAtomicsTests: XCTestCase
 
     var current = true
     XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == current)
-    CAtomicsBooleanStrongCAS(&current, false, &boolean, .relaxed, .relaxed)
+    CAtomicsBooleanCAS(&current, false, &boolean, .strong, .relaxed, .relaxed)
     current = CAtomicsBooleanLoad(&boolean, .relaxed)
     XCTAssert(current == false)
-    if CAtomicsBooleanStrongCAS(&current, true, &boolean, .relaxed, .relaxed)
+    if CAtomicsBooleanCAS(&current, true, &boolean, .strong, .relaxed, .relaxed)
     {
       current = !current
-      XCTAssert(CAtomicsBooleanWeakCAS(&current, false, &boolean, .relaxed, .relaxed))
+      XCTAssert(CAtomicsBooleanCAS(&current, false, &boolean, .weak, .relaxed, .relaxed))
       current = !current
-      XCTAssert(CAtomicsBooleanWeakCAS(&current, true, &boolean, .relaxed, .relaxed))
+      XCTAssert(CAtomicsBooleanCAS(&current, true, &boolean, .weak, .relaxed, .relaxed))
     }
   }
 

@@ -68,7 +68,7 @@ public class CAtomicsRaceTests: XCTestCase
         while true
         {
           var current = 0
-          if CAtomicsIntWeakCAS(&current, 1, &lock, .sequential, .relaxed)
+          if CAtomicsIntCAS(&current, 1, &lock, .weak, .sequential, .relaxed)
           {
             defer { CAtomicsIntStore(0, &lock, .sequential) }
             if let c = p
@@ -104,7 +104,7 @@ public class CAtomicsRaceTests: XCTestCase
         var c = UnsafeRawPointer(bitPattern: 0x1)
         while true
         {
-          if CAtomicsPointerWeakCAS(&c, nil, &p, .release, .relaxed)
+          if CAtomicsPointerCAS(&c, nil, &p, .weak, .release, .relaxed)
           {
             if let c = UnsafeMutableRawPointer(mutating: c)
             {

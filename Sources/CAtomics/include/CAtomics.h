@@ -89,14 +89,17 @@ SWIFT_ENUM(CASType)
         pType sType##opName(pType pName, sType *_Nonnull ptr, enum MemoryOrder order) \
         { return atomic_##op##_explicit(&(ptr->a), pName, order); }
 
-#define CLANG_ATOMICS_CAS(sType, pType, strength, strName) \
+#define CLANG_ATOMICS_CAS(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        _Bool sType##strName##CAS(pType *_Nonnull current, pType future, sType *_Nonnull ptr, \
-                                  enum MemoryOrder succ, enum LoadMemoryOrder fail) \
+        _Bool sType##CAS(pType *_Nonnull current, pType future, sType *_Nonnull ptr, \
+                         enum CASType type, enum MemoryOrder succ, enum LoadMemoryOrder fail) \
         { \
           assert((unsigned int)fail <= (unsigned int)succ); \
           assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
-          return atomic_compare_exchange_##strength##_explicit(&(ptr->a), current, future, succ, fail); \
+          if(type == CAS_TYPE_STRONG) \
+            return atomic_compare_exchange_strong_explicit(&(ptr->a), current, future, succ, fail); \
+          else \
+            return atomic_compare_exchange_weak_explicit(&(ptr->a), current, future, succ, fail); \
         }
 
 #define CLANG_ATOMICS_GENERATE(sType, aType, pType) \
@@ -110,8 +113,7 @@ SWIFT_ENUM(CASType)
         CLANG_ATOMICS_RMW(sType, pType, bits, fetch_or, Or) \
         CLANG_ATOMICS_RMW(sType, pType, bits, fetch_xor, Xor) \
         CLANG_ATOMICS_RMW(sType, pType, bits, fetch_and, And) \
-        CLANG_ATOMICS_CAS(sType, pType, strong, Strong) \
-        CLANG_ATOMICS_CAS(sType, pType, weak, Weak)
+        CLANG_ATOMICS_CAS(sType, pType)
 
 // integer atomics
 
@@ -140,8 +142,7 @@ CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, exchange, Swap)
 CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_or, Or)
 CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_xor, Xor)
 CLANG_ATOMICS_RMW(CAtomicsBoolean, _Bool, value, fetch_and, And)
-CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool, strong, Strong)
-CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool, weak, Weak)
+CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool)
 
 // pointer atomics
 
@@ -165,14 +166,17 @@ CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool, weak, Weak)
         pType _Nullable sType##Swap(pType _Nullable value, sType *_Nonnull ptr, enum MemoryOrder order) \
         { return (pType) atomic_exchange_explicit(&(ptr->a), (uintptr_t)value, order); }
 
-#define CLANG_ATOMICS_POINTER_CAS(sType, pType, strength, strName) \
+#define CLANG_ATOMICS_POINTER_CAS(sType, pType) \
         static __inline__ __attribute__((__always_inline__)) \
-        _Bool sType##strName##CAS(pType _Nullable* _Nonnull current, pType _Nullable future, sType *_Nonnull ptr, \
-                                  enum MemoryOrder succ, enum LoadMemoryOrder fail) \
+        _Bool sType##CAS(pType _Nullable* _Nonnull current, pType _Nullable future, sType *_Nonnull ptr, \
+                         enum CASType type, enum MemoryOrder succ, enum LoadMemoryOrder fail) \
         { \
           assert((unsigned int)fail <= (unsigned int)succ); \
           assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
-          return atomic_compare_exchange_##strength##_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
+          if(type == CAS_TYPE_STRONG) \
+            return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
+          else \
+            return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
         }
 
 CLANG_ATOMICS_STRUCT(CAtomicsMutablePointer, atomic_uintptr_t)
@@ -180,16 +184,14 @@ CLANG_ATOMICS_POINTER_INIT(CAtomicsMutablePointer, void*)
 CLANG_ATOMICS_POINTER_LOAD(CAtomicsMutablePointer, void*)
 CLANG_ATOMICS_POINTER_STORE(CAtomicsMutablePointer, void*)
 CLANG_ATOMICS_POINTER_SWAP(CAtomicsMutablePointer, void*)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsMutablePointer, void*, strong, Strong)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsMutablePointer, void*, weak, Weak)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsMutablePointer, void*)
 
 CLANG_ATOMICS_STRUCT(CAtomicsPointer, atomic_uintptr_t)
 CLANG_ATOMICS_POINTER_INIT(CAtomicsPointer, const void*)
 CLANG_ATOMICS_POINTER_LOAD(CAtomicsPointer, const void*)
 CLANG_ATOMICS_POINTER_STORE(CAtomicsPointer, const void*)
 CLANG_ATOMICS_POINTER_SWAP(CAtomicsPointer, const void*)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsPointer, const void*, strong, Strong)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsPointer, const void*, weak, Weak)
+CLANG_ATOMICS_POINTER_CAS(CAtomicsPointer, const void*)
 
 // fence
 

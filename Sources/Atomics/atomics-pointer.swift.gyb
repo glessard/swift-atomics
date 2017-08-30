@@ -50,13 +50,7 @@ public struct ${AtomicType}
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     return current.withMemoryRebound(to: Optional<Unsafe${Mutable}RawPointer>.self, capacity: 1) {
-      current in
-      switch type {
-      case .strong:
-        return CAtomics${Mutable}PointerStrongCAS(current, Unsafe${Mutable}RawPointer(future), &ptr, orderSwap, orderLoad)
-      case .weak:
-        return CAtomics${Mutable}PointerWeakCAS(current, Unsafe${Mutable}RawPointer(future), &ptr, orderSwap, orderLoad)
-      }
+      CAtomics${Mutable}PointerCAS($0, Unsafe${Mutable}RawPointer(future), &ptr, type, orderSwap, orderLoad)
     }
   }
 
