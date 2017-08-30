@@ -55,6 +55,15 @@ SWIFT_ENUM(StoreMemoryOrder)
   StoreMemoryOrder_sequential = __ATOMIC_SEQ_CST
 };
 
+#define CAS_TYPE_STRONG 0
+#define CAS_TYPE_WEAK   1
+
+SWIFT_ENUM(CASType)
+{
+  CASType_strong = CAS_TYPE_STRONG,
+  CASType_weak =   CAS_TYPE_WEAK
+};
+
 // atomic integer generation
 
 #define CLANG_ATOMICS_STRUCT(sType, aType) \
