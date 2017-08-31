@@ -3,7 +3,8 @@
 //  Atomics
 //
 //  Created by Guillaume Lessard on 10/06/2016.
-//  Copyright © 2016 Guillaume Lessard. All rights reserved.
+//  Copyright © 2016-2017 Guillaume Lessard. All rights reserved.
+//  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
 import CAtomics

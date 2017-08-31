@@ -2,9 +2,6 @@
 //  ViewController.swift
 //  Atomics_TestApp
 //
-//  Created by Guillaume Lessard on 2015-07-07.
-//  Copyright © 2015 Guillaume Lessard. All rights reserved.
-//
 
 import UIKit
 
