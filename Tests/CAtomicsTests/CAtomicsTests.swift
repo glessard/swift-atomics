@@ -2,6 +2,9 @@
 //  CAtomicsTests.swift
 //  AtomicsTests
 //
+//  Copyright © 2016-2017 Guillaume Lessard. All rights reserved.
+//  This file is distributed under the BSD 3-clause license. See LICENSE for details.
+//
 
 import XCTest
 import Dispatch

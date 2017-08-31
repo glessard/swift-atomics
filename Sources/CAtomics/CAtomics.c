@@ -3,6 +3,7 @@
 //
 //  Created by Guillaume Lessard on 2015-05-21.
 //  Copyright (c) 2015-2017 Guillaume Lessard. All rights reserved.
+//  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
 #import "CAtomics.h"

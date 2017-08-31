@@ -1,8 +1,10 @@
 //
 //  atomics-pointer.swift
+//  Atomics
 //
 //  Created by Guillaume Lessard on 2015-05-21.
-//  Copyright © 2015, 2016 Guillaume Lessard. All rights reserved.
+//  Copyright © 2015-2017 Guillaume Lessard. All rights reserved.
+//  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
 import CAtomics
