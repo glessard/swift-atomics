@@ -26,12 +26,15 @@
 #include <stdbool.h>
 #include <assert.h>
 
+#if __has_attribute(enum_extensibility)
+#define SWIFT_ENUM(_name,extensibility) enum __attribute__((enum_extensibility(extensibility))) _name
+#else
+#define SWIFT_ENUM(_name,extensibility) enum _name
+#endif
 
 // memory order
 
-#define SWIFT_ENUM(_name) enum _name
-
-SWIFT_ENUM(MemoryOrder)
+SWIFT_ENUM(MemoryOrder, open)
 {
   MemoryOrder_relaxed =    __ATOMIC_RELAXED,
   // MemoryOrder_consume = __ATOMIC_CONSUME,
@@ -41,7 +44,7 @@ SWIFT_ENUM(MemoryOrder)
   MemoryOrder_sequential = __ATOMIC_SEQ_CST
 };
 
-SWIFT_ENUM(LoadMemoryOrder)
+SWIFT_ENUM(LoadMemoryOrder, open)
 {
   LoadMemoryOrder_relaxed =    __ATOMIC_RELAXED,
   // LoadMemoryOrder_consume = __ATOMIC_CONSUME,
@@ -49,7 +52,7 @@ SWIFT_ENUM(LoadMemoryOrder)
   LoadMemoryOrder_sequential = __ATOMIC_SEQ_CST
 };
 
-SWIFT_ENUM(StoreMemoryOrder)
+SWIFT_ENUM(StoreMemoryOrder, open)
 {
   StoreMemoryOrder_relaxed =    __ATOMIC_RELAXED,
   StoreMemoryOrder_release =    __ATOMIC_RELEASE,
@@ -59,7 +62,7 @@ SWIFT_ENUM(StoreMemoryOrder)
 #define CAS_TYPE_STRONG 0
 #define CAS_TYPE_WEAK   1
 
-SWIFT_ENUM(CASType)
+SWIFT_ENUM(CASType, closed)
 {
   CASType_strong = CAS_TYPE_STRONG,
   CASType_weak =   CAS_TYPE_WEAK

@@ -14,6 +14,7 @@ public class MemoryOrderTests: XCTestCase
 {
   public static var allTests = [
     ("testMemoryOrder", testMemoryOrder),
+    ("testEnumCases", testEnumCases),
   ]
 
   public func testMemoryOrder()
@@ -36,5 +37,40 @@ public class MemoryOrderTests: XCTestCase
     XCTAssert(StoreMemoryOrder.sequential.rawValue == memory_order_seq_cst.rawValue)
 
     XCTAssert(LoadMemoryOrder.relaxed.rawValue < MemoryOrder.release.rawValue)
+  }
+
+  public func testEnumCases()
+  {
+    if let m = MemoryOrder(rawValue: memory_order_release.rawValue)
+    {
+      switch m
+      {
+      case .relaxed, .release, .acquire, .acqrel, .sequential: break
+      }
+    }
+
+    if let m = LoadMemoryOrder(rawValue: memory_order_relaxed.rawValue)
+    {
+      switch m
+      {
+      case .relaxed, .acquire, .sequential: break
+      }
+    }
+
+    if let m = StoreMemoryOrder(rawValue: memory_order_seq_cst.rawValue)
+    {
+      switch m
+      {
+      case .relaxed, .release, .sequential: break
+      }
+    }
+
+    if let t = CASType(rawValue: 0)
+    {
+      switch t
+      {
+      case .strong, .weak: break
+      }
+    }
   }
 }
