@@ -12,7 +12,7 @@ matrix:
       dist: trusty
       language: generic
       sudo: required
-      env: SWIFT_VERSION=4.0 SNAPSHOT=2017-08-04-a CLANG_VERSION=3.8
+      env: SWIFT_VERSION=4.0
 
     - os: osx
       osx_image: xcode8.2
