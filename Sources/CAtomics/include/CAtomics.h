@@ -148,32 +148,32 @@ SWIFT_ENUM(CASType, closed)
 
 // integer atomics
 
-CLANG_ATOMICS_GENERATE(CAtomicsInt, atomic_long, long)
-CLANG_ATOMICS_GENERATE(CAtomicsUInt, atomic_ulong, unsigned long)
+CLANG_ATOMICS_GENERATE(AtomicInt, atomic_long, long)
+CLANG_ATOMICS_GENERATE(AtomicUInt, atomic_ulong, unsigned long)
 
-CLANG_ATOMICS_GENERATE(CAtomicsInt8, atomic_schar, signed char)
-CLANG_ATOMICS_GENERATE(CAtomicsUInt8, atomic_uchar, unsigned char)
+CLANG_ATOMICS_GENERATE(AtomicInt8, atomic_schar, signed char)
+CLANG_ATOMICS_GENERATE(AtomicUInt8, atomic_uchar, unsigned char)
 
-CLANG_ATOMICS_GENERATE(CAtomicsInt16, atomic_short, short)
-CLANG_ATOMICS_GENERATE(CAtomicsUInt16, atomic_ushort, unsigned short)
+CLANG_ATOMICS_GENERATE(AtomicInt16, atomic_short, short)
+CLANG_ATOMICS_GENERATE(AtomicUInt16, atomic_ushort, unsigned short)
 
-CLANG_ATOMICS_GENERATE(CAtomicsInt32, atomic_int, int)
-CLANG_ATOMICS_GENERATE(CAtomicsUInt32, atomic_uint, unsigned int)
+CLANG_ATOMICS_GENERATE(AtomicInt32, atomic_int, int)
+CLANG_ATOMICS_GENERATE(AtomicUInt32, atomic_uint, unsigned int)
 
-CLANG_ATOMICS_GENERATE(CAtomicsInt64, atomic_llong, long long)
-CLANG_ATOMICS_GENERATE(CAtomicsUInt64, atomic_ullong, unsigned long long)
+CLANG_ATOMICS_GENERATE(AtomicInt64, atomic_llong, long long)
+CLANG_ATOMICS_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long)
 
 // bool atomics
 
-CLANG_ATOMICS_STRUCT(CAtomicsBool, atomic_bool)
-CLANG_ATOMICS_INIT(CAtomicsBool, _Bool)
-CLANG_ATOMICS_LOAD(CAtomicsBool, _Bool)
-CLANG_ATOMICS_STORE(CAtomicsBool, _Bool)
-CLANG_ATOMICS_SWAP(CAtomicsBool, _Bool)
-CLANG_ATOMICS_RMW(CAtomicsBool, _Bool, value, fetch_or, Or)
-CLANG_ATOMICS_RMW(CAtomicsBool, _Bool, value, fetch_xor, Xor)
-CLANG_ATOMICS_RMW(CAtomicsBool, _Bool, value, fetch_and, And)
-CLANG_ATOMICS_CAS(CAtomicsBool, _Bool)
+CLANG_ATOMICS_STRUCT(AtomicBool, atomic_bool)
+CLANG_ATOMICS_INIT(AtomicBool, _Bool)
+CLANG_ATOMICS_LOAD(AtomicBool, _Bool)
+CLANG_ATOMICS_STORE(AtomicBool, _Bool)
+CLANG_ATOMICS_SWAP(AtomicBool, _Bool)
+CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_or, Or)
+CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_xor, Xor)
+CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_and, And)
+CLANG_ATOMICS_CAS(AtomicBool, _Bool)
 
 // pointer atomics
 

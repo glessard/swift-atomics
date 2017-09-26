@@ -64,7 +64,7 @@ public class CAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
-      var lock = CAtomicsInt()
+      var lock = AtomicInt()
       lock.initialize(0)
 
       let closure = {

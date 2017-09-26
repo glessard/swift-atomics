@@ -63,7 +63,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testInt()
   {
-    var i = CAtomicsInt()
+    var i = AtomicInt()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -121,7 +121,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testUInt()
   {
-    var i = CAtomicsUInt()
+    var i = AtomicUInt()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -179,7 +179,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testInt8()
   {
-    var i = CAtomicsInt8()
+    var i = AtomicInt8()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -237,7 +237,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testUInt8()
   {
-    var i = CAtomicsUInt8()
+    var i = AtomicUInt8()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -295,7 +295,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testInt16()
   {
-    var i = CAtomicsInt16()
+    var i = AtomicInt16()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -353,7 +353,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testUInt16()
   {
-    var i = CAtomicsUInt16()
+    var i = AtomicUInt16()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -411,7 +411,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testInt32()
   {
-    var i = CAtomicsInt32()
+    var i = AtomicInt32()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -469,7 +469,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testUInt32()
   {
-    var i = CAtomicsUInt32()
+    var i = AtomicUInt32()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -527,7 +527,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testInt64()
   {
-    var i = CAtomicsInt64()
+    var i = AtomicInt64()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -585,7 +585,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testUInt64()
   {
-    var i = CAtomicsUInt64()
+    var i = AtomicUInt64()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -701,7 +701,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testBool()
   {
-    var boolean = CAtomicsBool()
+    var boolean = AtomicBool()
     boolean.initialize(false)
     XCTAssert(boolean.load(.relaxed) == false)
 

@@ -69,7 +69,7 @@ public class CAtomicsTests: XCTestCase
 % for i in integers:
   public func test${i}()
   {
-    var i = CAtomics${i}()
+    var i = Atomic${i}()
     i.initialize(0)
     XCTAssert(i.load(.relaxed) == 0)
 
@@ -160,7 +160,7 @@ public class CAtomicsTests: XCTestCase
 % end
   public func testBool()
   {
-    var boolean = CAtomicsBool()
+    var boolean = AtomicBool()
     boolean.initialize(false)
     XCTAssert(boolean.load(.relaxed) == false)
 
