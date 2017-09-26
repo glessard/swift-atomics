@@ -65,15 +65,15 @@ public class CAtomicsRaceTests: XCTestCase
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
       var lock = CAtomicsInt()
-      CAtomicsIntInit(0, &lock)
+      lock.initialize(0)
 
       let closure = {
         while true
         {
           var current = 0
-          if CAtomicsIntCAS(&current, 1, &lock, .weak, .sequential, .relaxed)
+          if lock.loadCAS(&current, 1, .weak, .sequential, .relaxed)
           {
-            defer { CAtomicsIntStore(0, &lock, .sequential) }
+            defer { lock.store(0, .sequential) }
             if let c = p
             {
               p = nil
