@@ -223,28 +223,28 @@ CLANG_ATOMICS_CAS(AtomicBool, _Bool)
           return sType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
-CLANG_ATOMICS_STRUCT(CAtomicsMutableRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(CAtomicsMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_LOAD(CAtomicsMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_STORE(CAtomicsMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_SWAP(CAtomicsMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsMutableRawPointer, void*)
+CLANG_ATOMICS_STRUCT(AtomicMutableRawPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicMutableRawPointer, void*)
+CLANG_ATOMICS_POINTER_LOAD(AtomicMutableRawPointer, void*)
+CLANG_ATOMICS_POINTER_STORE(AtomicMutableRawPointer, void*)
+CLANG_ATOMICS_POINTER_SWAP(AtomicMutableRawPointer, void*)
+CLANG_ATOMICS_POINTER_CAS(AtomicMutableRawPointer, void*)
 
-CLANG_ATOMICS_STRUCT(CAtomicsRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(CAtomicsRawPointer, const void*)
-CLANG_ATOMICS_POINTER_LOAD(CAtomicsRawPointer, const void*)
-CLANG_ATOMICS_POINTER_STORE(CAtomicsRawPointer, const void*)
-CLANG_ATOMICS_POINTER_SWAP(CAtomicsRawPointer, const void*)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsRawPointer, const void*)
+CLANG_ATOMICS_STRUCT(AtomicRawPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicRawPointer, const void*)
+CLANG_ATOMICS_POINTER_LOAD(AtomicRawPointer, const void*)
+CLANG_ATOMICS_POINTER_STORE(AtomicRawPointer, const void*)
+CLANG_ATOMICS_POINTER_SWAP(AtomicRawPointer, const void*)
+CLANG_ATOMICS_POINTER_CAS(AtomicRawPointer, const void*)
 
 struct opaque;
 
-CLANG_ATOMICS_STRUCT(CAtomicsOpaquePointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(CAtomicsOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_LOAD(CAtomicsOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_STORE(CAtomicsOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_SWAP(CAtomicsOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_CAS(CAtomicsOpaquePointer, struct opaque*)
+CLANG_ATOMICS_STRUCT(AtomicOpaquePointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicOpaquePointer, struct opaque*)
+CLANG_ATOMICS_POINTER_LOAD(AtomicOpaquePointer, struct opaque*)
+CLANG_ATOMICS_POINTER_STORE(AtomicOpaquePointer, struct opaque*)
+CLANG_ATOMICS_POINTER_SWAP(AtomicOpaquePointer, struct opaque*)
+CLANG_ATOMICS_POINTER_CAS(AtomicOpaquePointer, struct opaque*)
 
 // fence
 

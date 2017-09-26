@@ -11,7 +11,7 @@ import CAtomics
 
 public struct AtomicReference<T: AnyObject>
 {
-  @_versioned internal var ptr = CAtomicsRawPointer()
+  @_versioned internal var ptr = AtomicMutableRawPointer()
 
   public init(_ ref: T? = nil)
   {

@@ -12,7 +12,7 @@ import CAtomics
 
 public struct Atomic${Mutable}Pointer<Pointee>
 {
-  @_versioned var ptr = CAtomics${Mutable}RawPointer()
+  @_versioned var ptr = Atomic${Mutable}RawPointer()
 
   public init(_ pointer: Unsafe${Mutable}Pointer<Pointee>? = nil)
   {
@@ -70,40 +70,38 @@ public struct Atomic${Mutable}Pointer<Pointee>
   }
 }
 % end
-% for (AtomicType, CAtomicsType, PointerType) in [('AtomicRawPointer', 'CAtomicsRawPointer', 'UnsafeRawPointer'), ('AtomicMutableRawPointer', 'CAtomicsMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOpaquePointer', 'CAtomicsOpaquePointer', 'OpaquePointer')]:
+% for (AtomicType, PointerType) in [('AtomicRawPointer', 'UnsafeRawPointer'), ('AtomicMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOpaquePointer', 'OpaquePointer')]:
 
-public struct ${AtomicType}
+@_exported import struct CAtomics.${AtomicType}
+
+extension ${AtomicType}
 {
-  @_versioned var ptr = ${CAtomicsType}()
-
-  public init(_ pointer: ${PointerType}? = nil)
-  {
-    ptr.initialize(pointer)
-  }
+  @available(*, unavailable, message: "If needed, use initialize(_ pointer: ${PointerType}?) after the default initializer, as long as the instance is unshared")
+  public init(_ pointer: ${PointerType}?) {}
 
   public var pointer: ${PointerType}? {
     @inline(__always)
     mutating get {
-      return ptr.load(.relaxed)
+      return load(.relaxed)
     }
   }
 
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ptr.load(order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ pointer: ${PointerType}?, order: StoreMemoryOrder = .sequential)
   {
-    ptr.store(pointer, order)
+    store(pointer, order)
   }
 
   @inline(__always)
   public mutating func swap(_ pointer: ${PointerType}?, order: MemoryOrder = .sequential) -> ${PointerType}?
   {
-    return ptr.swap(pointer, order)
+    return swap(pointer, order)
   }
 
   @inline(__always) @discardableResult
@@ -113,7 +111,7 @@ public struct ${AtomicType}
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return ptr.loadCAS(current, future, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
@@ -121,7 +119,7 @@ public struct ${AtomicType}
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
   {
-    return ptr.CAS(current, future, type, order)
+    return CAS(current, future, type, order)
   }
 }
 % end

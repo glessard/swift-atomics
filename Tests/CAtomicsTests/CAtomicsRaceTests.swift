@@ -100,11 +100,11 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsRawPointer()
+      var p = AtomicMutableRawPointer()
       p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
-        var c = UnsafeRawPointer(bitPattern: 0x1)
+        var c = UnsafeMutableRawPointer(bitPattern: 0x1)
         while true
         {
           if p.loadCAS(&c, nil, .weak, .release, .relaxed)
@@ -136,7 +136,7 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsRawPointer()
+      var p = AtomicMutableRawPointer()
       p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {

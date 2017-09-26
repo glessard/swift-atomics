@@ -130,7 +130,7 @@ public class CAtomicsTests: XCTestCase
 % for type in pointers:
   public func test${type}Pointer()
   {
-    var p = CAtomics${type}Pointer()
+    var p = Atomic${type}Pointer()
     p.initialize(nil)
     XCTAssert(p.load(.relaxed) == nil)
 

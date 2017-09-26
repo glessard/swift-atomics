@@ -644,7 +644,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testRawPointer()
   {
-    var p = CAtomicsRawPointer()
+    var p = AtomicRawPointer()
     p.initialize(nil)
     XCTAssert(p.load(.relaxed) == nil)
 
@@ -673,7 +673,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testMutableRawPointer()
   {
-    var p = CAtomicsMutableRawPointer()
+    var p = AtomicMutableRawPointer()
     p.initialize(nil)
     XCTAssert(p.load(.relaxed) == nil)
 
@@ -702,7 +702,7 @@ public class CAtomicsTests: XCTestCase
 
   public func testOpaquePointer()
   {
-    var p = CAtomicsOpaquePointer()
+    var p = AtomicOpaquePointer()
     p.initialize(nil)
     XCTAssert(p.load(.relaxed) == nil)
 
