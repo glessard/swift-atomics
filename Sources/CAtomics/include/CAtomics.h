@@ -59,13 +59,15 @@ SWIFT_ENUM(StoreMemoryOrder, open)
   StoreMemoryOrder_sequential = __ATOMIC_SEQ_CST
 };
 
-#define CAS_TYPE_STRONG 0
-#define CAS_TYPE_WEAK   1
+// form of compare-and-swap operation
+
+#define __ATOMIC_CAS_TYPE_STRONG 0
+#define __ATOMIC_CAS_TYPE_WEAK   1
 
 SWIFT_ENUM(CASType, closed)
 {
-  CASType_strong = CAS_TYPE_STRONG,
-  CASType_weak =   CAS_TYPE_WEAK
+  CASType_strong = __ATOMIC_CAS_TYPE_STRONG,
+  CASType_weak =   __ATOMIC_CAS_TYPE_WEAK
 };
 
 // atomic integer generation
@@ -100,7 +102,7 @@ SWIFT_ENUM(CASType, closed)
         { \
           assert((unsigned int)fail <= (unsigned int)succ); \
           assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
-          if(type == CAS_TYPE_STRONG) \
+          if(type == __ATOMIC_CAS_TYPE_STRONG) \
             return atomic_compare_exchange_strong_explicit(&(ptr->a), current, future, succ, fail); \
           else \
             return atomic_compare_exchange_weak_explicit(&(ptr->a), current, future, succ, fail); \
@@ -177,7 +179,7 @@ CLANG_ATOMICS_CAS(CAtomicsBoolean, _Bool)
         { \
           assert((unsigned int)fail <= (unsigned int)succ); \
           assert(succ == __ATOMIC_RELEASE ? fail == __ATOMIC_RELAXED : true); \
-          if(type == CAS_TYPE_STRONG) \
+          if(type == __ATOMIC_CAS_TYPE_STRONG) \
             return atomic_compare_exchange_strong_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
           else \
             return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, succ, fail); \
