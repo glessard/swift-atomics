@@ -55,8 +55,9 @@ extension UInt
 public class CAtomicsTests: XCTestCase
 {
   public static var allTests = [
-    ("testMutablePointer", testMutablePointer),
-    ("testPointer", testPointer),
+    ("testRawPointer", testRawPointer),
+    ("testMutableRawPointer", testMutableRawPointer),
+    ("testOpaquePointer", testOpaquePointer),
     ("testBool", testBool),
     ("testFence", testFence),
   ]
@@ -641,62 +642,91 @@ public class CAtomicsTests: XCTestCase
     XCTAssertEqual(r3, i.load(.relaxed))
   }
 
-  public func testMutablePointer()
+  public func testRawPointer()
   {
-    var p = CAtomicsMutablePointer()
-    CAtomicsMutablePointerInit(nil, &p)
-    XCTAssert(CAtomicsMutablePointerLoad(&p, .relaxed) == nil)
-
-    let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-
-    CAtomicsMutablePointerStore(r1, &p, .relaxed)
-    XCTAssert(r1 == CAtomicsMutablePointerLoad(&p, .relaxed))
-
-    var j = CAtomicsMutablePointerSwap(r2, &p, .relaxed)
-    XCTAssertEqual(r1, j)
-    XCTAssertEqual(r2, CAtomicsMutablePointerLoad(&p, .relaxed))
-
-    j = r1
-    CAtomicsMutablePointerStore(r1, &p, .relaxed)
-    XCTAssertTrue(CAtomicsMutablePointerCAS(&j, r2, &p, .strong, .relaxed, .relaxed))
-    XCTAssertEqual(r2, CAtomicsMutablePointerLoad(&p, .relaxed))
-
-    j = r2
-    CAtomicsMutablePointerStore(r1, &p, .relaxed)
-    while(!CAtomicsMutablePointerCAS(&j, r3, &p, .weak, .relaxed, .relaxed)) {}
-    XCTAssertEqual(r1, j)
-    XCTAssertEqual(r3, CAtomicsMutablePointerLoad(&p, .relaxed))
-  }
-
-  public func testPointer()
-  {
-    var p = CAtomicsPointer()
-    CAtomicsPointerInit(nil, &p)
-    XCTAssert(CAtomicsPointerLoad(&p, .relaxed) == nil)
+    var p = CAtomicsRawPointer()
+    p.initialize(nil)
+    XCTAssert(p.load(.relaxed) == nil)
 
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
-    CAtomicsPointerStore(r1, &p, .relaxed)
-    XCTAssert(r1 == CAtomicsPointerLoad(&p, .relaxed))
+    p.store(r1, .relaxed)
+    XCTAssert(r1 == p.load(.relaxed))
 
-    var j = CAtomicsPointerSwap(r2, &p, .relaxed)
+    var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r2, CAtomicsPointerLoad(&p, .relaxed))
+    XCTAssertEqual(r2, p.load(.relaxed))
 
-    j = r1
-    CAtomicsPointerStore(r1, &p, .relaxed)
-    XCTAssertTrue(CAtomicsPointerCAS(&j, r2, &p, .strong, .relaxed, .relaxed))
-    XCTAssertEqual(r2, CAtomicsPointerLoad(&p, .relaxed))
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
 
-    j = r2
-    CAtomicsPointerStore(r1, &p, .relaxed)
-    while(!CAtomicsPointerCAS(&j, r3, &p, .weak, .relaxed, .relaxed)) {}
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r3, CAtomicsPointerLoad(&p, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testMutableRawPointer()
+  {
+    var p = CAtomicsMutableRawPointer()
+    p.initialize(nil)
+    XCTAssert(p.load(.relaxed) == nil)
+
+    let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+    let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+    let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+
+    p.store(r1, .relaxed)
+    XCTAssert(r1 == p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testOpaquePointer()
+  {
+    var p = CAtomicsOpaquePointer()
+    p.initialize(nil)
+    XCTAssert(p.load(.relaxed) == nil)
+
+    let r1 = OpaquePointer(bitPattern: UInt.randomPositive())
+    let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
+    let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
+
+    p.store(r1, .relaxed)
+    XCTAssert(r1 == p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
   }
 
   public func testBool()

@@ -100,14 +100,14 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsPointer()
-      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = CAtomicsRawPointer()
+      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
         var c = UnsafeRawPointer(bitPattern: 0x1)
         while true
         {
-          if CAtomicsPointerCAS(&c, nil, &p, .weak, .release, .relaxed)
+          if p.loadCAS(&c, nil, .weak, .release, .relaxed)
           {
             if let c = UnsafeMutableRawPointer(mutating: c)
             {
@@ -136,13 +136,13 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsPointer()
-      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = CAtomicsRawPointer()
+      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
         while true
         {
-          if let c = CAtomicsPointerSwap(nil, &p, .acquire)
+          if let c = p.swap(nil, .acquire)
           {
             let pointer = UnsafeMutableRawPointer(mutating: c).assumingMemoryBound(to: Point.self)
             pointer.deallocate(capacity: 1)
