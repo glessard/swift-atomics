@@ -52,15 +52,15 @@ extension UInt
 }
 #endif
 % integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
-% pointers = ['Mutable', '']
+% pointers = ['Raw', 'MutableRaw', 'Opaque']
 
 public class CAtomicsTests: XCTestCase
 {
   public static var allTests = [
 % for integer in integers:
 % end
-% for mutable in pointers:
-    ("test${mutable}Pointer", test${mutable}Pointer),
+% for type in pointers:
+    ("test${type}Pointer", test${type}Pointer),
 % end
     ("testBool", testBool),
     ("testFence", testFence),
@@ -69,9 +69,9 @@ public class CAtomicsTests: XCTestCase
 % for i in integers:
   public func test${i}()
   {
-    var i = CAtomics${i}()
-    CAtomics${i}Init(0, &i)
-    XCTAssert(CAtomics${i}Load(&i, .relaxed) == 0)
+    var i = Atomic${i}()
+    i.initialize(0)
+    XCTAssert(i.load(.relaxed) == 0)
 
 #if swift(>=4.0)
     let r1 = ${i}.randomPositive()
@@ -84,128 +84,129 @@ public class CAtomicsTests: XCTestCase
     let r3 = ${i}(${truncating}UInt.randomPositive())
 #endif
 
-    CAtomics${i}Store(r1, &i, .relaxed)
-    XCTAssert(r1 == CAtomics${i}Load(&i, .relaxed))
+    i.store(r1, .relaxed)
+    XCTAssert(r1 == i.load(.relaxed))
 
-    var j = CAtomics${i}Swap(r2, &i, .relaxed)
+    var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r2, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r2, i.load(.relaxed))
 
-    j = CAtomics${i}Add(r1, &i, .relaxed)
+    j = i.fetch_add(r1, .relaxed)
     XCTAssertEqual(r2, j)
-    XCTAssertEqual(r1 &+ r2, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r1 &+ r2, i.load(.relaxed))
 
-    j = CAtomics${i}Sub(r2, &i, .relaxed)
+    j = i.fetch_sub(r2, .relaxed)
     XCTAssertEqual(r1 &+ r2, j)
-    XCTAssertEqual(r1, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
-    CAtomics${i}Store(r1, &i, .relaxed)
-    j = CAtomics${i}Or(r2, &i, .relaxed)
+    i.store(r1, .relaxed)
+    j = i.fetch_or(r2, .relaxed)
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r1 | r2, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r1 | r2, i.load(.relaxed))
 
-    CAtomics${i}Store(r2, &i, .relaxed)
-    j = CAtomics${i}Xor(r1, &i, .relaxed)
+    i.store(r2, .relaxed)
+    j = i.fetch_xor(r1, .relaxed)
     XCTAssertEqual(r2, j)
-    XCTAssertEqual(r1 ^ r2, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r1 ^ r2, i.load(.relaxed))
 
-    CAtomics${i}Store(r1, &i, .relaxed)
-    j = CAtomics${i}And(r2, &i, .relaxed)
+    i.store(r1, .relaxed)
+    j = i.fetch_and(r2, .relaxed)
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r1 & r2, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r1 & r2, i.load(.relaxed))
 
     j = r1
-    CAtomics${i}Store(r1, &i, .relaxed)
-    XCTAssertTrue(CAtomics${i}CAS(&j, r2, &i, .strong, .relaxed, .relaxed))
-    XCTAssertEqual(r2, CAtomics${i}Load(&i, .relaxed))
+    i.store(r1, .relaxed)
+    XCTAssertTrue(i.loadCAS(&j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertEqual(r2, i.load(.relaxed))
 
     j = r2
-    CAtomics${i}Store(r1, &i, .relaxed)
-    while(!CAtomics${i}CAS(&j, r3, &i, .weak, .relaxed, .relaxed)) {}
+    i.store(r1, .relaxed)
+    while(!i.loadCAS(&j, r3, .weak, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r3, CAtomics${i}Load(&i, .relaxed))
+    XCTAssertEqual(r3, i.load(.relaxed))
   }
 
 % end
-% for mutable in pointers:
-  public func test${mutable}Pointer()
+% for type in pointers:
+  public func test${type}Pointer()
   {
-    var p = CAtomics${mutable}Pointer()
-    CAtomics${mutable}PointerInit(nil, &p)
-    XCTAssert(CAtomics${mutable}PointerLoad(&p, .relaxed) == nil)
+    var p = Atomic${type}Pointer()
+    p.initialize(nil)
+    XCTAssert(p.load(.relaxed) == nil)
 
-    let r1 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
-    let r2 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
-    let r3 = Unsafe${mutable}RawPointer(bitPattern: UInt.randomPositive())
+% native = type if (type == 'Opaque') else "Unsafe" + type
+    let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())
+    let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())
+    let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())
 
-    CAtomics${mutable}PointerStore(r1, &p, .relaxed)
-    XCTAssert(r1 == CAtomics${mutable}PointerLoad(&p, .relaxed))
+    p.store(r1, .relaxed)
+    XCTAssert(r1 == p.load(.relaxed))
 
-    var j = CAtomics${mutable}PointerSwap(r2, &p, .relaxed)
+    var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r2, CAtomics${mutable}PointerLoad(&p, .relaxed))
+    XCTAssertEqual(r2, p.load(.relaxed))
 
-    j = r1
-    CAtomics${mutable}PointerStore(r1, &p, .relaxed)
-    XCTAssertTrue(CAtomics${mutable}PointerCAS(&j, r2, &p, .strong, .relaxed, .relaxed))
-    XCTAssertEqual(r2, CAtomics${mutable}PointerLoad(&p, .relaxed))
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
 
-    j = r2
-    CAtomics${mutable}PointerStore(r1, &p, .relaxed)
-    while(!CAtomics${mutable}PointerCAS(&j, r3, &p, .weak, .relaxed, .relaxed)) {}
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
-    XCTAssertEqual(r3, CAtomics${mutable}PointerLoad(&p, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
   }
 
 % end
   public func testBool()
   {
-    var boolean = CAtomicsBoolean()
-    CAtomicsBooleanInit(false, &boolean)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    var boolean = AtomicBool()
+    boolean.initialize(false)
+    XCTAssert(boolean.load(.relaxed) == false)
 
-    CAtomicsBooleanStore(false, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    boolean.store(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
 
-    CAtomicsBooleanStore(true, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == true)
+    boolean.store(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
 
-    CAtomicsBooleanStore(false, &boolean, .relaxed)
-    CAtomicsBooleanOr(true, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == true)
-    CAtomicsBooleanOr(false, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == true)
-    CAtomicsBooleanStore(false, &boolean, .relaxed)
-    CAtomicsBooleanOr(false, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
-    CAtomicsBooleanOr(true, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == true)
+    boolean.store(false, .relaxed)
+    boolean.fetch_or(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+    boolean.fetch_or(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+    boolean.store(false, .relaxed)
+    boolean.fetch_or(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_or(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
 
-    CAtomicsBooleanAnd(false, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
-    CAtomicsBooleanAnd(true, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
+    boolean.fetch_and(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_and(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
 
-    CAtomicsBooleanXor(false, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == false)
-    CAtomicsBooleanXor(true, &boolean, .relaxed)
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == true)
+    boolean.fetch_xor(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_xor(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
 
-    let old = CAtomicsBooleanSwap(false, &boolean, .relaxed)
+    let old = boolean.swap(false, .relaxed)
     XCTAssert(old == true)
-    XCTAssert(CAtomicsBooleanSwap(true, &boolean, .relaxed) == false)
+    XCTAssert(boolean.swap(true, .relaxed) == false)
 
     var current = true
-    XCTAssert(CAtomicsBooleanLoad(&boolean, .relaxed) == current)
-    CAtomicsBooleanCAS(&current, false, &boolean, .strong, .relaxed, .relaxed)
-    current = CAtomicsBooleanLoad(&boolean, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == current)
+    boolean.loadCAS(&current, false, .strong, .relaxed, .relaxed)
+    current = boolean.load(.relaxed)
     XCTAssert(current == false)
-    if CAtomicsBooleanCAS(&current, true, &boolean, .strong, .relaxed, .relaxed)
+    if boolean.loadCAS(&current, true, .strong, .relaxed, .relaxed)
     {
       current = !current
-      XCTAssert(CAtomicsBooleanCAS(&current, false, &boolean, .weak, .relaxed, .relaxed))
+      XCTAssert(boolean.loadCAS(&current, false, .weak, .relaxed, .relaxed))
       current = !current
-      XCTAssert(CAtomicsBooleanCAS(&current, true, &boolean, .weak, .relaxed, .relaxed))
+      XCTAssert(boolean.loadCAS(&current, true, .weak, .relaxed, .relaxed))
     }
   }
 

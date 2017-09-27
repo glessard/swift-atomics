@@ -9,81 +9,76 @@
 
 import CAtomics
 
-public struct AtomicInt
-{
-  @_versioned var val = CAtomicsInt()
-
-  public init(_ value: Int = 0)
-  {
-    CAtomicsIntInit(value, &val)
-  }
-
-  public var value: Int {
-    @inline(__always)
-    mutating get { return CAtomicsIntLoad(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicInt
 
 extension AtomicInt
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Int) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Int) {}
+
+  public var value: Int {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntLoad(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsIntStore(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntSwap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntAdd(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntSub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntOr(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntXor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntAnd(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntAdd(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return CAtomicsIntSub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -92,94 +87,88 @@ extension AtomicInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsIntCAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int, future: Int,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicUInt
-{
-  @_versioned var val = CAtomicsUInt()
-
-  public init(_ value: UInt = 0)
-  {
-    CAtomicsUIntInit(value, &val)
-  }
-
-  public var value: UInt {
-    @inline(__always)
-    mutating get { return CAtomicsUIntLoad(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicUInt
 
 extension AtomicUInt
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt) after the default initializer, as long as the instance is unshared")
+  public init(_ value: UInt) {}
+
+  public var value: UInt {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntLoad(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsUIntStore(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntSwap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntAdd(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntSub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntOr(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntXor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntAnd(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntAdd(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return CAtomicsUIntSub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -188,94 +177,88 @@ extension AtomicUInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsUIntCAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt, future: UInt,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicInt8
-{
-  @_versioned var val = CAtomicsInt8()
-
-  public init(_ value: Int8 = 0)
-  {
-    CAtomicsInt8Init(value, &val)
-  }
-
-  public var value: Int8 {
-    @inline(__always)
-    mutating get { return CAtomicsInt8Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicInt8
 
 extension AtomicInt8
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Int8) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Int8) {}
+
+  public var value: Int8 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsInt8Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
   {
-    return CAtomicsInt8Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -284,94 +267,88 @@ extension AtomicInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsInt8CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int8, future: Int8,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicUInt8
-{
-  @_versioned var val = CAtomicsUInt8()
-
-  public init(_ value: UInt8 = 0)
-  {
-    CAtomicsUInt8Init(value, &val)
-  }
-
-  public var value: UInt8 {
-    @inline(__always)
-    mutating get { return CAtomicsUInt8Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicUInt8
 
 extension AtomicUInt8
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt8) after the default initializer, as long as the instance is unshared")
+  public init(_ value: UInt8) {}
+
+  public var value: UInt8 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsUInt8Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return CAtomicsUInt8Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -380,94 +357,88 @@ extension AtomicUInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsUInt8CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt8, future: UInt8,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicInt16
-{
-  @_versioned var val = CAtomicsInt16()
-
-  public init(_ value: Int16 = 0)
-  {
-    CAtomicsInt16Init(value, &val)
-  }
-
-  public var value: Int16 {
-    @inline(__always)
-    mutating get { return CAtomicsInt16Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicInt16
 
 extension AtomicInt16
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Int16) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Int16) {}
+
+  public var value: Int16 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsInt16Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
   {
-    return CAtomicsInt16Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -476,94 +447,88 @@ extension AtomicInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsInt16CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int16, future: Int16,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicUInt16
-{
-  @_versioned var val = CAtomicsUInt16()
-
-  public init(_ value: UInt16 = 0)
-  {
-    CAtomicsUInt16Init(value, &val)
-  }
-
-  public var value: UInt16 {
-    @inline(__always)
-    mutating get { return CAtomicsUInt16Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicUInt16
 
 extension AtomicUInt16
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt16) after the default initializer, as long as the instance is unshared")
+  public init(_ value: UInt16) {}
+
+  public var value: UInt16 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsUInt16Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return CAtomicsUInt16Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -572,94 +537,88 @@ extension AtomicUInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsUInt16CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt16, future: UInt16,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicInt32
-{
-  @_versioned var val = CAtomicsInt32()
-
-  public init(_ value: Int32 = 0)
-  {
-    CAtomicsInt32Init(value, &val)
-  }
-
-  public var value: Int32 {
-    @inline(__always)
-    mutating get { return CAtomicsInt32Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicInt32
 
 extension AtomicInt32
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Int32) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Int32) {}
+
+  public var value: Int32 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsInt32Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
   {
-    return CAtomicsInt32Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -668,94 +627,88 @@ extension AtomicInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsInt32CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int32, future: Int32,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicUInt32
-{
-  @_versioned var val = CAtomicsUInt32()
-
-  public init(_ value: UInt32 = 0)
-  {
-    CAtomicsUInt32Init(value, &val)
-  }
-
-  public var value: UInt32 {
-    @inline(__always)
-    mutating get { return CAtomicsUInt32Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicUInt32
 
 extension AtomicUInt32
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt32) after the default initializer, as long as the instance is unshared")
+  public init(_ value: UInt32) {}
+
+  public var value: UInt32 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsUInt32Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return CAtomicsUInt32Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -764,94 +717,88 @@ extension AtomicUInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsUInt32CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt32, future: UInt32,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicInt64
-{
-  @_versioned var val = CAtomicsInt64()
-
-  public init(_ value: Int64 = 0)
-  {
-    CAtomicsInt64Init(value, &val)
-  }
-
-  public var value: Int64 {
-    @inline(__always)
-    mutating get { return CAtomicsInt64Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicInt64
 
 extension AtomicInt64
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Int64) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Int64) {}
+
+  public var value: Int64 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsInt64Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
-    return CAtomicsInt64Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -860,94 +807,88 @@ extension AtomicInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsInt64CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int64, future: Int64,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 
-public struct AtomicUInt64
-{
-  @_versioned var val = CAtomicsUInt64()
-
-  public init(_ value: UInt64 = 0)
-  {
-    CAtomicsUInt64Init(value, &val)
-  }
-
-  public var value: UInt64 {
-    @inline(__always)
-    mutating get { return CAtomicsUInt64Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.AtomicUInt64
 
 extension AtomicUInt64
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt64) after the default initializer, as long as the instance is unshared")
+  public init(_ value: UInt64) {}
+
+  public var value: UInt64 {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    CAtomicsUInt64Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Swap(value, &val, order)
+    return swap(value, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Add(delta, &val, order)
+    return fetch_add(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Sub(delta, &val, order)
+    return fetch_sub(delta, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Or(bits, &val, order)
+    return fetch_or(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Xor(bits, &val, order)
+    return fetch_xor(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64And(bits, &val, order)
+    return fetch_and(bits, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Add(1, &val, order)
+    return fetch_add(1, order)
   }
 
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return CAtomicsUInt64Sub(1, &val, order)
+    return fetch_sub(1, order)
   }
 
   @inline(__always) @discardableResult
@@ -956,15 +897,80 @@ extension AtomicUInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsUInt64CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt64, future: UInt64,
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
+  }
+}
+
+@_exported import struct CAtomics.AtomicBool
+
+extension AtomicBool
+{
+  @available(*, unavailable, message: "If needed, use initialize(_ value: Bool) after the default initializer, as long as the instance is unshared")
+  public init(_ value: Bool) {}
+
+  public var value: Bool {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return load(order)
+  }
+
+  @inline(__always)
+  public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+
+  @inline(__always)
+  public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return swap(value, order)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_or(value, order)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_xor(value, order)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_and(value, order)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: Bool, future: Bool,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
   }
 }

@@ -79,6 +79,7 @@ public class AtomicsTests: XCTestCase
   public func testInt()
   {
     var i = AtomicInt()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -144,6 +145,7 @@ public class AtomicsTests: XCTestCase
   public func testUInt()
   {
     var i = AtomicUInt()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -209,6 +211,7 @@ public class AtomicsTests: XCTestCase
   public func testInt8()
   {
     var i = AtomicInt8()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -274,6 +277,7 @@ public class AtomicsTests: XCTestCase
   public func testUInt8()
   {
     var i = AtomicUInt8()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -339,6 +343,7 @@ public class AtomicsTests: XCTestCase
   public func testInt16()
   {
     var i = AtomicInt16()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -404,6 +409,7 @@ public class AtomicsTests: XCTestCase
   public func testUInt16()
   {
     var i = AtomicUInt16()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -469,6 +475,7 @@ public class AtomicsTests: XCTestCase
   public func testInt32()
   {
     var i = AtomicInt32()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -534,6 +541,7 @@ public class AtomicsTests: XCTestCase
   public func testUInt32()
   {
     var i = AtomicUInt32()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -599,6 +607,7 @@ public class AtomicsTests: XCTestCase
   public func testInt64()
   {
     var i = AtomicInt64()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -664,6 +673,7 @@ public class AtomicsTests: XCTestCase
   public func testUInt64()
   {
     var i = AtomicUInt64()
+    i.initialize(0)
     XCTAssert(i.value == 0)
 
   #if swift(>=4.0)
@@ -864,8 +874,8 @@ public class AtomicsTests: XCTestCase
 
   public func testBool()
   {
-    var boolean = AtomicBool(false)
-    _ = AtomicBool(true)
+    var boolean = AtomicBool()
+    boolean.initialize(false)
     XCTAssert(boolean.value == false)
 
     boolean.store(false)
@@ -896,15 +906,16 @@ public class AtomicsTests: XCTestCase
     boolean.xor(true)
     XCTAssert(boolean.value == true)
 
-    let old = boolean.swap(false)
+    var old = boolean.swap(false)
     XCTAssert(old == true)
     XCTAssert(boolean.swap(true) == false)
 
     boolean.CAS(current: true, future: false)
     if boolean.CAS(current: false, future: true, type: .strong)
     {
-      boolean.CAS(current: true, future: false, type: .weak)
-      boolean.CAS(current: false, future: true, type: .weak)
+      XCTAssert(boolean.CAS(current: true, future: false, type: .strong))
+      XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong) == false)
+      XCTAssert(boolean.CAS(current: old, future: true, type: .strong))
     }
   }
 

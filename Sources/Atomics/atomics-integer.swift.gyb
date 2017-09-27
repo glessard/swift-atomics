@@ -8,77 +8,81 @@
 //
 
 import CAtomics
-% for IntType in ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']:
+% for IntType in ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64', 'Bool']:
 % AtomicType = 'Atomic' + IntType
-% CAtomicsType = 'CAtomics' + IntType
 
-public struct ${AtomicType}
-{
-  @_versioned var val = ${CAtomicsType}()
-
-  public init(_ value: ${IntType} = 0)
-  {
-    ${CAtomicsType}Init(value, &val)
-  }
-
-  public var value: ${IntType} {
-    @inline(__always)
-    mutating get { return ${CAtomicsType}Load(&val, .relaxed) }
-  }
-}
+@_exported import struct CAtomics.${AtomicType}
 
 extension ${AtomicType}
 {
+  @available(*, unavailable, message: "If needed, use initialize(_ value: ${IntType}) after the default initializer, as long as the instance is unshared")
+  public init(_ value: ${IntType}) {}
+
+  public var value: ${IntType} {
+    @inline(__always)
+    mutating get { return load(.relaxed) }
+  }
+
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${CAtomicsType}Load(&val, order)
+    return load(order)
   }
 
   @inline(__always)
   public mutating func store(_ value: ${IntType}, order: StoreMemoryOrder = .relaxed)
   {
-    ${CAtomicsType}Store(value, &val, order)
+    store(value, order)
   }
 
   @inline(__always)
   public mutating func swap(_ value: ${IntType}, order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${CAtomicsType}Swap(value, &val, order)
+    return swap(value, order)
   }
 
-% for (rmwMethod, rmwFunc, rmwParam) in [('add', 'Add', 'delta'), ('subtract', 'Sub', 'delta'), ('bitwiseOr', 'Or', 'bits'), ('bitwiseXor', 'Xor', 'bits'), ('bitwiseAnd', 'And', 'bits')]:
+% if IntType == 'Bool':
+% for (rmwMethod, rmwFunc, rmwParam) in [('or', 'fetch_or', 'value'), ('xor', 'fetch_xor', 'value'), ('and', 'fetch_and', 'value')]:
   @inline(__always) @discardableResult
   public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${CAtomicsType}${rmwFunc}(${rmwParam}, &val, order)
+    return ${rmwFunc}(${rmwParam}, order)
   }
 
-% end
-% for (inc, op) in [('increment', 'Add'), ('decrement', 'Sub')]:
+% end # for
+% else:
+% for (rmwMethod, rmwFunc, rmwParam) in [('add', 'fetch_add', 'delta'), ('subtract', 'fetch_sub', 'delta'), ('bitwiseOr', 'fetch_or', 'bits'), ('bitwiseXor', 'fetch_xor', 'bits'), ('bitwiseAnd', 'fetch_and', 'bits')]:
+  @inline(__always) @discardableResult
+  public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .relaxed) -> ${IntType}
+  {
+    return ${rmwFunc}(${rmwParam}, order)
+  }
+
+% end # for
+% for (inc, op) in [('increment', 'fetch_add'), ('decrement', 'fetch_sub')]:
   @inline(__always) @discardableResult
   public mutating func ${inc}(order: MemoryOrder = .relaxed) -> ${IntType}
   {
-    return ${CAtomicsType}${op}(1, &val, order)
+    return ${op}(1, order)
   }
 
-% end
+% end # for
+% end # if IntType == 'Bool'
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<${IntType}>, future: ${IntType},
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return ${CAtomicsType}CAS(current, future, &val, type, orderSwap, orderLoad)
+    return loadCAS(current, future, type, orderSwap, orderLoad)
   }
 
   @inline(__always) @discardableResult
   public mutating func CAS(current: ${IntType}, future: ${IntType},
-                           type: CASType = .weak,
+                           type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    var expect = current
-    return loadCAS(current: &expect, future: future, type: type, orderSwap: order, orderLoad: .relaxed)
+    return CAS(current, future, type, order)
   }
 }
 % end # for AtomicType

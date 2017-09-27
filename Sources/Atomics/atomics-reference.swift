@@ -11,12 +11,12 @@ import CAtomics
 
 public struct AtomicReference<T: AnyObject>
 {
-  @_versioned internal var ptr = CAtomicsPointer()
+  @_versioned internal var ptr = AtomicMutableRawPointer()
 
   public init(_ ref: T? = nil)
   {
     let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    CAtomicsPointerInit(u, &ptr)
+    ptr.initialize(u)
   }
 }
 
@@ -26,7 +26,7 @@ extension AtomicReference
   public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
   {
     let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    if let pointer = CAtomicsPointerSwap(u, &ptr, order)
+    if let pointer = ptr.swap(u, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }
@@ -37,8 +37,7 @@ extension AtomicReference
   public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
   {
     let u = Unmanaged.passUnretained(ref)
-    var null: UnsafeRawPointer? = nil
-    if CAtomicsPointerCAS(&null, u.toOpaque(), &ptr, .strong, order, .relaxed)
+    if ptr.CAS(nil, u.toOpaque(), .strong, order)
     {
       _ = u.retain()
       return true
@@ -49,7 +48,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func take(order: MemoryOrder = .sequential) -> T?
   {
-    if let pointer = CAtomicsPointerSwap(nil, &ptr, order)
+    if let pointer = ptr.swap(nil, order)
     {
       return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
     }

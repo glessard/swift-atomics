@@ -64,16 +64,16 @@ public class CAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
-      var lock = CAtomicsInt()
-      CAtomicsIntInit(0, &lock)
+      var lock = AtomicInt()
+      lock.initialize(0)
 
       let closure = {
         while true
         {
           var current = 0
-          if CAtomicsIntCAS(&current, 1, &lock, .weak, .sequential, .relaxed)
+          if lock.loadCAS(&current, 1, .weak, .sequential, .relaxed)
           {
-            defer { CAtomicsIntStore(0, &lock, .sequential) }
+            defer { lock.store(0, .sequential) }
             if let c = p
             {
               p = nil
@@ -100,14 +100,14 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsPointer()
-      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = AtomicMutableRawPointer()
+      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
-        var c = UnsafeRawPointer(bitPattern: 0x1)
+        var c = UnsafeMutableRawPointer(bitPattern: 0x1)
         while true
         {
-          if CAtomicsPointerCAS(&c, nil, &p, .weak, .release, .relaxed)
+          if p.loadCAS(&c, nil, .weak, .release, .relaxed)
           {
             if let c = UnsafeMutableRawPointer(mutating: c)
             {
@@ -136,13 +136,13 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = CAtomicsPointer()
-      CAtomicsPointerInit(UnsafeMutablePointer<Point>.allocate(capacity: 1), &p)
+      var p = AtomicMutableRawPointer()
+      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
         while true
         {
-          if let c = CAtomicsPointerSwap(nil, &p, .acquire)
+          if let c = p.swap(nil, .acquire)
           {
             let pointer = UnsafeMutableRawPointer(mutating: c).assumingMemoryBound(to: Point.self)
             pointer.deallocate(capacity: 1)
