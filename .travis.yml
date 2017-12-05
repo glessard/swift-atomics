@@ -6,24 +6,24 @@ matrix:
       dist: trusty
       language: generic
       sudo: required
-      env: SWIFT_VERSION=3.0.2 CLANG_VERSION=3.6
+      env: SWIFT_VERSION=3.1.1 CLANG_VERSION=3.6
 
     - os: linux
       dist: trusty
       language: generic
       sudo: required
-      env: SWIFT_VERSION=4.0
+      env: SWIFT_VERSION=4.0.2
 
     - os: osx
-      osx_image: xcode8.2
+      osx_image: xcode8.3
+      env: SWIFT_VERSION=3.1.1
 
     - os: osx
-      osx_image: xcode9
+      osx_image: xcode9.1
       env: SWIFT_VERSION=3.2
 
     - os: osx
-      osx_image: xcode9
-      env: SWIFT_VERSION=4.0
+      osx_image: xcode9.1
 
 before_install:
   - sudo /bin/bash Tests/install-clang.sh
