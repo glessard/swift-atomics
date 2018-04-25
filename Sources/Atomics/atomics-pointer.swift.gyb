@@ -77,7 +77,10 @@ public struct Atomic${Mutable}Pointer<Pointee>
 extension ${AtomicType}
 {
   @available(*, unavailable, message: "If needed, use initialize(_ pointer: ${PointerType}?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: ${PointerType}?) {}
+  public init(_ pointer: ${PointerType}?)
+  {
+    self.init()
+  }
 
   public var pointer: ${PointerType}? {
     @inline(__always)
