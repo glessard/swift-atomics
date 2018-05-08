@@ -39,7 +39,11 @@ public class AtomicsRaceTests: XCTestCase
           if let c = p
           {
             p = nil
+            #if swift(>=4.1)
+            c.deallocate()
+            #else
             c.deallocate(capacity: 1)
+            #endif
           }
           else // pointer is deallocated
           {
@@ -75,7 +79,11 @@ public class AtomicsRaceTests: XCTestCase
             if let c = p
             {
               p = nil
+              #if swift(>=4.1)
+              c.deallocate()
+              #else
               c.deallocate(capacity: 1)
+              #endif
             }
             else // pointer is deallocated
             {
@@ -106,7 +114,11 @@ public class AtomicsRaceTests: XCTestCase
           {
             if p.CAS(current: c, future: nil, type: .weak, order: .release)
             {
+              #if swift(>=4.1)
+              c.deallocate()
+              #else
               c.deallocate(capacity: 1)
+              #endif
             }
           }
           else // pointer is deallocated
@@ -137,7 +149,11 @@ public class AtomicsRaceTests: XCTestCase
           if p.loadCAS(current: &c, future: nil, type: .weak, orderSwap: .release, orderLoad: .relaxed),
              let c = c
           {
+            #if swift(>=4.1)
+            c.deallocate()
+            #else
             c.deallocate(capacity: 1)
+            #endif
           }
           else // pointer is deallocated
           {
@@ -165,7 +181,11 @@ public class AtomicsRaceTests: XCTestCase
         {
           if let c = p.swap(nil, order: .acquire)
           {
+            #if swift(>=4.1)
+            c.deallocate()
+            #else
             c.deallocate(capacity: 1)
+            #endif
           }
           else // pointer is deallocated
           {

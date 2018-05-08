@@ -77,7 +77,11 @@ public class CAtomicsRaceTests: XCTestCase
             if let c = p
             {
               p = nil
+              #if swift(>=4.1)
+              c.deallocate()
+              #else
               c.deallocate(capacity: 1)
+              #endif
             }
             else // pointer is deallocated
             {
@@ -112,7 +116,11 @@ public class CAtomicsRaceTests: XCTestCase
             if let c = UnsafeMutableRawPointer(mutating: c)
             {
               let pointer = c.assumingMemoryBound(to: Point.self)
+              #if swift(>=4.1)
+              pointer.deallocate()
+              #else
               pointer.deallocate(capacity: 1)
+              #endif
             }
           }
 
@@ -145,7 +153,11 @@ public class CAtomicsRaceTests: XCTestCase
           if let c = p.swap(nil, .acquire)
           {
             let pointer = UnsafeMutableRawPointer(mutating: c).assumingMemoryBound(to: Point.self)
+            #if swift(>=4.1)
+            pointer.deallocate()
+            #else
             pointer.deallocate(capacity: 1)
+            #endif
           }
           else // pointer is deallocated
           {
