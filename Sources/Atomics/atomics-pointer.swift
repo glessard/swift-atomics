@@ -134,7 +134,10 @@ public struct AtomicMutablePointer<Pointee>
 extension AtomicRawPointer
 {
   @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeRawPointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeRawPointer?) {}
+  public init(_ pointer: UnsafeRawPointer?)
+  {
+    self.init()
+  }
 
   public var pointer: UnsafeRawPointer? {
     @inline(__always)
@@ -185,7 +188,10 @@ extension AtomicRawPointer
 extension AtomicMutableRawPointer
 {
   @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeMutableRawPointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeMutableRawPointer?) {}
+  public init(_ pointer: UnsafeMutableRawPointer?)
+  {
+    self.init()
+  }
 
   public var pointer: UnsafeMutableRawPointer? {
     @inline(__always)
@@ -236,7 +242,10 @@ extension AtomicMutableRawPointer
 extension AtomicOpaquePointer
 {
   @available(*, unavailable, message: "If needed, use initialize(_ pointer: OpaquePointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: OpaquePointer?) {}
+  public init(_ pointer: OpaquePointer?)
+  {
+    self.init()
+  }
 
   public var pointer: OpaquePointer? {
     @inline(__always)
