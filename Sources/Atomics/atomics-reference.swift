@@ -11,7 +11,11 @@ import CAtomics
 
 public struct AtomicReference<T: AnyObject>
 {
+#if swift(>=4.2)
+  @usableFromInline internal var ptr = AtomicMutableRawPointer()
+#else
   @_versioned internal var ptr = AtomicMutableRawPointer()
+#endif
 
   public init(_ ref: T? = nil)
   {
@@ -58,9 +62,17 @@ extension AtomicReference
 
 extension Unmanaged
 {
+#if swift(>=4.2)
+  @usableFromInline static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
+  {
+    guard let reference = optional else { return nil }
+    return Unmanaged.passRetained(reference)
+  }
+#else
   @_versioned static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
   {
     guard let reference = optional else { return nil }
     return Unmanaged.passRetained(reference)
   }
+#endif
 }

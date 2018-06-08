@@ -11,7 +11,11 @@ import CAtomics
 
 public struct AtomicPointer<Pointee>
 {
+#if swift(>=4.2)
+  @usableFromInline var ptr = AtomicRawPointer()
+#else
   @_versioned var ptr = AtomicRawPointer()
+#endif
 
   public init(_ pointer: UnsafePointer<Pointee>? = nil)
   {
@@ -71,7 +75,11 @@ public struct AtomicPointer<Pointee>
 
 public struct AtomicMutablePointer<Pointee>
 {
+#if swift(>=4.2)
+  @usableFromInline var ptr = AtomicMutableRawPointer()
+#else
   @_versioned var ptr = AtomicMutableRawPointer()
+#endif
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>? = nil)
   {
