@@ -54,14 +54,6 @@ extension UInt
 
 public class CAtomicsBasicTests: XCTestCase
 {
-  public static var allTests = [
-    ("testRawPointer", testRawPointer),
-    ("testMutableRawPointer", testMutableRawPointer),
-    ("testOpaquePointer", testOpaquePointer),
-    ("testBool", testBool),
-    ("testFence", testFence),
-  ]
-
   public func testInt()
   {
     var i = AtomicInt()

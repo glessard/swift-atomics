@@ -57,19 +57,6 @@ extension UInt
 
 public class AtomicsBasicTests: XCTestCase
 {
-  public static var allTests = [
-% for i in integers:
-    ("test${i}", test${i}),
-% end
-% for p in pointers:
-% unsafe = 'Unsafe' if p != 'Opaque' else ''
-    ("test${unsafe}${p}Pointer", test${unsafe}${p}Pointer),
-% end
-    ("testBool", testBool),
-    ("testFence", testFence),
-    ("testUnmanaged", testUnmanaged),
-  ]
-
 % for i in integers:
   public func test${i}()
   {

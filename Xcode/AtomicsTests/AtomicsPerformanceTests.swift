@@ -11,17 +11,6 @@ import Atomics
 
 public class AtomicsPerformanceTests: XCTestCase
 {
-  public static var allTests = [
-    ("testPerformanceRead", testPerformanceRead),
-    ("testPerformanceSynchronizedRead", testPerformanceSynchronizedRead),
-    ("testPerformanceStore", testPerformanceStore),
-    ("testPerformanceSynchronizedStore", testPerformanceSynchronizedStore),
-    ("testPerformanceSwiftCASSuccess", testPerformanceSwiftCASSuccess),
-    ("testPerformanceSwiftCASFailure", testPerformanceSwiftCASFailure),
-    ("testPerformanceOSAtomicCASSuccess", testPerformanceOSAtomicCASSuccess),
-    ("testPerformanceOSAtomicCASFailure", testPerformanceOSAtomicCASFailure),
-  ]
-
   let testLoopCount = 1_000_000
 
   public func testPerformanceStore()

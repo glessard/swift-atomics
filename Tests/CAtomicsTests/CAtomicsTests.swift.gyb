@@ -56,16 +56,6 @@ extension UInt
 
 public class CAtomicsBasicTests: XCTestCase
 {
-  public static var allTests = [
-% for integer in integers:
-% end
-% for type in pointers:
-    ("test${type}Pointer", test${type}Pointer),
-% end
-    ("testBool", testBool),
-    ("testFence", testFence),
-  ]
-
 % for i in integers:
   public func test${i}()
   {

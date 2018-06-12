@@ -12,11 +12,6 @@ import CAtomics
 
 public class MemoryOrderTests: XCTestCase
 {
-  public static var allTests = [
-    ("testMemoryOrder", testMemoryOrder),
-    ("testEnumCases", testEnumCases),
-  ]
-
   public func testMemoryOrder()
   {
     let m = MemoryOrder(rawValue: memory_order_relaxed.rawValue)

@@ -1,11 +1,10 @@
 import XCTest
+
 import AtomicsTests
 import CAtomicsTests
 
-XCTMain([
-  testCase(MemoryOrderTests.allTests),
-  testCase(CAtomicsTests.allTests),
-  testCase(CAtomicsRaceTests.allTests),
-  testCase(AtomicsTests.allTests),
-  testCase(AtomicsRaceTests.raceTests),
-])
+var tests = [XCTestCaseEntry]()
+tests += AtomicsTests.__allTests()
+tests += CAtomicsTests.__allTests()
+
+XCTMain(tests)
