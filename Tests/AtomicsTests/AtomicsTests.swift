@@ -53,7 +53,7 @@ extension UInt
 #endif
 
 
-public class AtomicsTests: XCTestCase
+public class AtomicsBasicTests: XCTestCase
 {
   public static var allTests = [
     ("testInt", testInt),

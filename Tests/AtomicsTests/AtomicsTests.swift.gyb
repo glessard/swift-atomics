@@ -55,7 +55,7 @@ extension UInt
 % pointers = ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']
 % integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
 
-public class AtomicsTests: XCTestCase
+public class AtomicsBasicTests: XCTestCase
 {
   public static var allTests = [
 % for i in integers:

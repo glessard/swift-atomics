@@ -52,7 +52,7 @@ extension UInt
 }
 #endif
 
-public class CAtomicsTests: XCTestCase
+public class CAtomicsBasicTests: XCTestCase
 {
   public static var allTests = [
     ("testRawPointer", testRawPointer),
