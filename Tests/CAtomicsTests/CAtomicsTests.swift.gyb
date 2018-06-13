@@ -54,18 +54,8 @@ extension UInt
 % integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
 % pointers = ['Raw', 'MutableRaw', 'Opaque']
 
-public class CAtomicsTests: XCTestCase
+public class CAtomicsBasicTests: XCTestCase
 {
-  public static var allTests = [
-% for integer in integers:
-% end
-% for type in pointers:
-    ("test${type}Pointer", test${type}Pointer),
-% end
-    ("testBool", testBool),
-    ("testFence", testFence),
-  ]
-
 % for i in integers:
   public func test${i}()
   {

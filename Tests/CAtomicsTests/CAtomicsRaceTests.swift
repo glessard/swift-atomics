@@ -17,13 +17,6 @@ private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
 public class CAtomicsRaceTests: XCTestCase
 {
-  public static var allTests = [
-    ("testRaceCrash", testRaceCrash),
-    ("testRaceSpinLock", testRaceSpinLock),
-    ("testRacePointerCAS", testRacePointerCAS),
-    ("testRacePointerSwap", testRacePointerSwap),
-  ]
-
   public func testRaceCrash()
   {
 #if false
