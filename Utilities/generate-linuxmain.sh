@@ -12,16 +12,19 @@ do
   then
     # echo "$manifestpath does not exist"
     generate="yes"
-  elif /bin/test `/usr/bin/find "${testspath}/${testdir}" -newer "${manifestpath}"`
-  then
-    # echo "newer files than $manifestpath"
-    generate="yes"
+  else
+    newer=`/usr/bin/find "${testspath}/${testdir}" -newer "${manifestpath}"`
+    if /bin/test "${newer}"
+    then
+      # echo "newer files than $manifestpath"
+      generate="yes"
+    fi
   fi
 done
 
-if /bin/test ${generate}
+if /bin/test "${generate}"
 then
-  /usr/bin/find "${testspath}" -name ${manifest} -exec rm -f {} \;
+  /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
   echo "Regenerating test manifests"
   /usr/bin/swift test --generate-linuxmain
 fi
