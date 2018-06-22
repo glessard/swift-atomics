@@ -7,50 +7,8 @@
 //
 
 import XCTest
-import Dispatch
-
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-import func Darwin.C.stdlib.arc4random
-#else // assuming os(Linux)
-import func Glibc.random
-#endif
 
 import CAtomics
-
-#if swift(>=4.0)
-extension FixedWidthInteger
-{
-  // returns a positive random integer greater than 0 and less-than-or-equal to Self.max/2
-  // the least significant bit is always set.
-  static func randomPositive() -> Self
-  {
-    var t = Self()
-    for _ in 0...((t.bitWidth-1)/32)
-    {
-    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
-    #else // probably Linux
-      t = t<<32 &+ Self(truncatingIfNeeded: random())
-    #endif
-    }
-    return (t|1) & (Self.max>>1)
-  }
-}
-#else
-extension UInt
-{
-  // returns a positive random integer greater than 0 and less-than-or-equal to UInt32.max/2
-  // the least significant bit is always set.
-  static func randomPositive() -> UInt
-  {
-  #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-    return UInt(arc4random() & 0x3fff_fffe + 1)
-  #else
-    return UInt(random() & 0x3fff_fffe + 1)
-  #endif
-  }
-}
-#endif
 
 public class CAtomicsBasicTests: XCTestCase
 {

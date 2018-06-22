@@ -6,6 +6,7 @@
 import UIKit
 
 import Atomics
+import CAtomics
 
 #if !swift(>=4.2)
 extension UIApplication { typealias LaunchOptionsKey = UIApplicationLaunchOptionsKey }
@@ -18,7 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     var bool = AtomicBool()
-    bool.store(true)
+    bool.store(false)
+    let f = bool.swap(true, .sequential)
+    assert(f == false)
+    assert(bool.load(order: .acquire))
     return bool.value
   }
 

@@ -23,7 +23,7 @@ matrix:
       env: SWIFT_VERSION=3.2
 
     - os: osx
-      osx_image: xcode9.3
+      osx_image: xcode9.4
 
 before_install:
   - sudo /bin/bash Tests/install-clang.sh
