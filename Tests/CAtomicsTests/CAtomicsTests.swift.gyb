@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import Dispatch
 
 #if !swift(>=4.2)
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)

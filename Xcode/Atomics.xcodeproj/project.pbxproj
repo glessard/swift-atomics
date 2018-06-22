@@ -3,142 +3,190 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
-		030F599F1ED04A4600F4B44B /* atomics-pointer.swift.gyb in Resources */ = {isa = PBXBuildFile; fileRef = 030F599E1ED04A4600F4B44B /* atomics-pointer.swift.gyb */; };
-		030F59A41ED1AB7700F4B44B /* generate.sh in Resources */ = {isa = PBXBuildFile; fileRef = 030F59A31ED1AB7700F4B44B /* generate.sh */; };
-		030F59A81ED1AD0200F4B44B /* AtomicsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */; };
-		03119BB11F4F7A8600F4B44B /* CAtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03119BB01F4F7A8600F4B44B /* CAtomicsRaceTests.swift */; };
-		03119BB21F4F7A8600F4B44B /* CAtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03119BB01F4F7A8600F4B44B /* CAtomicsRaceTests.swift */; };
-		03119BB41F4F836D00F4B44B /* CAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03119BB31F4F836C00F4B44B /* CAtomicsTests.swift */; };
-		03119BB51F4F836D00F4B44B /* CAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03119BB31F4F836C00F4B44B /* CAtomicsTests.swift */; };
-		03157DAB1E4C4C6D00F4B44B /* atomics-fence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */; };
-		031D7C461ECF61A800F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031D7C451ECF61A800F4B44B /* atomics-integer.swift */; };
-		0339F2A31F292DAD00F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */; };
-		0339F2A41F292DB000F4B44B /* AtomicsPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */; };
-		03433D941EC2150200F4B44B /* atomics-reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03433D931EC2150200F4B44B /* atomics-reference.swift */; };
-		0367F8181E70DF9900F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */; };
-		0367F81A1E70DF9900F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */; };
-		0367F81E1E70E0CA00F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; };
-		0367F81F1E70E25F00F4B44B /* Atomics.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 030110EF1B4B896700F4B44B /* Atomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */; };
-		03CF24BF1F39870D00F4B44B /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 03CF24BE1F39870D00F4B44B /* .travis.yml */; };
-		03D6A82D1DF20AAB00F4B44B /* CAtomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A82B1DF20AAB00F4B44B /* CAtomics.c */; };
-		03D6A82F1DF20AAB00F4B44B /* CAtomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 03D6A82C1DF20AAB00F4B44B /* CAtomics.h */; };
-		03D6A83B1DF20AF700F4B44B /* atomics-pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A8341DF20AF700F4B44B /* atomics-pointer.swift */; };
-		03D6A8421DF20B2700F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */; };
-		03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */; };
-		03DB46F81B4C7AFC00F4B44B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DB46F71B4C7AFC00F4B44B /* ViewController.swift */; };
-		03DB46FB1B4C7AFC00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46F91B4C7AFC00F4B44B /* Main.storyboard */; };
-		03DB46FD1B4C7AFC00F4B44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FC1B4C7AFC00F4B44B /* Assets.xcassets */; };
-		03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */; };
-		03E976511DFB1E9600F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */; };
+		031CA34820DBDC0400F4B44B /* Atomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA33E20DBDC0400F4B44B /* Atomics.framework */; };
+		031CA34F20DBDC0400F4B44B /* Atomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 031CA34120DBDC0400F4B44B /* Atomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		031CA36620DBDCAE00F4B44B /* CAtomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */; };
+		031CA37720DBDD0E00F4B44B /* CAtomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 031CA37520DBDD0E00F4B44B /* CAtomics.c */; };
+		031CA37F20DBE01500F4B44B /* CAtomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 031CA37420DBDD0E00F4B44B /* CAtomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		031CA38D20DBE51B00F4B44B /* CAtomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA38C20DBE51B00F4B44B /* CAtomics.swift */; };
+		031CA39520DBE58A00F4B44B /* CAtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */; };
+		031CA39620DBE58A00F4B44B /* CAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */; };
+		031CA39720DBE58A00F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */; };
+		031CA3A320DC3FF600F4B44B /* atomics-fence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39D20DC3FF500F4B44B /* atomics-fence.swift */; };
+		031CA3A620DC3FF600F4B44B /* atomics-pointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3A020DC3FF600F4B44B /* atomics-pointer.swift */; };
+		031CA3A720DC3FF600F4B44B /* atomics-reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3A120DC3FF600F4B44B /* atomics-reference.swift */; };
+		031CA3A820DC3FF600F4B44B /* atomics-integer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3A220DC3FF600F4B44B /* atomics-integer.swift */; };
+		031CA3AC20DC401400F4B44B /* CAtomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */; };
+		031CA3B220DC404F00F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3AE20DC404F00F4B44B /* AtomicsTests.swift */; };
+		031CA3B320DC404F00F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3AF20DC404F00F4B44B /* AtomicsRaceTests.swift */; };
+		0382B62920DC4A2B00F4B44B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0382B62820DC4A2B00F4B44B /* AppDelegate.swift */; };
+		0382B62B20DC4A2B00F4B44B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0382B62A20DC4A2B00F4B44B /* ViewController.swift */; };
+		0382B62E20DC4A2B00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0382B62C20DC4A2B00F4B44B /* Main.storyboard */; };
+		0382B63020DC4A2D00F4B44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0382B62F20DC4A2D00F4B44B /* Assets.xcassets */; };
+		0382B63320DC4A2D00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0382B63120DC4A2D00F4B44B /* LaunchScreen.storyboard */; };
+		0382B65120DC51FE00F4B44B /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3AE20DC404F00F4B44B /* AtomicsTests.swift */; };
+		0382B65220DC51FE00F4B44B /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA3AF20DC404F00F4B44B /* AtomicsRaceTests.swift */; };
+		0382B65320DC51FE00F4B44B /* CAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */; };
+		0382B65420DC51FE00F4B44B /* CAtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */; };
+		0382B65520DC51FE00F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */; };
+		0382B65720DC52CF00F4B44B /* Atomics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA33E20DBDC0400F4B44B /* Atomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0382B65920DC52CF00F4B44B /* CAtomics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		030110FB1B4B896700F4B44B /* PBXContainerItemProxy */ = {
+		031CA34920DBDC0400F4B44B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 030110E61B4B896700F4B44B /* Project object */;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 030110EE1B4B896700F4B44B;
+			remoteGlobalIDString = 031CA33D20DBDC0400F4B44B;
 			remoteInfo = Atomics;
 		};
-		0367F81C1E70E0BA00F4B44B /* PBXContainerItemProxy */ = {
+		031CA36720DBDCAE00F4B44B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 030110E61B4B896700F4B44B /* Project object */;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 030110EE1B4B896700F4B44B;
+			remoteGlobalIDString = 031CA35C20DBDCAD00F4B44B;
+			remoteInfo = CAtomics;
+		};
+		031CA3A920DC400900F4B44B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 031CA35C20DBDCAD00F4B44B;
+			remoteInfo = CAtomics;
+		};
+		0382B63A20DC4A2D00F4B44B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0382B62520DC4A2B00F4B44B;
+			remoteInfo = AtomicsTestApp;
+		};
+		0382B64620DC4E5100F4B44B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 031CA33D20DBDC0400F4B44B;
 			remoteInfo = Atomics;
 		};
-		03DB47071B4C7AFC00F4B44B /* PBXContainerItemProxy */ = {
+		0382B64820DC4E5100F4B44B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 030110E61B4B896700F4B44B /* Project object */;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 03DB46F21B4C7AFB00F4B44B;
-			remoteInfo = Atomics_TestApp;
+			remoteGlobalIDString = 031CA35C20DBDCAD00F4B44B;
+			remoteInfo = CAtomics;
+		};
+		038CB66220DC7B4F00F4B44B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 031CA33520DBDC0400F4B44B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 031CA36420DBDCAE00F4B44B;
+			remoteInfo = CAtomicsTests;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		03DB47151B4C7B7400F4B44B /* CopyFiles */ = {
+		0382B65A20DC52CF00F4B44B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0367F81F1E70E25F00F4B44B /* Atomics.framework in CopyFiles */,
+				0382B65720DC52CF00F4B44B /* Atomics.framework in Embed Frameworks */,
+				0382B65920DC52CF00F4B44B /* CAtomics.framework in Embed Frameworks */,
 			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		030110EF1B4B896700F4B44B /* Atomics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Atomics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		030110F41B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		030110F91B4B896700F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		030111001B4B896700F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		030F599E1ED04A4600F4B44B /* atomics-pointer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-pointer.swift.gyb"; path = "../../Sources/Atomics/atomics-pointer.swift.gyb"; sourceTree = "<group>"; };
-		030F59A31ED1AB7700F4B44B /* generate.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = generate.sh; path = ../Utilities/generate.sh; sourceTree = "<group>"; };
-		030F59A51ED1AB8700F4B44B /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
-		030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AtomicsPerformanceTests.swift; sourceTree = "<group>"; };
-		030F59A91ED1AEAC00F4B44B /* AtomicsTests.swift.gyb */ = {isa = PBXFileReference; lastKnownFileType = text; name = AtomicsTests.swift.gyb; path = ../../Tests/AtomicsTests/AtomicsTests.swift.gyb; sourceTree = "<group>"; };
-		03119BB01F4F7A8600F4B44B /* CAtomicsRaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CAtomicsRaceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsRaceTests.swift; sourceTree = "<group>"; };
-		03119BB31F4F836C00F4B44B /* CAtomicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CAtomicsTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsTests.swift; sourceTree = "<group>"; };
-		03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-fence.swift"; path = "../../Sources/Atomics/atomics-fence.swift"; sourceTree = "<group>"; };
-		03157DAD1E4C54AA00F4B44B /* CAtomicsTests.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CAtomicsTests.swift.gyb; path = ../../Tests/CAtomicsTests/CAtomicsTests.swift.gyb; sourceTree = "<group>"; };
-		031D7C431ECF59B100F4B44B /* atomics-integer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-integer.swift.gyb"; path = "../../Sources/Atomics/atomics-integer.swift.gyb"; sourceTree = "<group>"; };
-		031D7C451ECF61A800F4B44B /* atomics-integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-integer.swift"; path = "../../Sources/Atomics/atomics-integer.swift"; sourceTree = "<group>"; };
-		03433D931EC2150200F4B44B /* atomics-reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-reference.swift"; path = "../../Sources/Atomics/atomics-reference.swift"; sourceTree = "<group>"; };
-		037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemoryOrderTests.swift; path = ../../Tests/CAtomicsTests/MemoryOrderTests.swift; sourceTree = "<group>"; };
-		03A8569120D0024A00F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../../Tests/AtomicsTests/XCTestManifests.swift; sourceTree = "<group>"; };
-		03A8569320D0025300F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../../Tests/CAtomicsTests/XCTestManifests.swift; sourceTree = "<group>"; };
-		03CF24BE1F39870D00F4B44B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
-		03D6A82B1DF20AAB00F4B44B /* CAtomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CAtomics.c; path = ../../Sources/CAtomics/CAtomics.c; sourceTree = "<group>"; };
-		03D6A82C1DF20AAB00F4B44B /* CAtomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAtomics.h; path = ../../Sources/CAtomics/include/CAtomics.h; sourceTree = "<group>"; };
-		03D6A8341DF20AF700F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-pointer.swift"; path = "../../Sources/Atomics/atomics-pointer.swift"; sourceTree = "<group>"; };
-		03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsTests.swift; path = ../../Tests/AtomicsTests/AtomicsTests.swift; sourceTree = "<group>"; };
-		03D6A8441DF20B3600F4B44B /* LinuxMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LinuxMain.swift; path = ../../Tests/LinuxMain.swift; sourceTree = "<group>"; };
-		03DB46F31B4C7AFB00F4B44B /* Atomics_TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Atomics_TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		03DB46F71B4C7AFC00F4B44B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		03DB46FA1B4C7AFC00F4B44B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		03DB46FC1B4C7AFC00F4B44B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		03DB46FF1B4C7AFC00F4B44B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		03DB47011B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Atomics_TestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		03DB470C1B4C7AFC00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		03E4BEEB1BFD994D00F4B44B /* module.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.map; sourceTree = "<group>"; };
-		03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsRaceTests.swift; path = ../../Tests/AtomicsTests/AtomicsRaceTests.swift; sourceTree = "<group>"; };
+		031CA33E20DBDC0400F4B44B /* Atomics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Atomics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		031CA34120DBDC0400F4B44B /* Atomics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Atomics.h; sourceTree = "<group>"; };
+		031CA34220DBDC0400F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		031CA34720DBDC0400F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		031CA34E20DBDC0400F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		031CA35D20DBDCAD00F4B44B /* CAtomics.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CAtomics.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		031CA36020DBDCAD00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		031CA36520DBDCAE00F4B44B /* CAtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CAtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		031CA36C20DBDCAE00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		031CA37420DBDD0E00F4B44B /* CAtomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAtomics.h; path = ../../Sources/CAtomics/include/CAtomics.h; sourceTree = "<group>"; };
+		031CA37520DBDD0E00F4B44B /* CAtomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CAtomics.c; path = ../../Sources/CAtomics/CAtomics.c; sourceTree = "<group>"; };
+		031CA38C20DBE51B00F4B44B /* CAtomics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CAtomics.swift; sourceTree = "<group>"; };
+		031CA38E20DBE58A00F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../../Tests/CAtomicsTests/XCTestManifests.swift; sourceTree = "<group>"; };
+		031CA38F20DBE58A00F4B44B /* CAtomicsTests.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CAtomicsTests.swift.gyb; path = ../../Tests/CAtomicsTests/CAtomicsTests.swift.gyb; sourceTree = "<group>"; };
+		031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CAtomicsRaceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsRaceTests.swift; sourceTree = "<group>"; };
+		031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CAtomicsTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsTests.swift; sourceTree = "<group>"; };
+		031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MemoryOrderTests.swift; path = ../../Tests/CAtomicsTests/MemoryOrderTests.swift; sourceTree = "<group>"; };
+		031CA39D20DC3FF500F4B44B /* atomics-fence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-fence.swift"; path = "../../Sources/Atomics/atomics-fence.swift"; sourceTree = "<group>"; };
+		031CA39E20DC3FF500F4B44B /* atomics-integer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-integer.swift.gyb"; path = "../../Sources/Atomics/atomics-integer.swift.gyb"; sourceTree = "<group>"; };
+		031CA39F20DC3FF600F4B44B /* atomics-pointer.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "atomics-pointer.swift.gyb"; path = "../../Sources/Atomics/atomics-pointer.swift.gyb"; sourceTree = "<group>"; };
+		031CA3A020DC3FF600F4B44B /* atomics-pointer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-pointer.swift"; path = "../../Sources/Atomics/atomics-pointer.swift"; sourceTree = "<group>"; };
+		031CA3A120DC3FF600F4B44B /* atomics-reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-reference.swift"; path = "../../Sources/Atomics/atomics-reference.swift"; sourceTree = "<group>"; };
+		031CA3A220DC3FF600F4B44B /* atomics-integer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "atomics-integer.swift"; path = "../../Sources/Atomics/atomics-integer.swift"; sourceTree = "<group>"; };
+		031CA3AD20DC404F00F4B44B /* AtomicsTests.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AtomicsTests.swift.gyb; path = ../../Tests/AtomicsTests/AtomicsTests.swift.gyb; sourceTree = "<group>"; };
+		031CA3AE20DC404F00F4B44B /* AtomicsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsTests.swift; path = ../../Tests/AtomicsTests/AtomicsTests.swift; sourceTree = "<group>"; };
+		031CA3AF20DC404F00F4B44B /* AtomicsRaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AtomicsRaceTests.swift; path = ../../Tests/AtomicsTests/AtomicsRaceTests.swift; sourceTree = "<group>"; };
+		031CA3B020DC404F00F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../../Tests/AtomicsTests/XCTestManifests.swift; sourceTree = "<group>"; };
+		031CA3BB20DC442300F4B44B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
+		031CA3BC20DC445100F4B44B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
+		031CA3BD20DC446100F4B44B /* generate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = generate.sh; path = ../Utilities/generate.sh; sourceTree = "<group>"; };
+		031CA3BE20DC446100F4B44B /* generate-linuxmain.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "generate-linuxmain.sh"; path = "../Utilities/generate-linuxmain.sh"; sourceTree = "<group>"; };
+		0382B62620DC4A2B00F4B44B /* AtomicsTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicsTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0382B62820DC4A2B00F4B44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		0382B62A20DC4A2B00F4B44B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0382B62D20DC4A2B00F4B44B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0382B62F20DC4A2D00F4B44B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		0382B63220DC4A2D00F4B44B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0382B63420DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0382B63920DC4A2D00F4B44B /* AtomicsTestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0382B63F20DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		030110EB1B4B896700F4B44B /* Frameworks */ = {
+		031CA33A20DBDC0400F4B44B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				031CA3AC20DC401400F4B44B /* CAtomics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		031CA34420DBDC0400F4B44B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				031CA34820DBDC0400F4B44B /* Atomics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		031CA35920DBDCAD00F4B44B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		030110F61B4B896700F4B44B /* Frameworks */ = {
+		031CA36220DBDCAE00F4B44B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				030110FA1B4B896700F4B44B /* Atomics.framework in Frameworks */,
+				031CA36620DBDCAE00F4B44B /* CAtomics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB46F01B4C7AFB00F4B44B /* Frameworks */ = {
+		0382B62320DC4A2B00F4B44B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0367F81E1E70E0CA00F4B44B /* Atomics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB47031B4C7AFC00F4B44B /* Frameworks */ = {
+		0382B63620DC4A2D00F4B44B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -148,267 +196,351 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		030110E51B4B896700F4B44B = {
+		031CA33420DBDC0400F4B44B = {
 			isa = PBXGroup;
 			children = (
-				030F59A51ED1AB8700F4B44B /* Package.swift */,
-				03CF24BE1F39870D00F4B44B /* .travis.yml */,
-				030F59A31ED1AB7700F4B44B /* generate.sh */,
-				030110F11B4B896700F4B44B /* Atomics */,
-				030110FD1B4B896700F4B44B /* AtomicsTests */,
-				03DB46F41B4C7AFC00F4B44B /* Atomics_TestApp */,
-				03DB47091B4C7AFC00F4B44B /* Atomics_TestAppTests */,
-				030110F01B4B896700F4B44B /* Products */,
+				031CA3BB20DC442300F4B44B /* Package.swift */,
+				031CA3BC20DC445100F4B44B /* .travis.yml */,
+				031CA3BD20DC446100F4B44B /* generate.sh */,
+				031CA3BE20DC446100F4B44B /* generate-linuxmain.sh */,
+				031CA34020DBDC0400F4B44B /* Atomics */,
+				031CA34B20DBDC0400F4B44B /* AtomicsTests */,
+				031CA35E20DBDCAD00F4B44B /* CAtomics */,
+				031CA36920DBDCAE00F4B44B /* CAtomicsTests */,
+				0382B62720DC4A2B00F4B44B /* AtomicsTestApp */,
+				0382B63C20DC4A2D00F4B44B /* AtomicsTestAppTests */,
+				031CA33F20DBDC0400F4B44B /* Products */,
+				031CA3AB20DC401400F4B44B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		030110F01B4B896700F4B44B /* Products */ = {
+		031CA33F20DBDC0400F4B44B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				030110EF1B4B896700F4B44B /* Atomics.framework */,
-				030110F91B4B896700F4B44B /* AtomicsTests.xctest */,
-				03DB46F31B4C7AFB00F4B44B /* Atomics_TestApp.app */,
-				03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */,
+				031CA33E20DBDC0400F4B44B /* Atomics.framework */,
+				031CA34720DBDC0400F4B44B /* AtomicsTests.xctest */,
+				031CA35D20DBDCAD00F4B44B /* CAtomics.framework */,
+				031CA36520DBDCAE00F4B44B /* CAtomicsTests.xctest */,
+				0382B62620DC4A2B00F4B44B /* AtomicsTestApp.app */,
+				0382B63920DC4A2D00F4B44B /* AtomicsTestAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		030110F11B4B896700F4B44B /* Atomics */ = {
+		031CA34020DBDC0400F4B44B /* Atomics */ = {
 			isa = PBXGroup;
 			children = (
-				030110F41B4B896700F4B44B /* Info.plist */,
-				03D6A8311DF20AC400F4B44B /* CAtomics */,
-				031D7C431ECF59B100F4B44B /* atomics-integer.swift.gyb */,
-				031D7C451ECF61A800F4B44B /* atomics-integer.swift */,
-				030F599E1ED04A4600F4B44B /* atomics-pointer.swift.gyb */,
-				03D6A8341DF20AF700F4B44B /* atomics-pointer.swift */,
-				03433D931EC2150200F4B44B /* atomics-reference.swift */,
-				03157DAA1E4C4C6D00F4B44B /* atomics-fence.swift */,
+				031CA39E20DC3FF500F4B44B /* atomics-integer.swift.gyb */,
+				031CA3A220DC3FF600F4B44B /* atomics-integer.swift */,
+				031CA39F20DC3FF600F4B44B /* atomics-pointer.swift.gyb */,
+				031CA3A020DC3FF600F4B44B /* atomics-pointer.swift */,
+				031CA3A120DC3FF600F4B44B /* atomics-reference.swift */,
+				031CA39D20DC3FF500F4B44B /* atomics-fence.swift */,
+				031CA34120DBDC0400F4B44B /* Atomics.h */,
+				031CA34220DBDC0400F4B44B /* Info.plist */,
 			);
 			path = Atomics;
 			sourceTree = "<group>";
 		};
-		030110FD1B4B896700F4B44B /* AtomicsTests */ = {
+		031CA34B20DBDC0400F4B44B /* AtomicsTests */ = {
 			isa = PBXGroup;
 			children = (
-				03D6A8441DF20B3600F4B44B /* LinuxMain.swift */,
-				030F59A91ED1AEAC00F4B44B /* AtomicsTests.swift.gyb */,
-				03D6A8411DF20B2700F4B44B /* AtomicsTests.swift */,
-				03E976501DFB1E9600F4B44B /* AtomicsRaceTests.swift */,
-				030F59A71ED1AD0200F4B44B /* AtomicsPerformanceTests.swift */,
-				03A8569120D0024A00F4B44B /* XCTestManifests.swift */,
-				03157DAD1E4C54AA00F4B44B /* CAtomicsTests.swift.gyb */,
-				03119BB31F4F836C00F4B44B /* CAtomicsTests.swift */,
-				03119BB01F4F7A8600F4B44B /* CAtomicsRaceTests.swift */,
-				037B842C1EC7CF5700F4B44B /* MemoryOrderTests.swift */,
-				03A8569320D0025300F4B44B /* XCTestManifests.swift */,
-				030111001B4B896700F4B44B /* Info.plist */,
+				031CA3AD20DC404F00F4B44B /* AtomicsTests.swift.gyb */,
+				031CA3AE20DC404F00F4B44B /* AtomicsTests.swift */,
+				031CA3AF20DC404F00F4B44B /* AtomicsRaceTests.swift */,
+				031CA3B020DC404F00F4B44B /* XCTestManifests.swift */,
+				031CA34E20DBDC0400F4B44B /* Info.plist */,
 			);
 			path = AtomicsTests;
 			sourceTree = "<group>";
 		};
-		03D6A8311DF20AC400F4B44B /* CAtomics */ = {
+		031CA35E20DBDCAD00F4B44B /* CAtomics */ = {
 			isa = PBXGroup;
 			children = (
-				03E4BEEB1BFD994D00F4B44B /* module.map */,
-				03D6A82B1DF20AAB00F4B44B /* CAtomics.c */,
-				03D6A82C1DF20AAB00F4B44B /* CAtomics.h */,
+				031CA37520DBDD0E00F4B44B /* CAtomics.c */,
+				031CA37420DBDD0E00F4B44B /* CAtomics.h */,
+				031CA38C20DBE51B00F4B44B /* CAtomics.swift */,
+				031CA36020DBDCAD00F4B44B /* Info.plist */,
 			);
-			name = CAtomics;
+			path = CAtomics;
 			sourceTree = "<group>";
 		};
-		03DB46F41B4C7AFC00F4B44B /* Atomics_TestApp */ = {
+		031CA36920DBDCAE00F4B44B /* CAtomicsTests */ = {
 			isa = PBXGroup;
 			children = (
-				03DB46F51B4C7AFC00F4B44B /* AppDelegate.swift */,
-				03DB46F71B4C7AFC00F4B44B /* ViewController.swift */,
-				03DB46F91B4C7AFC00F4B44B /* Main.storyboard */,
-				03DB46FC1B4C7AFC00F4B44B /* Assets.xcassets */,
-				03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */,
-				03DB47011B4C7AFC00F4B44B /* Info.plist */,
+				031CA38F20DBE58A00F4B44B /* CAtomicsTests.swift.gyb */,
+				031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */,
+				031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */,
+				031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */,
+				031CA38E20DBE58A00F4B44B /* XCTestManifests.swift */,
+				031CA36C20DBDCAE00F4B44B /* Info.plist */,
 			);
-			path = Atomics_TestApp;
+			path = CAtomicsTests;
 			sourceTree = "<group>";
 		};
-		03DB47091B4C7AFC00F4B44B /* Atomics_TestAppTests */ = {
+		031CA3AB20DC401400F4B44B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				03DB470C1B4C7AFC00F4B44B /* Info.plist */,
 			);
-			path = Atomics_TestAppTests;
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0382B62720DC4A2B00F4B44B /* AtomicsTestApp */ = {
+			isa = PBXGroup;
+			children = (
+				0382B62820DC4A2B00F4B44B /* AppDelegate.swift */,
+				0382B62A20DC4A2B00F4B44B /* ViewController.swift */,
+				0382B62C20DC4A2B00F4B44B /* Main.storyboard */,
+				0382B62F20DC4A2D00F4B44B /* Assets.xcassets */,
+				0382B63120DC4A2D00F4B44B /* LaunchScreen.storyboard */,
+				0382B63420DC4A2D00F4B44B /* Info.plist */,
+			);
+			path = AtomicsTestApp;
+			sourceTree = "<group>";
+		};
+		0382B63C20DC4A2D00F4B44B /* AtomicsTestAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				0382B63F20DC4A2D00F4B44B /* Info.plist */,
+			);
+			path = AtomicsTestAppTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		030110EC1B4B896700F4B44B /* Headers */ = {
+		031CA33B20DBDC0400F4B44B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03D6A82F1DF20AAB00F4B44B /* CAtomics.h in Headers */,
+				031CA34F20DBDC0400F4B44B /* Atomics.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		031CA35A20DBDCAD00F4B44B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				031CA37F20DBE01500F4B44B /* CAtomics.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		030110EE1B4B896700F4B44B /* Atomics */ = {
+		031CA33D20DBDC0400F4B44B /* Atomics */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 030111031B4B896700F4B44B /* Build configuration list for PBXNativeTarget "Atomics" */;
+			buildConfigurationList = 031CA35220DBDC0400F4B44B /* Build configuration list for PBXNativeTarget "Atomics" */;
 			buildPhases = (
-				030F599D1ECF80B600F4B44B /* ShellScript */,
-				030110EA1B4B896700F4B44B /* Sources */,
-				030110EB1B4B896700F4B44B /* Frameworks */,
-				030110EC1B4B896700F4B44B /* Headers */,
-				030110ED1B4B896700F4B44B /* Resources */,
+				031CA39B20DC3F5F00F4B44B /* ShellScript */,
+				031CA33920DBDC0400F4B44B /* Sources */,
+				031CA33A20DBDC0400F4B44B /* Frameworks */,
+				031CA33B20DBDC0400F4B44B /* Headers */,
+				031CA33C20DBDC0400F4B44B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				031CA3AA20DC400900F4B44B /* PBXTargetDependency */,
 			);
 			name = Atomics;
 			productName = Atomics;
-			productReference = 030110EF1B4B896700F4B44B /* Atomics.framework */;
+			productReference = 031CA33E20DBDC0400F4B44B /* Atomics.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		030110F81B4B896700F4B44B /* AtomicsTests */ = {
+		031CA34620DBDC0400F4B44B /* AtomicsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 030111061B4B896700F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTests" */;
+			buildConfigurationList = 031CA35520DBDC0400F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTests" */;
 			buildPhases = (
-				030F59AA1ED1B0BE00F4B44B /* ShellScript */,
-				030110F51B4B896700F4B44B /* Sources */,
-				030110F61B4B896700F4B44B /* Frameworks */,
-				030110F71B4B896700F4B44B /* Resources */,
-				03BEA0E220CF473300F4B44B /* ShellScript */,
+				031CA39C20DC3F7C00F4B44B /* ShellScript */,
+				031CA34320DBDC0400F4B44B /* Sources */,
+				031CA34420DBDC0400F4B44B /* Frameworks */,
+				031CA34520DBDC0400F4B44B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				030110FC1B4B896700F4B44B /* PBXTargetDependency */,
+				031CA34A20DBDC0400F4B44B /* PBXTargetDependency */,
+				038CB66320DC7B4F00F4B44B /* PBXTargetDependency */,
 			);
 			name = AtomicsTests;
 			productName = AtomicsTests;
-			productReference = 030110F91B4B896700F4B44B /* AtomicsTests.xctest */;
+			productReference = 031CA34720DBDC0400F4B44B /* AtomicsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		03DB46F21B4C7AFB00F4B44B /* Atomics_TestApp */ = {
+		031CA35C20DBDCAD00F4B44B /* CAtomics */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 03DB470D1B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestApp" */;
+			buildConfigurationList = 031CA36E20DBDCAE00F4B44B /* Build configuration list for PBXNativeTarget "CAtomics" */;
 			buildPhases = (
-				03DB46EF1B4C7AFB00F4B44B /* Sources */,
-				03DB46F01B4C7AFB00F4B44B /* Frameworks */,
-				03DB46F11B4C7AFB00F4B44B /* Resources */,
-				03DB47151B4C7B7400F4B44B /* CopyFiles */,
+				031CA35820DBDCAD00F4B44B /* Sources */,
+				031CA35920DBDCAD00F4B44B /* Frameworks */,
+				031CA35A20DBDCAD00F4B44B /* Headers */,
+				031CA35B20DBDCAD00F4B44B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0367F81D1E70E0BA00F4B44B /* PBXTargetDependency */,
 			);
-			name = Atomics_TestApp;
-			productName = Atomics_TestApp;
-			productReference = 03DB46F31B4C7AFB00F4B44B /* Atomics_TestApp.app */;
+			name = CAtomics;
+			productName = CAtomics;
+			productReference = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		031CA36420DBDCAE00F4B44B /* CAtomicsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 031CA37120DBDCAE00F4B44B /* Build configuration list for PBXNativeTarget "CAtomicsTests" */;
+			buildPhases = (
+				031CA39A20DC3E6400F4B44B /* ShellScript */,
+				031CA36120DBDCAE00F4B44B /* Sources */,
+				031CA36220DBDCAE00F4B44B /* Frameworks */,
+				031CA36320DBDCAE00F4B44B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				031CA36820DBDCAE00F4B44B /* PBXTargetDependency */,
+			);
+			name = CAtomicsTests;
+			productName = CAtomicsTests;
+			productReference = 031CA36520DBDCAE00F4B44B /* CAtomicsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		0382B62520DC4A2B00F4B44B /* AtomicsTestApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0382B64420DC4A2D00F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTestApp" */;
+			buildPhases = (
+				0382B62220DC4A2B00F4B44B /* Sources */,
+				0382B62320DC4A2B00F4B44B /* Frameworks */,
+				0382B62420DC4A2B00F4B44B /* Resources */,
+				0382B65A20DC52CF00F4B44B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0382B64720DC4E5100F4B44B /* PBXTargetDependency */,
+				0382B64920DC4E5100F4B44B /* PBXTargetDependency */,
+			);
+			name = AtomicsTestApp;
+			productName = AtomicsTestApp;
+			productReference = 0382B62620DC4A2B00F4B44B /* AtomicsTestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		03DB47051B4C7AFC00F4B44B /* Atomics_TestAppTests */ = {
+		0382B63820DC4A2D00F4B44B /* AtomicsTestAppTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 03DB47101B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestAppTests" */;
+			buildConfigurationList = 0382B64520DC4A2D00F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTestAppTests" */;
 			buildPhases = (
-				03DB47021B4C7AFC00F4B44B /* Sources */,
-				03DB47031B4C7AFC00F4B44B /* Frameworks */,
-				03DB47041B4C7AFC00F4B44B /* Resources */,
+				0330BB0D20DC60A600F4B44B /* ShellScript */,
+				0382B63520DC4A2D00F4B44B /* Sources */,
+				0382B63620DC4A2D00F4B44B /* Frameworks */,
+				0382B63720DC4A2D00F4B44B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				03DB47081B4C7AFC00F4B44B /* PBXTargetDependency */,
+				0382B63B20DC4A2D00F4B44B /* PBXTargetDependency */,
 			);
-			name = Atomics_TestAppTests;
-			productName = Atomics_TestAppTests;
-			productReference = 03DB47061B4C7AFC00F4B44B /* Atomics_TestAppTests.xctest */;
+			name = AtomicsTestAppTests;
+			productName = AtomicsTestAppTests;
+			productReference = 0382B63920DC4A2D00F4B44B /* AtomicsTestAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		030110E61B4B896700F4B44B /* Project object */ = {
+		031CA33520DBDC0400F4B44B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0930;
+				LastSwiftUpdateCheck = 1000;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Guillaume Lessard";
 				TargetAttributes = {
-					030110EE1B4B896700F4B44B = {
-						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 1000;
+					031CA33D20DBDC0400F4B44B = {
+						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
 					};
-					030110F81B4B896700F4B44B = {
-						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 1000;
+					031CA34620DBDC0400F4B44B = {
+						CreatedOnToolsVersion = 9.4.1;
 					};
-					03DB46F21B4C7AFB00F4B44B = {
-						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 96558JVW34;
-						LastSwiftMigration = 0900;
+					031CA35C20DBDCAD00F4B44B = {
+						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
 					};
-					03DB47051B4C7AFC00F4B44B = {
-						CreatedOnToolsVersion = 7.0;
-						DevelopmentTeam = 96558JVW34;
-						LastSwiftMigration = 0900;
-						TestTargetID = 03DB46F21B4C7AFB00F4B44B;
+					031CA36420DBDCAE00F4B44B = {
+						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
+					};
+					0382B62520DC4A2B00F4B44B = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					0382B63820DC4A2D00F4B44B = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = 0382B62520DC4A2B00F4B44B;
 					};
 				};
 			};
-			buildConfigurationList = 030110E91B4B896700F4B44B /* Build configuration list for PBXProject "Atomics" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			buildConfigurationList = 031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 030110E51B4B896700F4B44B;
-			productRefGroup = 030110F01B4B896700F4B44B /* Products */;
+			mainGroup = 031CA33420DBDC0400F4B44B;
+			productRefGroup = 031CA33F20DBDC0400F4B44B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				030110EE1B4B896700F4B44B /* Atomics */,
-				030110F81B4B896700F4B44B /* AtomicsTests */,
-				03DB46F21B4C7AFB00F4B44B /* Atomics_TestApp */,
-				03DB47051B4C7AFC00F4B44B /* Atomics_TestAppTests */,
+				031CA33D20DBDC0400F4B44B /* Atomics */,
+				031CA34620DBDC0400F4B44B /* AtomicsTests */,
+				031CA35C20DBDCAD00F4B44B /* CAtomics */,
+				031CA36420DBDCAE00F4B44B /* CAtomicsTests */,
+				0382B62520DC4A2B00F4B44B /* AtomicsTestApp */,
+				0382B63820DC4A2D00F4B44B /* AtomicsTestAppTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		030110ED1B4B896700F4B44B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				03CF24BF1F39870D00F4B44B /* .travis.yml in Resources */,
-				030F599F1ED04A4600F4B44B /* atomics-pointer.swift.gyb in Resources */,
-				030F59A41ED1AB7700F4B44B /* generate.sh in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		030110F71B4B896700F4B44B /* Resources */ = {
+		031CA33C20DBDC0400F4B44B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB46F11B4C7AFB00F4B44B /* Resources */ = {
+		031CA34520DBDC0400F4B44B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB47001B4C7AFC00F4B44B /* LaunchScreen.storyboard in Resources */,
-				03DB46FD1B4C7AFC00F4B44B /* Assets.xcassets in Resources */,
-				03DB46FB1B4C7AFC00F4B44B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB47041B4C7AFC00F4B44B /* Resources */ = {
+		031CA35B20DBDCAD00F4B44B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		031CA36320DBDCAE00F4B44B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0382B62420DC4A2B00F4B44B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0382B63320DC4A2D00F4B44B /* LaunchScreen.storyboard in Resources */,
+				0382B63020DC4A2D00F4B44B /* Assets.xcassets in Resources */,
+				0382B62E20DC4A2B00F4B44B /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0382B63720DC4A2D00F4B44B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -418,7 +550,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		030F599D1ECF80B600F4B44B /* ShellScript */ = {
+		031CA39A20DC3E6400F4B44B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -428,11 +560,11 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh";
+			shellPath = /bin/sh;
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
 			showEnvVarsInLog = 0;
 		};
-		030F59AA1ED1B0BE00F4B44B /* ShellScript */ = {
+		031CA39B20DC3F5F00F4B44B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -442,11 +574,11 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
+			shellPath = /bin/sh;
 			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n";
 			showEnvVarsInLog = 0;
 		};
-		03BEA0E220CF473300F4B44B /* ShellScript */ = {
+		031CA39C20DC3F7C00F4B44B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -456,93 +588,140 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
+			shellPath = /bin/sh;
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
+			showEnvVarsInLog = 0;
+		};
+		0330BB0D20DC60A600F4B44B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		030110EA1B4B896700F4B44B /* Sources */ = {
+		031CA33920DBDC0400F4B44B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				031D7C461ECF61A800F4B44B /* atomics-integer.swift in Sources */,
-				03D6A82D1DF20AAB00F4B44B /* CAtomics.c in Sources */,
-				03D6A83B1DF20AF700F4B44B /* atomics-pointer.swift in Sources */,
-				03157DAB1E4C4C6D00F4B44B /* atomics-fence.swift in Sources */,
-				03433D941EC2150200F4B44B /* atomics-reference.swift in Sources */,
+				031CA3A620DC3FF600F4B44B /* atomics-pointer.swift in Sources */,
+				031CA3A320DC3FF600F4B44B /* atomics-fence.swift in Sources */,
+				031CA3A720DC3FF600F4B44B /* atomics-reference.swift in Sources */,
+				031CA3A820DC3FF600F4B44B /* atomics-integer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		030110F51B4B896700F4B44B /* Sources */ = {
+		031CA34320DBDC0400F4B44B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03E976511DFB1E9600F4B44B /* AtomicsRaceTests.swift in Sources */,
-				03119BB21F4F7A8600F4B44B /* CAtomicsRaceTests.swift in Sources */,
-				03119BB51F4F836D00F4B44B /* CAtomicsTests.swift in Sources */,
-				037B842D1EC7CF5700F4B44B /* MemoryOrderTests.swift in Sources */,
-				03D6A8421DF20B2700F4B44B /* AtomicsTests.swift in Sources */,
-				030F59A81ED1AD0200F4B44B /* AtomicsPerformanceTests.swift in Sources */,
+				031CA3B320DC404F00F4B44B /* AtomicsRaceTests.swift in Sources */,
+				031CA3B220DC404F00F4B44B /* AtomicsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB46EF1B4C7AFB00F4B44B /* Sources */ = {
+		031CA35820DBDCAD00F4B44B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03DB46F81B4C7AFC00F4B44B /* ViewController.swift in Sources */,
-				03DB46F61B4C7AFC00F4B44B /* AppDelegate.swift in Sources */,
+				031CA38D20DBE51B00F4B44B /* CAtomics.swift in Sources */,
+				031CA37720DBDD0E00F4B44B /* CAtomics.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		03DB47021B4C7AFC00F4B44B /* Sources */ = {
+		031CA36120DBDCAE00F4B44B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0367F8181E70DF9900F4B44B /* AtomicsTests.swift in Sources */,
-				03119BB11F4F7A8600F4B44B /* CAtomicsRaceTests.swift in Sources */,
-				03119BB41F4F836D00F4B44B /* CAtomicsTests.swift in Sources */,
-				0339F2A31F292DAD00F4B44B /* MemoryOrderTests.swift in Sources */,
-				0339F2A41F292DB000F4B44B /* AtomicsPerformanceTests.swift in Sources */,
-				0367F81A1E70DF9900F4B44B /* AtomicsRaceTests.swift in Sources */,
+				031CA39720DBE58A00F4B44B /* MemoryOrderTests.swift in Sources */,
+				031CA39520DBE58A00F4B44B /* CAtomicsRaceTests.swift in Sources */,
+				031CA39620DBE58A00F4B44B /* CAtomicsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0382B62220DC4A2B00F4B44B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0382B62B20DC4A2B00F4B44B /* ViewController.swift in Sources */,
+				0382B62920DC4A2B00F4B44B /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0382B63520DC4A2D00F4B44B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0382B65320DC51FE00F4B44B /* CAtomicsTests.swift in Sources */,
+				0382B65520DC51FE00F4B44B /* MemoryOrderTests.swift in Sources */,
+				0382B65220DC51FE00F4B44B /* AtomicsRaceTests.swift in Sources */,
+				0382B65420DC51FE00F4B44B /* CAtomicsRaceTests.swift in Sources */,
+				0382B65120DC51FE00F4B44B /* AtomicsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		030110FC1B4B896700F4B44B /* PBXTargetDependency */ = {
+		031CA34A20DBDC0400F4B44B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 030110EE1B4B896700F4B44B /* Atomics */;
-			targetProxy = 030110FB1B4B896700F4B44B /* PBXContainerItemProxy */;
+			target = 031CA33D20DBDC0400F4B44B /* Atomics */;
+			targetProxy = 031CA34920DBDC0400F4B44B /* PBXContainerItemProxy */;
 		};
-		0367F81D1E70E0BA00F4B44B /* PBXTargetDependency */ = {
+		031CA36820DBDCAE00F4B44B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 030110EE1B4B896700F4B44B /* Atomics */;
-			targetProxy = 0367F81C1E70E0BA00F4B44B /* PBXContainerItemProxy */;
+			target = 031CA35C20DBDCAD00F4B44B /* CAtomics */;
+			targetProxy = 031CA36720DBDCAE00F4B44B /* PBXContainerItemProxy */;
 		};
-		03DB47081B4C7AFC00F4B44B /* PBXTargetDependency */ = {
+		031CA3AA20DC400900F4B44B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 03DB46F21B4C7AFB00F4B44B /* Atomics_TestApp */;
-			targetProxy = 03DB47071B4C7AFC00F4B44B /* PBXContainerItemProxy */;
+			target = 031CA35C20DBDCAD00F4B44B /* CAtomics */;
+			targetProxy = 031CA3A920DC400900F4B44B /* PBXContainerItemProxy */;
+		};
+		0382B63B20DC4A2D00F4B44B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0382B62520DC4A2B00F4B44B /* AtomicsTestApp */;
+			targetProxy = 0382B63A20DC4A2D00F4B44B /* PBXContainerItemProxy */;
+		};
+		0382B64720DC4E5100F4B44B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 031CA33D20DBDC0400F4B44B /* Atomics */;
+			targetProxy = 0382B64620DC4E5100F4B44B /* PBXContainerItemProxy */;
+		};
+		0382B64920DC4E5100F4B44B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 031CA35C20DBDCAD00F4B44B /* CAtomics */;
+			targetProxy = 0382B64820DC4E5100F4B44B /* PBXContainerItemProxy */;
+		};
+		038CB66320DC7B4F00F4B44B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 031CA36420DBDCAE00F4B44B /* CAtomicsTests */;
+			targetProxy = 038CB66220DC7B4F00F4B44B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		03DB46F91B4C7AFC00F4B44B /* Main.storyboard */ = {
+		0382B62C20DC4A2B00F4B44B /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				03DB46FA1B4C7AFC00F4B44B /* Base */,
+				0382B62D20DC4A2B00F4B44B /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		03DB46FE1B4C7AFC00F4B44B /* LaunchScreen.storyboard */ = {
+		0382B63120DC4A2D00F4B44B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				03DB46FF1B4C7AFC00F4B44B /* Base */,
+				0382B63220DC4A2D00F4B44B /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -550,20 +729,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		030111011B4B896700F4B44B /* Debug */ = {
+		031CA35020DBDC0400F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -575,6 +758,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -582,7 +766,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -598,8 +782,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.2;
@@ -610,20 +794,24 @@
 			};
 			name = Debug;
 		};
-		030111021B4B896700F4B44B /* Release */ = {
+		031CA35120DBDC0400F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -635,6 +823,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -642,7 +831,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -652,8 +842,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.2;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
@@ -663,142 +853,283 @@
 			};
 			name = Release;
 		};
-		030111041B4B896700F4B44B /* Debug */ = {
+		031CA35320DBDC0400F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = Atomics/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.Atomics;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos appletvos iphonesimulator appletvsimulator";
-				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
-		030111051B4B896700F4B44B /* Release */ = {
+		031CA35420DBDC0400F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = Atomics/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.Atomics;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos appletvos iphonesimulator appletvsimulator";
-				SWIFT_INCLUDE_PATHS = $SRCROOT/Atomics;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
 				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
-		030111071B4B896700F4B44B /* Debug */ = {
+		031CA35620DBDC0400F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = AtomicsTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "macosx iphoneos appletvos iphonesimulator appletvsimulator";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
 				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
-		030111081B4B896700F4B44B /* Release */ = {
+		031CA35720DBDC0400F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = AtomicsTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "macosx iphoneos appletvos iphonesimulator appletvsimulator";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
 				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
 			};
 			name = Release;
 		};
-		03DB470E1B4C7AFC00F4B44B /* Debug */ = {
+		031CA36F20DBDCAE00F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CAtomics/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.CAtomics;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
+			};
+			name = Debug;
+		};
+		031CA37020DBDCAE00F4B44B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = CAtomics/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.CAtomics;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
+			};
+			name = Release;
+		};
+		031CA37220DBDCAE00F4B44B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = CAtomicsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.CAtomicsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
+			};
+			name = Debug;
+		};
+		031CA37320DBDCAE00F4B44B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = CAtomicsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.CAtomicsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				VALID_ARCHS = "i386 x86_64 arm64 armv7 armv7s";
+			};
+			name = Release;
+		};
+		0382B64020DC4A2D00F4B44B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 96558JVW34;
-				INFOPLIST_FILE = Atomics_TestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTest.03a1;
+				INFOPLIST_FILE = AtomicsTestApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTestApp.0x3a1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		03DB470F1B4C7AFC00F4B44B /* Release */ = {
+		0382B64120DC4A2D00F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 96558JVW34;
-				INFOPLIST_FILE = Atomics_TestApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTest.03a1;
+				INFOPLIST_FILE = AtomicsTestApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTestApp.0x3a1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		03DB47111B4C7AFC00F4B44B /* Debug */ = {
+		0382B64220DC4A2D00F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 96558JVW34;
-				INFOPLIST_FILE = Atomics_TestAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-TestAppTests";
+				INFOPLIST_FILE = AtomicsTestAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AtomicsTestApp.app/AtomicsTestApp";
 			};
 			name = Debug;
 		};
-		03DB47121B4C7AFC00F4B44B /* Release */ = {
+		0382B64320DC4A2D00F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 96558JVW34;
-				INFOPLIST_FILE = Atomics_TestAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tffenterprises.Atomics-TestAppTests";
+				INFOPLIST_FILE = AtomicsTestAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tffenterprises.AtomicsTestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Atomics_TestApp.app/Atomics_TestApp";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AtomicsTestApp.app/AtomicsTestApp";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -806,52 +1137,70 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		030110E91B4B896700F4B44B /* Build configuration list for PBXProject "Atomics" */ = {
+		031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				030111011B4B896700F4B44B /* Debug */,
-				030111021B4B896700F4B44B /* Release */,
+				031CA35020DBDC0400F4B44B /* Debug */,
+				031CA35120DBDC0400F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		030111031B4B896700F4B44B /* Build configuration list for PBXNativeTarget "Atomics" */ = {
+		031CA35220DBDC0400F4B44B /* Build configuration list for PBXNativeTarget "Atomics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				030111041B4B896700F4B44B /* Debug */,
-				030111051B4B896700F4B44B /* Release */,
+				031CA35320DBDC0400F4B44B /* Debug */,
+				031CA35420DBDC0400F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		030111061B4B896700F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTests" */ = {
+		031CA35520DBDC0400F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				030111071B4B896700F4B44B /* Debug */,
-				030111081B4B896700F4B44B /* Release */,
+				031CA35620DBDC0400F4B44B /* Debug */,
+				031CA35720DBDC0400F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03DB470D1B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestApp" */ = {
+		031CA36E20DBDCAE00F4B44B /* Build configuration list for PBXNativeTarget "CAtomics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				03DB470E1B4C7AFC00F4B44B /* Debug */,
-				03DB470F1B4C7AFC00F4B44B /* Release */,
+				031CA36F20DBDCAE00F4B44B /* Debug */,
+				031CA37020DBDCAE00F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		03DB47101B4C7AFC00F4B44B /* Build configuration list for PBXNativeTarget "Atomics_TestAppTests" */ = {
+		031CA37120DBDCAE00F4B44B /* Build configuration list for PBXNativeTarget "CAtomicsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				03DB47111B4C7AFC00F4B44B /* Debug */,
-				03DB47121B4C7AFC00F4B44B /* Release */,
+				031CA37220DBDCAE00F4B44B /* Debug */,
+				031CA37320DBDCAE00F4B44B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0382B64420DC4A2D00F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0382B64020DC4A2D00F4B44B /* Debug */,
+				0382B64120DC4A2D00F4B44B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0382B64520DC4A2D00F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTestAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0382B64220DC4A2D00F4B44B /* Debug */,
+				0382B64320DC4A2D00F4B44B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 030110E61B4B896700F4B44B /* Project object */;
+	rootObject = 031CA33520DBDC0400F4B44B /* Project object */;
 }
