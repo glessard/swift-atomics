@@ -8,55 +8,7 @@
 
 import XCTest
 
-#if !swift(>=4.2)
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-import func Darwin.C.stdlib.arc4random
-#else // assuming os(Linux)
-import func Glibc.random
-#endif
-#endif
-
 import Atomics
-
-#if swift(>=4.0)
-extension FixedWidthInteger where Self.Magnitude: UnsignedInteger, Self.Stride: SignedInteger
-{
-  // returns a positive random integer greater than 0 and less-than-or-equal to Self.max/2
-  static func nzRandom() -> Self
-  {
-#if swift(>=4.2)
-    return Self.random(in: 1...(Self.max>>1))
-#else
-    var t = Self()
-    for _ in 0...((t.bitWidth-1)/32)
-    {
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
-#else // probably Linux
-      t = t<<32 &+ Self(truncatingIfNeeded: random())
-#endif
-    }
-    // in this variant the least significant bit is always set.
-    return (t|1) & (Self.max>>1)
-#endif
-  }
-}
-#else
-extension UInt
-{
-  // returns a positive random integer greater than 0 and less-than-or-equal to UInt32.max/2
-  // in this variant the least significant bit is always set.
-  static func nzRandom() -> UInt
-  {
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-    return UInt(arc4random() & 0x3fff_fffe + 1)
-#else
-    return UInt(random() & 0x3fff_fffe + 1)
-#endif
-  }
-}
-#endif
-
 
 public class AtomicsBasicTests: XCTestCase
 {
@@ -66,15 +18,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = Int.nzRandom()
-    let r2 = Int.nzRandom()
-    let r3 = Int.nzRandom()
-  #else
-    let r1 = Int(UInt.nzRandom())
-    let r2 = Int(UInt.nzRandom())
-    let r3 = Int(UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = Int.randomPositive()
+    let r2 = Int.randomPositive()
+    let r3 = Int.randomPositive()
+#else
+    let r1 = Int(UInt.randomPositive())
+    let r2 = Int(UInt.randomPositive())
+    let r3 = Int(UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -132,15 +84,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = UInt.nzRandom()
-    let r2 = UInt.nzRandom()
-    let r3 = UInt.nzRandom()
-  #else
-    let r1 = UInt(UInt.nzRandom())
-    let r2 = UInt(UInt.nzRandom())
-    let r3 = UInt(UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = UInt.randomPositive()
+    let r2 = UInt.randomPositive()
+    let r3 = UInt.randomPositive()
+#else
+    let r1 = UInt(UInt.randomPositive())
+    let r2 = UInt(UInt.randomPositive())
+    let r3 = UInt(UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -198,15 +150,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = Int8.nzRandom()
-    let r2 = Int8.nzRandom()
-    let r3 = Int8.nzRandom()
-  #else
-    let r1 = Int8(truncatingBitPattern: UInt.nzRandom())
-    let r2 = Int8(truncatingBitPattern: UInt.nzRandom())
-    let r3 = Int8(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = Int8.randomPositive()
+    let r2 = Int8.randomPositive()
+    let r3 = Int8.randomPositive()
+#else
+    let r1 = Int8(truncatingBitPattern: UInt.randomPositive())
+    let r2 = Int8(truncatingBitPattern: UInt.randomPositive())
+    let r3 = Int8(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -264,15 +216,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = UInt8.nzRandom()
-    let r2 = UInt8.nzRandom()
-    let r3 = UInt8.nzRandom()
-  #else
-    let r1 = UInt8(truncatingBitPattern: UInt.nzRandom())
-    let r2 = UInt8(truncatingBitPattern: UInt.nzRandom())
-    let r3 = UInt8(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = UInt8.randomPositive()
+    let r2 = UInt8.randomPositive()
+    let r3 = UInt8.randomPositive()
+#else
+    let r1 = UInt8(truncatingBitPattern: UInt.randomPositive())
+    let r2 = UInt8(truncatingBitPattern: UInt.randomPositive())
+    let r3 = UInt8(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -330,15 +282,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = Int16.nzRandom()
-    let r2 = Int16.nzRandom()
-    let r3 = Int16.nzRandom()
-  #else
-    let r1 = Int16(truncatingBitPattern: UInt.nzRandom())
-    let r2 = Int16(truncatingBitPattern: UInt.nzRandom())
-    let r3 = Int16(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = Int16.randomPositive()
+    let r2 = Int16.randomPositive()
+    let r3 = Int16.randomPositive()
+#else
+    let r1 = Int16(truncatingBitPattern: UInt.randomPositive())
+    let r2 = Int16(truncatingBitPattern: UInt.randomPositive())
+    let r3 = Int16(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -396,15 +348,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = UInt16.nzRandom()
-    let r2 = UInt16.nzRandom()
-    let r3 = UInt16.nzRandom()
-  #else
-    let r1 = UInt16(truncatingBitPattern: UInt.nzRandom())
-    let r2 = UInt16(truncatingBitPattern: UInt.nzRandom())
-    let r3 = UInt16(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = UInt16.randomPositive()
+    let r2 = UInt16.randomPositive()
+    let r3 = UInt16.randomPositive()
+#else
+    let r1 = UInt16(truncatingBitPattern: UInt.randomPositive())
+    let r2 = UInt16(truncatingBitPattern: UInt.randomPositive())
+    let r3 = UInt16(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -462,15 +414,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = Int32.nzRandom()
-    let r2 = Int32.nzRandom()
-    let r3 = Int32.nzRandom()
-  #else
-    let r1 = Int32(truncatingBitPattern: UInt.nzRandom())
-    let r2 = Int32(truncatingBitPattern: UInt.nzRandom())
-    let r3 = Int32(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = Int32.randomPositive()
+    let r2 = Int32.randomPositive()
+    let r3 = Int32.randomPositive()
+#else
+    let r1 = Int32(truncatingBitPattern: UInt.randomPositive())
+    let r2 = Int32(truncatingBitPattern: UInt.randomPositive())
+    let r3 = Int32(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -528,15 +480,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = UInt32.nzRandom()
-    let r2 = UInt32.nzRandom()
-    let r3 = UInt32.nzRandom()
-  #else
-    let r1 = UInt32(truncatingBitPattern: UInt.nzRandom())
-    let r2 = UInt32(truncatingBitPattern: UInt.nzRandom())
-    let r3 = UInt32(truncatingBitPattern: UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = UInt32.randomPositive()
+    let r2 = UInt32.randomPositive()
+    let r3 = UInt32.randomPositive()
+#else
+    let r1 = UInt32(truncatingBitPattern: UInt.randomPositive())
+    let r2 = UInt32(truncatingBitPattern: UInt.randomPositive())
+    let r3 = UInt32(truncatingBitPattern: UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -594,15 +546,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = Int64.nzRandom()
-    let r2 = Int64.nzRandom()
-    let r3 = Int64.nzRandom()
-  #else
-    let r1 = Int64(UInt.nzRandom())
-    let r2 = Int64(UInt.nzRandom())
-    let r3 = Int64(UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = Int64.randomPositive()
+    let r2 = Int64.randomPositive()
+    let r3 = Int64.randomPositive()
+#else
+    let r1 = Int64(UInt.randomPositive())
+    let r2 = Int64(UInt.randomPositive())
+    let r3 = Int64(UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -660,15 +612,15 @@ public class AtomicsBasicTests: XCTestCase
     i.initialize(0)
     XCTAssert(i.value == 0)
 
-  #if swift(>=4.0)
-    let r1 = UInt64.nzRandom()
-    let r2 = UInt64.nzRandom()
-    let r3 = UInt64.nzRandom()
-  #else
-    let r1 = UInt64(UInt.nzRandom())
-    let r2 = UInt64(UInt.nzRandom())
-    let r3 = UInt64(UInt.nzRandom())
-  #endif
+#if swift(>=4.0)
+    let r1 = UInt64.randomPositive()
+    let r2 = UInt64.randomPositive()
+    let r3 = UInt64.randomPositive()
+#else
+    let r1 = UInt64(UInt.randomPositive())
+    let r2 = UInt64(UInt.randomPositive())
+    let r3 = UInt64(UInt.randomPositive())
+#endif
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -725,9 +677,9 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicRawPointer()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafeRawPointer(bitPattern: UInt.nzRandom())
-    let r2 = UnsafeRawPointer(bitPattern: UInt.nzRandom())
-    let r3 = UnsafeRawPointer(bitPattern: UInt.nzRandom())
+    let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
+    let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
+    let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -752,9 +704,9 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicMutableRawPointer()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafeMutableRawPointer(bitPattern: UInt.nzRandom())
-    let r2 = UnsafeMutableRawPointer(bitPattern: UInt.nzRandom())
-    let r3 = UnsafeMutableRawPointer(bitPattern: UInt.nzRandom())
+    let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+    let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+    let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -779,9 +731,9 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicPointer<Int64>()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafePointer<Int64>(bitPattern: UInt.nzRandom())
-    let r2 = UnsafePointer<Int64>(bitPattern: UInt.nzRandom())
-    let r3 = UnsafePointer<Int64>(bitPattern: UInt.nzRandom())
+    let r1 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
+    let r2 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
+    let r3 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -806,9 +758,9 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicMutablePointer<Int64>()
     XCTAssert(i.pointer == nil)
 
-    let r1 = UnsafeMutablePointer<Int64>(bitPattern: UInt.nzRandom())
-    let r2 = UnsafeMutablePointer<Int64>(bitPattern: UInt.nzRandom())
-    let r3 = UnsafeMutablePointer<Int64>(bitPattern: UInt.nzRandom())
+    let r1 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
+    let r2 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
+    let r3 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -833,9 +785,9 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOpaquePointer()
     XCTAssert(i.pointer == nil)
 
-    let r1 = OpaquePointer(bitPattern: UInt.nzRandom())
-    let r2 = OpaquePointer(bitPattern: UInt.nzRandom())
-    let r3 = OpaquePointer(bitPattern: UInt.nzRandom())
+    let r1 = OpaquePointer(bitPattern: UInt.randomPositive())
+    let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
+    let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -912,13 +864,13 @@ public class AtomicsBasicTests: XCTestCase
   private class Thing
   {
     let id: UInt
-    init(_ x: UInt = UInt.nzRandom()) { id = x }
+    init(_ x: UInt = UInt.randomPositive()) { id = x }
     deinit { print("Released     \(id)") }
   }
 
   public func testUnmanaged()
   {
-    var i = UInt.nzRandom()
+    var i = UInt.randomPositive()
     var a = AtomicReference(Thing(i))
     do {
       let r1 = a.swap(.none)
@@ -926,14 +878,14 @@ public class AtomicsBasicTests: XCTestCase
       XCTAssert(r1 != nil)
     }
 
-    i = UInt.nzRandom()
+    i = UInt.randomPositive()
     XCTAssert(a.swap(Thing(i)) == nil)
     print("Releasing    \(i)")
     XCTAssert(a.swap(nil) != nil)
 
-    i = UInt.nzRandom()
+    i = UInt.randomPositive()
     XCTAssert(a.swapIfNil(Thing(i)) == true)
-    let j = UInt.nzRandom()
+    let j = UInt.randomPositive()
     print("Will drop    \(j)")
     XCTAssert(a.swapIfNil(Thing(j)) == false)
 

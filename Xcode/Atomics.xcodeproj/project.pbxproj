@@ -35,6 +35,9 @@
 		0382B65520DC51FE00F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */; };
 		0382B65720DC52CF00F4B44B /* Atomics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA33E20DBDC0400F4B44B /* Atomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0382B65920DC52CF00F4B44B /* CAtomics.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		038CB66120DC75A400F4B44B /* RandomPositive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CB66020DC75A400F4B44B /* RandomPositive.swift */; };
+		038CB66520DCB0C700F4B44B /* RandomPositive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CB66420DCB0C700F4B44B /* RandomPositive.swift */; };
+		038CB66620DCB15400F4B44B /* RandomPositive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CB66020DC75A400F4B44B /* RandomPositive.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +148,8 @@
 		0382B63420DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0382B63920DC4A2D00F4B44B /* AtomicsTestAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTestAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0382B63F20DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		038CB66020DC75A400F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../../Tests/AtomicsTests/RandomPositive.swift; sourceTree = "<group>"; };
+		038CB66420DCB0C700F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../../Tests/CAtomicsTests/RandomPositive.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +253,7 @@
 				031CA3AD20DC404F00F4B44B /* AtomicsTests.swift.gyb */,
 				031CA3AE20DC404F00F4B44B /* AtomicsTests.swift */,
 				031CA3AF20DC404F00F4B44B /* AtomicsRaceTests.swift */,
+				038CB66020DC75A400F4B44B /* RandomPositive.swift */,
 				031CA3B020DC404F00F4B44B /* XCTestManifests.swift */,
 				031CA34E20DBDC0400F4B44B /* Info.plist */,
 			);
@@ -271,6 +277,7 @@
 				031CA38F20DBE58A00F4B44B /* CAtomicsTests.swift.gyb */,
 				031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */,
 				031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */,
+				038CB66420DCB0C700F4B44B /* RandomPositive.swift */,
 				031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */,
 				031CA38E20DBE58A00F4B44B /* XCTestManifests.swift */,
 				031CA36C20DBDCAE00F4B44B /* Info.plist */,
@@ -624,6 +631,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				038CB66120DC75A400F4B44B /* RandomPositive.swift in Sources */,
 				031CA3B320DC404F00F4B44B /* AtomicsRaceTests.swift in Sources */,
 				031CA3B220DC404F00F4B44B /* AtomicsTests.swift in Sources */,
 			);
@@ -645,6 +653,7 @@
 				031CA39720DBE58A00F4B44B /* MemoryOrderTests.swift in Sources */,
 				031CA39520DBE58A00F4B44B /* CAtomicsRaceTests.swift in Sources */,
 				031CA39620DBE58A00F4B44B /* CAtomicsTests.swift in Sources */,
+				038CB66520DCB0C700F4B44B /* RandomPositive.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,6 +673,7 @@
 				0382B65320DC51FE00F4B44B /* CAtomicsTests.swift in Sources */,
 				0382B65520DC51FE00F4B44B /* MemoryOrderTests.swift in Sources */,
 				0382B65220DC51FE00F4B44B /* AtomicsRaceTests.swift in Sources */,
+				038CB66620DCB15400F4B44B /* RandomPositive.swift in Sources */,
 				0382B65420DC51FE00F4B44B /* CAtomicsRaceTests.swift in Sources */,
 				0382B65120DC51FE00F4B44B /* AtomicsTests.swift in Sources */,
 			);
