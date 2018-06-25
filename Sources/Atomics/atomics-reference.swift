@@ -7,7 +7,7 @@
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
-import CAtomics
+@_exported import enum CAtomics.MemoryOrder
 
 public struct AtomicReference<T: AnyObject>
 {
@@ -26,6 +26,18 @@ public struct AtomicReference<T: AnyObject>
 
 extension AtomicReference
 {
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
+  {
+    let u = Unmanaged.tryRetain(ref)?.toOpaque()
+    if let pointer = ptr.swap(u, order)
+    {
+      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
+    }
+    return nil
+  }
+#else
   @inline(__always)
   public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
   {
@@ -36,7 +48,21 @@ extension AtomicReference
     }
     return nil
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
+  {
+    let u = Unmanaged.passUnretained(ref)
+    if ptr.CAS(nil, u.toOpaque(), .strong, order)
+    {
+      _ = u.retain()
+      return true
+    }
+    return false
+  }
+#else
   @inline(__always)
   public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
   {
@@ -48,7 +74,19 @@ extension AtomicReference
     }
     return false
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func take(order: MemoryOrder = .sequential) -> T?
+  {
+    if let pointer = ptr.swap(nil, order)
+    {
+      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
+    }
+    return nil
+  }
+#else
   @inline(__always)
   public mutating func take(order: MemoryOrder = .sequential) -> T?
   {
@@ -58,6 +96,7 @@ extension AtomicReference
     }
     return nil
   }
+#endif
 }
 
 extension Unmanaged
