@@ -7,7 +7,10 @@
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
-import CAtomics
+@_exported import enum CAtomics.MemoryOrder
+@_exported import enum CAtomics.LoadMemoryOrder
+@_exported import enum CAtomics.StoreMemoryOrder
+@_exported import enum CAtomics.CASType
 
 @_exported import struct CAtomics.AtomicInt
 
@@ -19,71 +22,168 @@ extension AtomicInt
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Int {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Int {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int>, future: Int,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Int>, future: Int,
                                type: CASType = .weak,
@@ -92,7 +192,17 @@ extension AtomicInt
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Int, future: Int,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int, future: Int,
                            type: CASType = .strong,
@@ -100,6 +210,7 @@ extension AtomicInt
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicUInt
@@ -112,71 +223,168 @@ extension AtomicUInt
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: UInt {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: UInt {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt>, future: UInt,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<UInt>, future: UInt,
                                type: CASType = .weak,
@@ -185,7 +393,17 @@ extension AtomicUInt
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UInt, future: UInt,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt, future: UInt,
                            type: CASType = .strong,
@@ -193,6 +411,7 @@ extension AtomicUInt
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicInt8
@@ -205,71 +424,168 @@ extension AtomicInt8
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Int8 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Int8 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int8>, future: Int8,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Int8>, future: Int8,
                                type: CASType = .weak,
@@ -278,7 +594,17 @@ extension AtomicInt8
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Int8, future: Int8,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int8, future: Int8,
                            type: CASType = .strong,
@@ -286,6 +612,7 @@ extension AtomicInt8
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicUInt8
@@ -298,71 +625,168 @@ extension AtomicUInt8
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: UInt8 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: UInt8 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt8>, future: UInt8,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<UInt8>, future: UInt8,
                                type: CASType = .weak,
@@ -371,7 +795,17 @@ extension AtomicUInt8
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UInt8, future: UInt8,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt8, future: UInt8,
                            type: CASType = .strong,
@@ -379,6 +813,7 @@ extension AtomicUInt8
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicInt16
@@ -391,71 +826,168 @@ extension AtomicInt16
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Int16 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Int16 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int16>, future: Int16,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Int16>, future: Int16,
                                type: CASType = .weak,
@@ -464,7 +996,17 @@ extension AtomicInt16
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Int16, future: Int16,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int16, future: Int16,
                            type: CASType = .strong,
@@ -472,6 +1014,7 @@ extension AtomicInt16
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicUInt16
@@ -484,71 +1027,168 @@ extension AtomicUInt16
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: UInt16 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: UInt16 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt16>, future: UInt16,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<UInt16>, future: UInt16,
                                type: CASType = .weak,
@@ -557,7 +1197,17 @@ extension AtomicUInt16
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UInt16, future: UInt16,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt16, future: UInt16,
                            type: CASType = .strong,
@@ -565,6 +1215,7 @@ extension AtomicUInt16
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicInt32
@@ -577,71 +1228,168 @@ extension AtomicInt32
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Int32 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Int32 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int32>, future: Int32,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Int32>, future: Int32,
                                type: CASType = .weak,
@@ -650,7 +1398,17 @@ extension AtomicInt32
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Int32, future: Int32,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int32, future: Int32,
                            type: CASType = .strong,
@@ -658,6 +1416,7 @@ extension AtomicInt32
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicUInt32
@@ -670,71 +1429,168 @@ extension AtomicUInt32
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: UInt32 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: UInt32 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt32>, future: UInt32,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<UInt32>, future: UInt32,
                                type: CASType = .weak,
@@ -743,7 +1599,17 @@ extension AtomicUInt32
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UInt32, future: UInt32,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt32, future: UInt32,
                            type: CASType = .strong,
@@ -751,6 +1617,7 @@ extension AtomicUInt32
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicInt64
@@ -763,71 +1630,168 @@ extension AtomicInt64
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Int64 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Int64 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Int64>, future: Int64,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Int64>, future: Int64,
                                type: CASType = .weak,
@@ -836,7 +1800,17 @@ extension AtomicInt64
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Int64, future: Int64,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Int64, future: Int64,
                            type: CASType = .strong,
@@ -844,6 +1818,7 @@ extension AtomicInt64
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicUInt64
@@ -856,71 +1831,168 @@ extension AtomicUInt64
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: UInt64 {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: UInt64 {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_add(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_add(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_sub(delta, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_sub(delta, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_or(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_or(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_xor(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_xor(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_and(bits, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_and(bits, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_add(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_add(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
+  {
+    return fetch_sub(1, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
     return fetch_sub(1, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UInt64>, future: UInt64,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<UInt64>, future: UInt64,
                                type: CASType = .weak,
@@ -929,7 +2001,17 @@ extension AtomicUInt64
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UInt64, future: UInt64,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: UInt64, future: UInt64,
                            type: CASType = .strong,
@@ -937,6 +2019,7 @@ extension AtomicUInt64
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
 
 @_exported import struct CAtomics.AtomicBool
@@ -949,47 +2032,112 @@ extension AtomicBool
     self.init()
   }
 
+#if swift(>=4.2)
+  public var value: Bool {
+    @inlinable
+    mutating get { return load(.relaxed) }
+  }
+#else
   public var value: Bool {
     @inline(__always)
     mutating get { return load(.relaxed) }
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return load(order)
+  }
+#else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Bool
   {
     return load(order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
+  {
+    store(value, order)
+  }
+#else
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
     store(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return swap(value, order)
+  }
+#else
   @inline(__always)
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
     return swap(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_or(value, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
     return fetch_or(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_xor(value, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
     return fetch_xor(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
+  {
+    return fetch_and(value, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
     return fetch_and(value, order)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .relaxed,
+                               orderLoad: LoadMemoryOrder = .relaxed) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
                                type: CASType = .weak,
@@ -998,7 +2146,17 @@ extension AtomicBool
   {
     return loadCAS(current, future, type, orderSwap, orderLoad)
   }
+#endif
 
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: Bool, future: Bool,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .relaxed) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
   @inline(__always) @discardableResult
   public mutating func CAS(current: Bool, future: Bool,
                            type: CASType = .strong,
@@ -1006,4 +2164,5 @@ extension AtomicBool
   {
     return CAS(current, future, type, order)
   }
+#endif
 }
