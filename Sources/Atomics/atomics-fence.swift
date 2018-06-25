@@ -7,7 +7,8 @@
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
-import CAtomics
+import func CAtomics.CAtomicsThreadFence
+@_exported import enum CAtomics.MemoryOrder
 
 public func threadFence(order: MemoryOrder = .sequential)
 {
