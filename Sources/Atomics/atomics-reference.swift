@@ -7,7 +7,7 @@
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
-import CAtomics
+@_exported import enum CAtomics.MemoryOrder
 
 public struct AtomicReference<T: AnyObject>
 {
