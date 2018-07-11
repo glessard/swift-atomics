@@ -24,7 +24,14 @@ done
 
 if /bin/test "${generate}"
 then
-  /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
-  echo "Regenerating test manifests"
-  /usr/bin/swift test --generate-linuxmain
+  if /bin/test "${XCODE_VERSION_ACTUAL}" -ge "0930"
+  then
+    /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
+    echo "Regenerating test manifests"
+    /usr/bin/swift test --generate-linuxmain
+  else
+    echo "This version of the toolchain does not support automatic generation of XCTestManifests files"
+  fi
+else
+  echo "No need to regenerate test manifests"
 fi
