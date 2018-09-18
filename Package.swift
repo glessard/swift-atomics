@@ -2,6 +2,12 @@
 
 import PackageDescription
 
+#if !swift(>=4.2)
+let versions = [3,4]
+#else
+let versions = [SwiftVersion.v3, .v4, .v4_2]
+#endif
+
 #if swift(>=4.0)
 
 let package = Package(
@@ -15,7 +21,8 @@ let package = Package(
     .testTarget(name: "AtomicsTests", dependencies: ["Atomics"]),
     .target(name: "CAtomics", dependencies: []),
     .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
-  ]
+  ],
+  swiftLanguageVersions: versions
 )
 
 #else
