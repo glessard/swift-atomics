@@ -20,16 +20,18 @@ extension FixedWidthInteger where Self.Magnitude: UnsignedInteger, Self.Stride: 
     return Self.random(in: 1...(Self.max>>1))
 #else
     var t = Self()
-    for _ in 0...((t.bitWidth-1)/32)
-    {
+    repeat {
+      for _ in 0...((t.bitWidth-1)/32)
+      {
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-      t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
+        t = t<<32 &+ Self(truncatingIfNeeded: arc4random())
 #else // probably Linux
-      t = t<<32 &+ Self(truncatingIfNeeded: random())
+        t = t<<32 &+ Self(truncatingIfNeeded: random())
 #endif
-    }
-    // in this variant the least significant bit is always set.
-    return (t|1) & (Self.max>>1)
+      }
+    } while (t == Self())
+
+    return t & (Self.max>>1)
 #endif
   }
 }
