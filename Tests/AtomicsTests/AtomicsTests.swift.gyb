@@ -2,7 +2,7 @@
 //  AtomicsTests.swift
 //  AtomicsTests
 //
-//  Copyright © 2015-2017 Guillaume Lessard. All rights reserved.
+//  Copyright © 2015-2018 Guillaume Lessard. All rights reserved.
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
