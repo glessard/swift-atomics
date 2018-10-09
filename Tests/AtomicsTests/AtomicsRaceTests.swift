@@ -2,7 +2,7 @@
 //  AtomicsRaceTests.swift
 //  AtomicsTests
 //
-//  Copyright © 2015-2017 Guillaume Lessard. All rights reserved.
+//  Copyright © 2015-2018 Guillaume Lessard. All rights reserved.
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
@@ -17,14 +17,6 @@ private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
 public class AtomicsRaceTests: XCTestCase
 {
-  public static var raceTests = [
-    ("testRaceCrash", testRaceCrash),
-    ("testRaceSpinLock", testRaceSpinLock),
-    ("testRacePointerCAS", testRacePointerCAS),
-    ("testRacePointerLoadCAS", testRacePointerLoadCAS),
-    ("testRacePointerSwap", testRacePointerSwap),
-  ]
-
   public func testRaceCrash()
   { // this version is guaranteed to crash with a double-free
     let q = DispatchQueue(label: "", attributes: .concurrent)
