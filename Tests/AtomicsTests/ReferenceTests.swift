@@ -11,8 +11,6 @@ import Dispatch
 
 import Atomics
 
-private let iterations = 200_000//_000
-
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
 private class Thing
@@ -48,5 +46,69 @@ public class ReferenceTests: XCTestCase
     print("Will release \(i)")
     XCTAssert(a.take() != nil)
     XCTAssert(a.take() == nil)
+  }
+}
+
+private let iterations = 200_000//_000
+
+public class ReferenceRaceTests: XCTestCase
+{
+#if false
+  public func testRaceCrash()
+  {
+    let q = DispatchQueue(label: "", attributes: .concurrent)
+
+    for _ in 1...iterations
+    {
+      var r: Optional = ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 })
+      let closure = {
+        while true
+        {
+          if r != nil
+          {
+            r = nil
+          }
+          else
+          {
+            break
+          }
+        }
+      }
+
+      q.async(execute: closure)
+      q.async(execute: closure)
+    }
+
+    q.sync(flags: .barrier) {}
+  }
+#endif
+
+  public func testRaceAtomicReference()
+  {
+    let q = DispatchQueue(label: "", attributes: .concurrent)
+
+    for _ in 1...iterations
+    {
+      let b = ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 })
+      var r = AtomicReference(b)
+      let closure = {
+        while true
+        {
+          if let buffer = r.take()
+          {
+            XCTAssert(buffer.header == 1)
+          }
+          else
+          {
+            break
+          }
+        }
+      }
+
+      q.async(execute: closure)
+      q.async(execute: closure)
+    }
+
+    q.sync(flags: .barrier) {}
   }
 }
