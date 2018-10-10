@@ -36,12 +36,26 @@ extension MemoryOrderTests {
     ]
 }
 
+extension UnmanagedRaceTests {
+    static let __allTests = [
+        ("testRaceAtomickishUnmanaged", testRaceAtomickishUnmanaged),
+    ]
+}
+
+extension UnmanagedTests {
+    static let __allTests = [
+        ("testUnmanaged", testUnmanaged),
+    ]
+}
+
 #if !os(macOS)
 public func __allTests() -> [XCTestCaseEntry] {
     return [
         testCase(CAtomicsBasicTests.__allTests),
         testCase(CAtomicsRaceTests.__allTests),
         testCase(MemoryOrderTests.__allTests),
+        testCase(UnmanagedRaceTests.__allTests),
+        testCase(UnmanagedTests.__allTests),
     ]
 }
 #endif
