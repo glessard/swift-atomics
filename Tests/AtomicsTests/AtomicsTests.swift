@@ -2,7 +2,7 @@
 //  AtomicsTests.swift
 //  AtomicsTests
 //
-//  Copyright © 2015-2017 Guillaume Lessard. All rights reserved.
+//  Copyright © 2015-2018 Guillaume Lessard. All rights reserved.
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
@@ -859,38 +859,5 @@ public class AtomicsBasicTests: XCTestCase
   {
     threadFence()
     threadFence(order: .sequential)
-  }
-
-  private class Thing
-  {
-    let id: UInt
-    init(_ x: UInt = UInt.randomPositive()) { id = x }
-    deinit { print("Released     \(id)") }
-  }
-
-  public func testUnmanaged()
-  {
-    var i = UInt.randomPositive()
-    var a = AtomicReference(Thing(i))
-    do {
-      let r1 = a.swap(.none)
-      print("Will release \(i)")
-      XCTAssert(r1 != nil)
-    }
-
-    i = UInt.randomPositive()
-    XCTAssert(a.swap(Thing(i)) == nil)
-    print("Releasing    \(i)")
-    XCTAssert(a.swap(nil) != nil)
-
-    i = UInt.randomPositive()
-    XCTAssert(a.swapIfNil(Thing(i)) == true)
-    let j = UInt.randomPositive()
-    print("Will drop    \(j)")
-    XCTAssert(a.swapIfNil(Thing(j)) == false)
-
-    print("Will release \(i)")
-    XCTAssert(a.take() != nil)
-    XCTAssert(a.take() == nil)
   }
 }

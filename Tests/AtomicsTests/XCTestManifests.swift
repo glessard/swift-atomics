@@ -15,7 +15,6 @@ extension AtomicsBasicTests {
         ("testUInt32", testUInt32),
         ("testUInt64", testUInt64),
         ("testUInt8", testUInt8),
-        ("testUnmanaged", testUnmanaged),
         ("testUnsafeMutablePointer", testUnsafeMutablePointer),
         ("testUnsafeMutableRawPointer", testUnsafeMutableRawPointer),
         ("testUnsafePointer", testUnsafePointer),
@@ -33,11 +32,25 @@ extension AtomicsRaceTests {
     ]
 }
 
+extension ReferenceRaceTests {
+    static let __allTests = [
+        ("testRaceAtomicReference", testRaceAtomicReference),
+    ]
+}
+
+extension ReferenceTests {
+    static let __allTests = [
+        ("testUnmanaged", testUnmanaged),
+    ]
+}
+
 #if !os(macOS)
 public func __allTests() -> [XCTestCaseEntry] {
     return [
         testCase(AtomicsBasicTests.__allTests),
         testCase(AtomicsRaceTests.__allTests),
+        testCase(ReferenceRaceTests.__allTests),
+        testCase(ReferenceTests.__allTests),
     ]
 }
 #endif
