@@ -2,7 +2,7 @@
 //  CAtomics.h
 //
 //  Created by Guillaume Lessard on 2015-05-21.
-//  Copyright (c) 2015-2017 Guillaume Lessard. All rights reserved.
+//  Copyright (c) 2015-2018 Guillaume Lessard. All rights reserved.
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
@@ -25,6 +25,12 @@
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <assert.h>
+
+#ifdef __SSE2__
+#include <immintrin.h>
+#else
+#include <sched.h>
+#endif
 
 #if __has_attribute(enum_extensibility)
 #define SWIFT_ENUM(_name,extensibility) enum __attribute__((enum_extensibility(extensibility))) _name
@@ -252,6 +258,120 @@ static __inline__ __attribute__((__always_inline__))
 void CAtomicsThreadFence(enum MemoryOrder order)
 {
   atomic_thread_fence(order);
+}
+
+// unmanaged
+
+#define __RAW_UNMANAGED_LOCKED (uintptr_t)0x7
+#define __RAW_UNMANAGED_NULL   (uintptr_t)0x0
+
+SWIFT_ENUM(SpinLoadAction, closed)
+{
+  SpinLoadAction_lock = __RAW_UNMANAGED_LOCKED,
+  SpinLoadAction_null = __RAW_UNMANAGED_NULL
+};
+
+typedef struct { volatile atomic_uintptr_t a; } RawUnmanaged;
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.initialize(self:_:)) \
+void RawUnmanagedInitialize(RawUnmanaged *_Nonnull ptr, const void *_Nullable value)
+{
+  atomic_init(&(ptr->a), (uintptr_t)value);
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.rawStore(self:_:_:)) \
+void RawUnmanagedRawStore(RawUnmanaged *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
+{ // this should only be used for unlocking
+  atomic_store_explicit(&(ptr->a), (uintptr_t)value, order);
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.rawLoad(self:_:)) \
+const void *_Nullable RawUnmanagedRawLoad(RawUnmanaged *_Nonnull ptr, enum LoadMemoryOrder order)
+{ // this should only be used for debugging and testing
+  return (void*) atomic_load_explicit(&(ptr->a), order);
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.spinLoad(self:_:_:)) \
+const void *_Nullable RawUnmanagedSpinLoad(RawUnmanaged *_Nonnull ptr, enum SpinLoadAction action, enum LoadMemoryOrder order)
+{ // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
+#ifndef __SSE2__
+  char c;
+  c = 0;
+#endif
+  uintptr_t pointer;
+  pointer = atomic_load_explicit(&(ptr->a), order);
+  do { // don't fruitlessly invalidate the cache line if the value is locked
+    while (pointer == __RAW_UNMANAGED_LOCKED)
+    {
+#ifdef __SSE2__
+      _mm_pause();
+#else
+      c += 1;
+      if (c&0xc0 != 0) { sched_yield(); }
+#endif
+      pointer = atomic_load_explicit(&(ptr->a), order);
+    }
+    if (pointer == __RAW_UNMANAGED_NULL) { return (void*) pointer; }
+  } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, action, order, order));
+
+  return (void*) pointer;
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.spinSwap(self:_:_:)) \
+const void *_Nullable RawUnmanagedSpinSwap(RawUnmanaged *_Nonnull ptr, const void *_Nullable value, enum MemoryOrder order)
+{ // swap the pointer with `value`, spinning until the lock becomes unlocked if necessary
+#ifndef __SSE2__
+  char c;
+  c = 0
+#endif
+  uintptr_t pointer;
+  pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+  do { // don't fruitlessly invalidate the cache line if the value is locked
+    while (pointer == __RAW_UNMANAGED_LOCKED)
+    {
+#ifdef __SSE2__
+      _mm_pause();
+#else
+      c += 1;
+      if (c&0xc0 != 0) { sched_yield(); }
+#endif
+      pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+    }
+  } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, (uintptr_t)value, order, __ATOMIC_RELAXED));
+
+  return (void*) pointer;
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(RawUnmanaged.safeStore(self:_:_:)) \
+_Bool RawUnmanagedSafeStore(RawUnmanaged *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
+{ // store `value` if and only if our pointer contains NULL; spin for the lock if necessary
+#ifndef __SSE2__
+  char c;
+  c = 0
+#endif
+  uintptr_t pointer;
+  pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+  do { // don't fruitlessly invalidate the cache line if the value is locked
+    while (pointer == __RAW_UNMANAGED_LOCKED)
+    {
+#ifdef __SSE2__
+      _mm_pause();
+#else
+      c += 1;
+      if (c&0xc0 != 0) { sched_yield(); }
+#endif
+      pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+    }
+    if (pointer != __RAW_UNMANAGED_NULL) { return false; }
+  } while (!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, (uintptr_t)value, order, __ATOMIC_RELAXED));
+
+  return true;
 }
 
 #endif
