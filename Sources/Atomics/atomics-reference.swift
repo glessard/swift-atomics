@@ -104,4 +104,58 @@ extension AtomicReference
     return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #endif
+
+#if swift(>=4.2)
+  /// load the reference currently stored in this AtomicReference
+  ///
+  /// This is *not* an atomic operation if the reference is non-nil.
+  /// In order to ensure the integrity of the automatic reference
+  /// counting, the AtomicReference gets locked (internally) until the
+  /// reference count has been incremented. The critical section
+  /// protected by the lock is extremely short (nanoseconds), but necessary.
+  ///
+  /// This is the only AtomicReference operation that needs a lock;
+  /// the others operations will spin until a `load` operation is complete,
+  /// but are otherwise atomic.
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
+  {
+    if let pointer = ptr.spinLoad(.lock, order)
+    {
+      assert(ptr.rawLoad(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
+      // ensure the reference counting operation has occurred before unlocking,
+      // by performing our store operation with StoreMemoryOrder.release
+      ptr.rawStore(pointer, .release)
+      return unmanaged.takeRetainedValue()
+    }
+    return nil
+  }
+#else
+  /// load the reference currently stored in this AtomicReference
+  ///
+  /// This is *not* an atomic operation if the reference is non-nil.
+  /// In order to ensure the integrity of the automatic reference
+  /// counting, the AtomicReference gets locked (internally) until the
+  /// reference count has been incremented. The critical section
+  /// protected by the lock is extremely short (nanoseconds), but necessary.
+  ///
+  /// This is the only AtomicReference operation that needs a lock;
+  /// the others operations will spin until a `load` operation is complete,
+  /// but are otherwise atomic.
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
+  {
+    if let pointer = ptr.spinLoad(.lock, order)
+    {
+      assert(ptr.rawLoad(.acquire) == UnsafeRawPointer(bitPattern: 0x7))
+      let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
+      // ensure the reference counting operation has occurred before unlocking,
+      // by performing our store operation with StoreMemoryOrder.release
+      ptr.rawStore(pointer, .release)
+      return unmanaged.takeRetainedValue()
+    }
+    return nil
+  }
+#endif
 }

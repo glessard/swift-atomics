@@ -30,6 +30,7 @@ public class ReferenceTests: XCTestCase
       let r1 = a.swap(.none)
       print("Will release \(i)")
       XCTAssert(r1 != nil)
+      XCTAssert(a.load() == nil)
     }
 
     i = UInt.randomPositive()
@@ -43,6 +44,11 @@ public class ReferenceTests: XCTestCase
     print("Will drop    \(j)")
     // a compiler warning is expected for the next line
     XCTAssert(a.swapIfNil(Thing(j)) == false)
+
+    do {
+      let v = a.load()
+      XCTAssert(v?.id == i)
+    }
 
     print("Will release \(i)")
     XCTAssert(a.take() != nil)

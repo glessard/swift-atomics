@@ -53,7 +53,7 @@ public class UnmanagedTests: XCTestCase
     XCTAssert(v != nil)
     XCTAssert(v == UnsafeRawPointer(u.toOpaque()))
     XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
-    a.rawStore(nil, .relaxed)
+    a.rawStore(nil, .release)
     print("Releasing    \(i)")
     v.map { Unmanaged<Thing>.fromOpaque($0).release() }
   }
