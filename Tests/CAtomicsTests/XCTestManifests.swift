@@ -44,6 +44,7 @@ extension UnmanagedRaceTests {
 
 extension UnmanagedTests {
     static let __allTests = [
+        ("testDemonstrateWhyLockIsNecessary", testDemonstrateWhyLockIsNecessary),
         ("testSafeStoreFailure", testSafeStoreFailure),
         ("testSafeStoreSuccess", testSafeStoreSuccess),
         ("testSpinLoad", testSpinLoad),

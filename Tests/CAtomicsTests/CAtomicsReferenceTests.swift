@@ -207,6 +207,45 @@ public class UnmanagedTests: XCTestCase
     }
     else { throw TestError.value(i) }
   }
+
+  public func testDemonstrateWhyLockIsNecessary() throws
+  {
+    let i = UInt.randomPositive()
+
+    var a = RawUnmanaged()
+    a.initialize(Unmanaged.passRetained(Witness(i)).toOpaque())
+
+    // mock thread A needs a copy of the reference
+    let p = a.rawLoad(.relaxed)
+    // mock thread A is interrupted
+
+    // mock thread B resumes execution
+    if let p = a.spinSwap(nil, .acquire)
+    {
+      print("Releasing \(i)")
+      Unmanaged<Thing>.fromOpaque(p).release()
+    }
+    else { throw TestError.value(i) }
+    // mock thread B is done
+
+    XCTAssert(a.rawLoad(.relaxed) == nil)
+    XCTAssert(p != nil)
+
+    // mock thread A resumes execution
+    if let p = p
+    {
+      let u = Unmanaged<Witness>.fromOpaque(p)
+      _ = u
+      // when un-commented, either of the next two lines causes a crash
+      // u.release()
+      // let _ = u.takeRetainedValue()
+
+      // this is similar to the Swift 2 runtime bug
+      // https://bugs.swift.org/browse/SR-192
+      // the only way to fix that -- short of a redesign --
+      // was to lock weak references for reading.
+    }
+  }
 }
 
 private let iterations = 200_000//_000
