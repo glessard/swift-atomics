@@ -39,6 +39,7 @@
 		038CB66520DCB0C700F4B44B /* RandomPositive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CB66420DCB0C700F4B44B /* RandomPositive.swift */; };
 		038CB66620DCB15400F4B44B /* RandomPositive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038CB66020DC75A400F4B44B /* RandomPositive.swift */; };
 		038F0035216D010800F4B44B /* ReferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038F0034216D010800F4B44B /* ReferenceTests.swift */; };
+		03DD246F216EA05800F4B44B /* CAtomicsReferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DD246E216EA05800F4B44B /* CAtomicsReferenceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +153,7 @@
 		038CB66020DC75A400F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../../Tests/AtomicsTests/RandomPositive.swift; sourceTree = "<group>"; };
 		038CB66420DCB0C700F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../../Tests/CAtomicsTests/RandomPositive.swift; sourceTree = "<group>"; };
 		038F0034216D010800F4B44B /* ReferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReferenceTests.swift; path = ../../Tests/AtomicsTests/ReferenceTests.swift; sourceTree = "<group>"; };
+		03DD246E216EA05800F4B44B /* CAtomicsReferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CAtomicsReferenceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsReferenceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +282,7 @@
 				031CA38F20DBE58A00F4B44B /* CAtomicsTests.swift.gyb */,
 				031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */,
 				031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */,
+				03DD246E216EA05800F4B44B /* CAtomicsReferenceTests.swift */,
 				038CB66420DCB0C700F4B44B /* RandomPositive.swift */,
 				031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */,
 				031CA38E20DBE58A00F4B44B /* XCTestManifests.swift */,
@@ -658,6 +661,7 @@
 				031CA39520DBE58A00F4B44B /* CAtomicsRaceTests.swift in Sources */,
 				031CA39620DBE58A00F4B44B /* CAtomicsTests.swift in Sources */,
 				038CB66520DCB0C700F4B44B /* RandomPositive.swift in Sources */,
+				03DD246F216EA05800F4B44B /* CAtomicsReferenceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
