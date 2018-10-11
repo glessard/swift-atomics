@@ -315,7 +315,8 @@ const void *_Nullable RawUnmanagedSpinLoad(RawUnmanaged *_Nonnull ptr, enum Spin
 #endif
       pointer = atomic_load_explicit(&(ptr->a), order);
     }
-    if (pointer == __RAW_UNMANAGED_NULL) { return (void*) pointer; }
+    // return immediately if pointer is NULL (importantly: without locking)
+    if (pointer == __RAW_UNMANAGED_NULL) { return NULL; }
   } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, action, order, order));
 
   return (void*) pointer;
