@@ -8,19 +8,28 @@
 //
 
 @_exported import enum CAtomics.MemoryOrder
+@_exported import enum CAtomics.LoadMemoryOrder
+@_exported import enum CAtomics.StoreMemoryOrder
+
+import struct CAtomics.RawUnmanaged
 
 public struct AtomicReference<T: AnyObject>
 {
 #if swift(>=4.2)
-  @usableFromInline internal var ptr = AtomicMutableRawPointer()
+  @usableFromInline internal var ptr = RawUnmanaged()
 #else
-  @_versioned internal var ptr = AtomicMutableRawPointer()
+  @_versioned internal var ptr = RawUnmanaged()
 #endif
 
-  public init(_ ref: T? = nil)
+  public init(_ reference: T? = nil)
   {
-    let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    ptr.initialize(u)
+    self.initialize(reference)
+  }
+
+  mutating public func initialize(_ reference: T?)
+  {
+    let u = reference.map(Unmanaged.passRetained)
+    ptr.initialize(u?.toOpaque())
   }
 }
 
@@ -28,34 +37,38 @@ extension AtomicReference
 {
 #if swift(>=4.2)
   @inlinable
-  public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
+  public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
   {
-    let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    if let pointer = ptr.swap(u, order)
-    {
-      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
-    }
-    return nil
+    let u = reference.map(Unmanaged.passRetained)?.toOpaque()
+
+    let pointer = ptr.spinSwap(u, order)
+    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #else
   @inline(__always)
-  public mutating func swap(_ ref: T?, order: MemoryOrder = .sequential) -> T?
+  public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
   {
-    let u = Unmanaged.tryRetain(ref)?.toOpaque()
-    if let pointer = ptr.swap(u, order)
-    {
-      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
-    }
-    return nil
+    let u = reference.map(Unmanaged.passRetained)?.toOpaque()
+
+    let pointer = ptr.spinSwap(u, order)
+    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #endif
 
-#if swift(>=4.2)
-  @inlinable
+  @available(*, deprecated, renamed: "storeIfNil(_:order:)")
   public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
   {
-    let u = Unmanaged.passUnretained(ref)
-    if ptr.CAS(nil, u.toOpaque(), .strong, order)
+    let newOrder = StoreMemoryOrder(rawValue: order.rawValue) ?? .sequential
+    return self.storeIfNil(ref, order: newOrder)
+  }
+
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  {
+    let u = Unmanaged.passUnretained(reference)
+    if ptr.safeStore(u.toOpaque(), order)
     {
       _ = u.retain()
       return true
@@ -64,10 +77,10 @@ extension AtomicReference
   }
 #else
   @inline(__always)
-  public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
-    let u = Unmanaged.passUnretained(ref)
-    if ptr.CAS(nil, u.toOpaque(), .strong, order)
+    let u = Unmanaged.passUnretained(reference)
+    if ptr.safeStore(u.toOpaque(), order)
     {
       _ = u.retain()
       return true
@@ -78,40 +91,17 @@ extension AtomicReference
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func take(order: MemoryOrder = .sequential) -> T?
+  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.swap(nil, order)
-    {
-      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
-    }
-    return nil
+    let pointer = ptr.spinLoad(.null, order)
+    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #else
   @inline(__always)
-  public mutating func take(order: MemoryOrder = .sequential) -> T?
+  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.swap(nil, order)
-    {
-      return Unmanaged<T>.fromOpaque(pointer).takeRetainedValue()
-    }
-    return nil
-  }
-#endif
-}
-
-extension Unmanaged
-{
-#if swift(>=4.2)
-  @usableFromInline static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
-  {
-    guard let reference = optional else { return nil }
-    return Unmanaged.passRetained(reference)
-  }
-#else
-  @_versioned static func tryRetain(_ optional: Instance?) -> Unmanaged<Instance>?
-  {
-    guard let reference = optional else { return nil }
-    return Unmanaged.passRetained(reference)
+    let pointer = ptr.spinLoad(.null, order)
+    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #endif
 }

@@ -38,9 +38,10 @@ public class ReferenceTests: XCTestCase
     XCTAssert(a.swap(nil) != nil)
 
     i = UInt.randomPositive()
-    XCTAssert(a.swapIfNil(Thing(i)) == true)
+    XCTAssert(a.storeIfNil(Thing(i)) == true)
     let j = UInt.randomPositive()
     print("Will drop    \(j)")
+    // a compiler warning is expected for the next line
     XCTAssert(a.swapIfNil(Thing(j)) == false)
 
     print("Will release \(i)")
