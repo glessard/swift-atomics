@@ -11,14 +11,14 @@
 @_exported import enum CAtomics.LoadMemoryOrder
 @_exported import enum CAtomics.StoreMemoryOrder
 
-import struct CAtomics.OpaqueUnmanagedBase
+import struct CAtomics.OpaqueUnmanagedHelper
 
 public struct AtomicReference<T: AnyObject>
 {
 #if swift(>=4.2)
-  @usableFromInline internal var ptr = OpaqueUnmanagedBase()
+  @usableFromInline internal var ptr = OpaqueUnmanagedHelper()
 #else
-  @_versioned internal var ptr = OpaqueUnmanagedBase()
+  @_versioned internal var ptr = OpaqueUnmanagedHelper()
 #endif
 
   public init(_ reference: T? = nil)

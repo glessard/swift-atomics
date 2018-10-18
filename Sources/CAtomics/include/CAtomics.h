@@ -271,32 +271,32 @@ SWIFT_ENUM(SpinLoadAction, closed)
   SpinLoadAction_null = __OPAQUE_UNMANAGED_NULL
 };
 
-typedef struct { volatile atomic_uintptr_t a; } OpaqueUnmanagedBase;
+typedef struct { volatile atomic_uintptr_t a; } OpaqueUnmanagedHelper;
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.initialize(self:_:)) \
-void OpaqueUnmanagedBaseInitialize(OpaqueUnmanagedBase *_Nonnull ptr, const void *_Nullable value)
+SWIFT_NAME(OpaqueUnmanagedHelper.initialize(self:_:)) \
+void UnmanagedInitialize(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value)
 {
   atomic_init(&(ptr->a), (uintptr_t)value);
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.rawStore(self:_:_:)) \
-void OpaqueUnmanagedBaseRawStore(OpaqueUnmanagedBase *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.rawStore(self:_:_:)) \
+void UnmanagedRawStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
 { // this should only be used for unlocking
   atomic_store_explicit(&(ptr->a), (uintptr_t)value, order);
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.rawLoad(self:_:)) \
-const void *_Nullable OpaqueUnmanagedBaseRawLoad(OpaqueUnmanagedBase *_Nonnull ptr, enum LoadMemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.rawLoad(self:_:)) \
+const void *_Nullable UnmanagedRawLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enum LoadMemoryOrder order)
 { // this should only be used for debugging and testing
   return (void*) atomic_load_explicit(&(ptr->a), order);
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.spinLoad(self:_:_:)) \
-const void *_Nullable OpaqueUnmanagedBaseSpinLoad(OpaqueUnmanagedBase *_Nonnull ptr, enum SpinLoadAction action, enum LoadMemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.spinLoad(self:_:_:)) \
+const void *_Nullable UnmanagedSpinLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enum SpinLoadAction action, enum LoadMemoryOrder order)
 { // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
 #ifndef __SSE2__
   char c;
@@ -323,8 +323,8 @@ const void *_Nullable OpaqueUnmanagedBaseSpinLoad(OpaqueUnmanagedBase *_Nonnull 
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.spinSwap(self:_:_:)) \
-const void *_Nullable OpaqueUnmanagedBaseSpinSwap(OpaqueUnmanagedBase *_Nonnull ptr, const void *_Nullable value, enum MemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.spinSwap(self:_:_:)) \
+const void *_Nullable UnmanagedSpinSwap(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value, enum MemoryOrder order)
 { // swap the pointer with `value`, spinning until the lock becomes unlocked if necessary
 #ifndef __SSE2__
   char c;
@@ -349,8 +349,8 @@ const void *_Nullable OpaqueUnmanagedBaseSpinSwap(OpaqueUnmanagedBase *_Nonnull 
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedBase.safeStore(self:_:_:)) \
-_Bool OpaqueUnmanagedBaseSafeStore(OpaqueUnmanagedBase *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.safeStore(self:_:_:)) \
+_Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
 { // store `value` if and only if our pointer contains NULL; spin for the lock if necessary
 #ifndef __SSE2__
   char c;
