@@ -31,7 +31,7 @@ public class UnmanagedTests: XCTestCase
   {
     var i = UInt.randomPositive()
     var u = Unmanaged.passRetained(Witness(i))
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(u.toOpaque())
     do {
       let p = a.spinSwap(nil, .relaxed)
@@ -66,7 +66,7 @@ public class UnmanagedTests: XCTestCase
   public func testSpinLoad()
   {
     let i = UInt.randomPositive()
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
@@ -91,7 +91,7 @@ public class UnmanagedTests: XCTestCase
   public func testSpinTake()
   {
     let i = UInt.randomPositive()
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
@@ -116,7 +116,7 @@ public class UnmanagedTests: XCTestCase
   public func testSpinSwap() throws
   {
     let i = UInt.randomPositive()
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
@@ -148,7 +148,7 @@ public class UnmanagedTests: XCTestCase
   public func testSafeStoreSuccess() throws
   {
     let i = UInt.randomPositive()
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
@@ -183,7 +183,7 @@ public class UnmanagedTests: XCTestCase
   public func testSafeStoreFailure() throws
   {
     let i = UInt.randomPositive()
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
@@ -212,7 +212,7 @@ public class UnmanagedTests: XCTestCase
   {
     let i = UInt.randomPositive()
 
-    var a = RawUnmanaged()
+    var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Witness(i)).toOpaque())
 
     // mock thread A needs a copy of the reference
@@ -258,7 +258,7 @@ public class UnmanagedRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var r = RawUnmanaged()
+      var r = OpaqueUnmanagedHelper()
       r.initialize({
         () -> UnsafeMutableRawPointer in
         let b = ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 })
