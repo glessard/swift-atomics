@@ -266,8 +266,6 @@ public struct AtomicNonNullPointer<Pointee>
   @_versioned var ptr = AtomicNonNullRawPointer()
 #endif
 
-  public init() { }
-
   public init(_ pointer: UnsafePointer<Pointee>)
   {
     self.initialize(pointer)
@@ -388,8 +386,6 @@ public struct AtomicNonNullMutablePointer<Pointee>
 #else
   @_versioned var ptr = AtomicNonNullMutableRawPointer()
 #endif
-
-  public init() { }
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>)
   {

@@ -24,8 +24,10 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
   @_versioned var ptr = Atomic${Nullable}${Mutable}RawPointer()
 #endif
 
+% if Nullable == '':
   public init() { }
 
+% end
   public init(_ pointer: Unsafe${Mutable}${pointer})
   {
     self.initialize(pointer)
