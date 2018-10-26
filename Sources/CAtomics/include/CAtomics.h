@@ -183,34 +183,34 @@ CLANG_ATOMICS_CAS(AtomicBool, _Bool)
 
 // pointer atomics
 
-#define CLANG_ATOMICS_POINTER_INIT(sType, pType) \
+#define CLANG_ATOMICS_POINTER_INIT(sType, pType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.initialize(self:_:)) \
-        void sType##Init(sType *_Nonnull ptr, pType _Nullable value) \
+        void sType##Init(sType *_Nonnull ptr, pType nullability value) \
         { atomic_init(&(ptr->a), (uintptr_t)value); }
 
-#define CLANG_ATOMICS_POINTER_LOAD(sType, pType) \
+#define CLANG_ATOMICS_POINTER_LOAD(sType, pType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.load(self:_:)) \
-        pType _Nullable sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
+        pType nullability sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
         { return (pType) atomic_load_explicit(&(ptr->a), order); }
 
-#define CLANG_ATOMICS_POINTER_STORE(sType, pType) \
+#define CLANG_ATOMICS_POINTER_STORE(sType, pType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.store(self:_:_:)) \
-        void sType##Store(sType *_Nonnull ptr, pType _Nullable value, enum StoreMemoryOrder order) \
+        void sType##Store(sType *_Nonnull ptr, pType nullability value, enum StoreMemoryOrder order) \
         { atomic_store_explicit(&(ptr->a), (uintptr_t)value, order); }
 
-#define CLANG_ATOMICS_POINTER_SWAP(sType, pType) \
+#define CLANG_ATOMICS_POINTER_SWAP(sType, pType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.swap(self:_:_:)) \
-        pType _Nullable sType##Swap(sType *_Nonnull ptr, pType _Nullable value, enum MemoryOrder order) \
+        pType nullability sType##Swap(sType *_Nonnull ptr, pType nullability value, enum MemoryOrder order) \
         { return (pType) atomic_exchange_explicit(&(ptr->a), (uintptr_t)value, order); }
 
-#define CLANG_ATOMICS_POINTER_CAS(sType, pType) \
+#define CLANG_ATOMICS_POINTER_CAS(sType, pType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.loadCAS(self:_:_:_:_:_:)) \
-        _Bool sType##LoadCAS(sType *_Nonnull ptr, pType _Nullable* _Nonnull current, pType _Nullable future, \
+        _Bool sType##LoadCAS(sType *_Nonnull ptr, pType nullability* _Nonnull current, pType nullability future, \
                              enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
           assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
@@ -222,7 +222,7 @@ CLANG_ATOMICS_CAS(AtomicBool, _Bool)
         } \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(sType.CAS(self:_:_:_:_:)) \
-        _Bool sType##CAS(sType *_Nonnull ptr, pType _Nullable current, pType _Nullable future, \
+        _Bool sType##CAS(sType *_Nonnull ptr, pType nullability current, pType nullability future, \
                          enum CASType type, enum MemoryOrder order) \
         { \
           pType expect = current; \
@@ -230,27 +230,48 @@ CLANG_ATOMICS_CAS(AtomicBool, _Bool)
         }
 
 CLANG_ATOMICS_STRUCT(AtomicMutableRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_LOAD(AtomicMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_STORE(AtomicMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_SWAP(AtomicMutableRawPointer, void*)
-CLANG_ATOMICS_POINTER_CAS(AtomicMutableRawPointer, void*)
+CLANG_ATOMICS_POINTER_INIT(AtomicMutableRawPointer, void*, _Nullable)
+CLANG_ATOMICS_POINTER_LOAD(AtomicMutableRawPointer, void*, _Nullable)
+CLANG_ATOMICS_POINTER_STORE(AtomicMutableRawPointer, void*, _Nullable)
+CLANG_ATOMICS_POINTER_SWAP(AtomicMutableRawPointer, void*, _Nullable)
+CLANG_ATOMICS_POINTER_CAS(AtomicMutableRawPointer, void*, _Nullable)
+
+CLANG_ATOMICS_STRUCT(AtomicNonNullMutableRawPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicNonNullMutableRawPointer, void*, _Nonnull)
+CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullMutableRawPointer, void*, _Nonnull)
+CLANG_ATOMICS_POINTER_STORE(AtomicNonNullMutableRawPointer, void*, _Nonnull)
+CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullMutableRawPointer, void*, _Nonnull)
+CLANG_ATOMICS_POINTER_CAS(AtomicNonNullMutableRawPointer, void*, _Nonnull)
 
 CLANG_ATOMICS_STRUCT(AtomicRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicRawPointer, const void*)
-CLANG_ATOMICS_POINTER_LOAD(AtomicRawPointer, const void*)
-CLANG_ATOMICS_POINTER_STORE(AtomicRawPointer, const void*)
-CLANG_ATOMICS_POINTER_SWAP(AtomicRawPointer, const void*)
-CLANG_ATOMICS_POINTER_CAS(AtomicRawPointer, const void*)
+CLANG_ATOMICS_POINTER_INIT(AtomicRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_LOAD(AtomicRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_STORE(AtomicRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_SWAP(AtomicRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_CAS(AtomicRawPointer, const void*, _Nullable)
+
+CLANG_ATOMICS_STRUCT(AtomicNonNullRawPointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicNonNullRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_POINTER_STORE(AtomicNonNullRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_POINTER_CAS(AtomicNonNullRawPointer, const void*, _Nonnull)
 
 struct opaque;
 
 CLANG_ATOMICS_STRUCT(AtomicOpaquePointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_LOAD(AtomicOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_STORE(AtomicOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_SWAP(AtomicOpaquePointer, struct opaque*)
-CLANG_ATOMICS_POINTER_CAS(AtomicOpaquePointer, struct opaque*)
+CLANG_ATOMICS_POINTER_INIT(AtomicOpaquePointer, struct opaque*, _Nullable)
+CLANG_ATOMICS_POINTER_LOAD(AtomicOpaquePointer, struct opaque*, _Nullable)
+CLANG_ATOMICS_POINTER_STORE(AtomicOpaquePointer, struct opaque*, _Nullable)
+CLANG_ATOMICS_POINTER_SWAP(AtomicOpaquePointer, struct opaque*, _Nullable)
+CLANG_ATOMICS_POINTER_CAS(AtomicOpaquePointer, struct opaque*, _Nullable)
+
+CLANG_ATOMICS_STRUCT(AtomicNonNullOpaquePointer, atomic_uintptr_t)
+CLANG_ATOMICS_POINTER_INIT(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
+CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
+CLANG_ATOMICS_POINTER_STORE(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
+CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
+CLANG_ATOMICS_POINTER_CAS(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
 
 // fence
 

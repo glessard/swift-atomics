@@ -134,27 +134,27 @@ public struct Atomic${Mutable}Pointer<Pointee>
 #endif
 }
 % end
-% for (AtomicType, PointerType) in [('AtomicRawPointer', 'UnsafeRawPointer'), ('AtomicMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOpaquePointer', 'OpaquePointer')]:
+% for (AtomicType, PointerType) in [('AtomicRawPointer', 'UnsafeRawPointer?'), ('AtomicNonNullRawPointer', 'UnsafeRawPointer'), ('AtomicMutableRawPointer', 'UnsafeMutableRawPointer?'), ('AtomicNonNullMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOpaquePointer', 'OpaquePointer?'), ('AtomicNonNullOpaquePointer', 'OpaquePointer')]:
 
 @_exported import struct CAtomics.${AtomicType}
 
 extension ${AtomicType}
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: ${PointerType}?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: ${PointerType}?)
+  @available(*, unavailable, message: "If needed, use initialize(_ pointer: ${PointerType}) after the default initializer, as long as the instance is unshared")
+  public init(_ pointer: ${PointerType})
   {
     self.init()
   }
 
 #if swift(>=4.2)
-  public var pointer: ${PointerType}? {
+  public var pointer: ${PointerType} {
     @inlinable
     mutating get {
       return load(.relaxed)
     }
   }
 #else
-  public var pointer: ${PointerType}? {
+  public var pointer: ${PointerType} {
     @inline(__always)
     mutating get {
       return load(.relaxed)
@@ -164,13 +164,13 @@ extension ${AtomicType}
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}?
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}
   {
     return load(order)
   }
 #else
   @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}?
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> ${PointerType}
   {
     return load(order)
   }
@@ -178,13 +178,13 @@ extension ${AtomicType}
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func store(_ pointer: ${PointerType}?, order: StoreMemoryOrder = .sequential)
+  public mutating func store(_ pointer: ${PointerType}, order: StoreMemoryOrder = .sequential)
   {
     store(pointer, order)
   }
 #else
   @inline(__always)
-  public mutating func store(_ pointer: ${PointerType}?, order: StoreMemoryOrder = .sequential)
+  public mutating func store(_ pointer: ${PointerType}, order: StoreMemoryOrder = .sequential)
   {
     store(pointer, order)
   }
@@ -192,13 +192,13 @@ extension ${AtomicType}
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func swap(_ pointer: ${PointerType}?, order: MemoryOrder = .sequential) -> ${PointerType}?
+  public mutating func swap(_ pointer: ${PointerType}, order: MemoryOrder = .sequential) -> ${PointerType}
   {
     return swap(pointer, order)
   }
 #else
   @inline(__always)
-  public mutating func swap(_ pointer: ${PointerType}?, order: MemoryOrder = .sequential) -> ${PointerType}?
+  public mutating func swap(_ pointer: ${PointerType}, order: MemoryOrder = .sequential) -> ${PointerType}
   {
     return swap(pointer, order)
   }
@@ -206,8 +206,8 @@ extension ${AtomicType}
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<${PointerType}?>,
-                               future: ${PointerType}?,
+  public mutating func loadCAS(current: UnsafeMutablePointer<${PointerType}>,
+                               future: ${PointerType},
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
@@ -216,8 +216,8 @@ extension ${AtomicType}
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<${PointerType}?>,
-                               future: ${PointerType}?,
+  public mutating func loadCAS(current: UnsafeMutablePointer<${PointerType}>,
+                               future: ${PointerType},
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
@@ -228,7 +228,7 @@ extension ${AtomicType}
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func CAS(current: ${PointerType}?, future: ${PointerType}?,
+  public mutating func CAS(current: ${PointerType}, future: ${PointerType},
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
   {
@@ -236,7 +236,7 @@ extension ${AtomicType}
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func CAS(current: ${PointerType}?, future: ${PointerType}?,
+  public mutating func CAS(current: ${PointerType}, future: ${PointerType},
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
   {

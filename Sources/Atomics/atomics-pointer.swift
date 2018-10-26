@@ -363,6 +363,115 @@ extension AtomicRawPointer
 #endif
 }
 
+@_exported import struct CAtomics.AtomicNonNullRawPointer
+
+extension AtomicNonNullRawPointer
+{
+  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeRawPointer) after the default initializer, as long as the instance is unshared")
+  public init(_ pointer: UnsafeRawPointer)
+  {
+    self.init()
+  }
+
+#if swift(>=4.2)
+  public var pointer: UnsafeRawPointer {
+    @inlinable
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#else
+  public var pointer: UnsafeRawPointer {
+    @inline(__always)
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeRawPointer
+  {
+    return load(order)
+  }
+#else
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeRawPointer
+  {
+    return load(order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ pointer: UnsafeRawPointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func store(_ pointer: UnsafeRawPointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ pointer: UnsafeRawPointer, order: MemoryOrder = .sequential) -> UnsafeRawPointer
+  {
+    return swap(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func swap(_ pointer: UnsafeRawPointer, order: MemoryOrder = .sequential) -> UnsafeRawPointer
+  {
+    return swap(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer>,
+                               future: UnsafeRawPointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer>,
+                               future: UnsafeRawPointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UnsafeRawPointer, future: UnsafeRawPointer,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: UnsafeRawPointer, future: UnsafeRawPointer,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#endif
+}
+
 @_exported import struct CAtomics.AtomicMutableRawPointer
 
 extension AtomicMutableRawPointer
@@ -472,6 +581,115 @@ extension AtomicMutableRawPointer
 #endif
 }
 
+@_exported import struct CAtomics.AtomicNonNullMutableRawPointer
+
+extension AtomicNonNullMutableRawPointer
+{
+  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeMutableRawPointer) after the default initializer, as long as the instance is unshared")
+  public init(_ pointer: UnsafeMutableRawPointer)
+  {
+    self.init()
+  }
+
+#if swift(>=4.2)
+  public var pointer: UnsafeMutableRawPointer {
+    @inlinable
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#else
+  public var pointer: UnsafeMutableRawPointer {
+    @inline(__always)
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutableRawPointer
+  {
+    return load(order)
+  }
+#else
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutableRawPointer
+  {
+    return load(order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ pointer: UnsafeMutableRawPointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func store(_ pointer: UnsafeMutableRawPointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ pointer: UnsafeMutableRawPointer, order: MemoryOrder = .sequential) -> UnsafeMutableRawPointer
+  {
+    return swap(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func swap(_ pointer: UnsafeMutableRawPointer, order: MemoryOrder = .sequential) -> UnsafeMutableRawPointer
+  {
+    return swap(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer>,
+                               future: UnsafeMutableRawPointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer>,
+                               future: UnsafeMutableRawPointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: UnsafeMutableRawPointer, future: UnsafeMutableRawPointer,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: UnsafeMutableRawPointer, future: UnsafeMutableRawPointer,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#endif
+}
+
 @_exported import struct CAtomics.AtomicOpaquePointer
 
 extension AtomicOpaquePointer
@@ -573,6 +791,115 @@ extension AtomicOpaquePointer
 #else
   @inline(__always) @discardableResult
   public mutating func CAS(current: OpaquePointer?, future: OpaquePointer?,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#endif
+}
+
+@_exported import struct CAtomics.AtomicNonNullOpaquePointer
+
+extension AtomicNonNullOpaquePointer
+{
+  @available(*, unavailable, message: "If needed, use initialize(_ pointer: OpaquePointer) after the default initializer, as long as the instance is unshared")
+  public init(_ pointer: OpaquePointer)
+  {
+    self.init()
+  }
+
+#if swift(>=4.2)
+  public var pointer: OpaquePointer {
+    @inlinable
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#else
+  public var pointer: OpaquePointer {
+    @inline(__always)
+    mutating get {
+      return load(.relaxed)
+    }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> OpaquePointer
+  {
+    return load(order)
+  }
+#else
+  @inline(__always)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> OpaquePointer
+  {
+    return load(order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func store(_ pointer: OpaquePointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func store(_ pointer: OpaquePointer, order: StoreMemoryOrder = .sequential)
+  {
+    store(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func swap(_ pointer: OpaquePointer, order: MemoryOrder = .sequential) -> OpaquePointer
+  {
+    return swap(pointer, order)
+  }
+#else
+  @inline(__always)
+  public mutating func swap(_ pointer: OpaquePointer, order: MemoryOrder = .sequential) -> OpaquePointer
+  {
+    return swap(pointer, order)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer>,
+                               future: OpaquePointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer>,
+                               future: OpaquePointer,
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
+  {
+    return loadCAS(current, future, type, orderSwap, orderLoad)
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable @discardableResult
+  public mutating func CAS(current: OpaquePointer, future: OpaquePointer,
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
+  {
+    return CAS(current, future, type, order)
+  }
+#else
+  @inline(__always) @discardableResult
+  public mutating func CAS(current: OpaquePointer, future: OpaquePointer,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
   {
