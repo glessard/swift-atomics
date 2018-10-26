@@ -16,7 +16,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = Int.randomPositive()
@@ -29,7 +29,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -74,7 +74,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = UInt.randomPositive()
@@ -87,7 +87,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -132,7 +132,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt8()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = Int8.randomPositive()
@@ -145,7 +145,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -190,7 +190,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt8()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = UInt8.randomPositive()
@@ -203,7 +203,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -248,7 +248,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt16()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = Int16.randomPositive()
@@ -261,7 +261,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -306,7 +306,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt16()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = UInt16.randomPositive()
@@ -319,7 +319,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -364,7 +364,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt32()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = Int32.randomPositive()
@@ -377,7 +377,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -422,7 +422,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt32()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = UInt32.randomPositive()
@@ -435,7 +435,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -480,7 +480,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt64()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = Int64.randomPositive()
@@ -493,7 +493,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -538,7 +538,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt64()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = UInt64.randomPositive()
@@ -551,7 +551,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -594,16 +594,47 @@ public class CAtomicsBasicTests: XCTestCase
 
   public func testRawPointer()
   {
-    var p = AtomicRawPointer()
-    p.initialize(nil)
-    XCTAssert(p.load(.relaxed) == nil)
-
+    let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
+    var p = AtomicRawPointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
     p.store(r1, .relaxed)
-    XCTAssert(r1 == p.load(.relaxed))
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testNonNullRawPointer()
+  {
+    let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
+    let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
+    let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
+    let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
+
+    var p = AtomicRawPointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
 
     var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -623,16 +654,47 @@ public class CAtomicsBasicTests: XCTestCase
 
   public func testMutableRawPointer()
   {
-    var p = AtomicMutableRawPointer()
-    p.initialize(nil)
-    XCTAssert(p.load(.relaxed) == nil)
-
+    let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
+    var p = AtomicMutableRawPointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
     p.store(r1, .relaxed)
-    XCTAssert(r1 == p.load(.relaxed))
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testNonNullMutableRawPointer()
+  {
+    let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
+    let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
+    let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
+    let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
+
+    var p = AtomicMutableRawPointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
 
     var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -652,16 +714,47 @@ public class CAtomicsBasicTests: XCTestCase
 
   public func testOpaquePointer()
   {
-    var p = AtomicOpaquePointer()
-    p.initialize(nil)
-    XCTAssert(p.load(.relaxed) == nil)
-
+    let r0 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r1 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
+    var p = AtomicOpaquePointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
     p.store(r1, .relaxed)
-    XCTAssert(r1 == p.load(.relaxed))
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testNonNullOpaquePointer()
+  {
+    let r0 = OpaquePointer(bitPattern: UInt.randomPositive())!
+    let r1 = OpaquePointer(bitPattern: UInt.randomPositive())!
+    let r2 = OpaquePointer(bitPattern: UInt.randomPositive())!
+    let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
+
+    var p = AtomicOpaquePointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
 
     var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)

@@ -19,7 +19,7 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = Atomic${i}()
     i.initialize(0)
-    XCTAssert(i.load(.relaxed) == 0)
+    XCTAssertEqual(0, i.load(.relaxed))
 
 #if swift(>=4.0)
     let r1 = ${i}.randomPositive()
@@ -33,7 +33,7 @@ public class CAtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1, .relaxed)
-    XCTAssert(r1 == i.load(.relaxed))
+    XCTAssertEqual(r1, i.load(.relaxed))
 
     var j = i.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -75,20 +75,24 @@ public class CAtomicsBasicTests: XCTestCase
   }
 
 % end
+% nullability = ['', 'NonNull']
 % for type in pointers:
-  public func test${type}Pointer()
+% for nullable in nullability:
+  public func test${nullable}${type}Pointer()
   {
-    var p = Atomic${type}Pointer()
-    p.initialize(nil)
-    XCTAssert(p.load(.relaxed) == nil)
-
 % native = type if (type == 'Opaque') else "Unsafe" + type
-    let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())
-    let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())
-    let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())
+% bang = '!' if (nullable == 'NonNull') else ''
+    let r0 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+
+    var p = Atomic${type}Pointer()
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
 
     p.store(r1, .relaxed)
-    XCTAssert(r1 == p.load(.relaxed))
+    XCTAssertEqual(r1, p.load(.relaxed))
 
     var j = p.swap(r2, .relaxed)
     XCTAssertEqual(r1, j)
@@ -106,6 +110,7 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
+% end
 % end
   public func testBool()
   {
