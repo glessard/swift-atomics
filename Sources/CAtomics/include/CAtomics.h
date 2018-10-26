@@ -271,6 +271,8 @@ SWIFT_ENUM(SpinLoadAction, closed)
   SpinLoadAction_null = __OPAQUE_UNMANAGED_NULL
 };
 
+#define __OPAQUE_UNMANAGED_SPINMASK (char)0xc0
+
 typedef struct { volatile atomic_uintptr_t a; } OpaqueUnmanagedHelper;
 
 static __inline__ __attribute__((__always_inline__)) \
@@ -311,7 +313,7 @@ const void *_Nullable UnmanagedSpinLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enu
       _mm_pause();
 #else
       c += 1;
-      if ((c&0xc0) != 0) { sched_yield(); }
+      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
       pointer = atomic_load_explicit(&(ptr->a), order);
     }
@@ -339,7 +341,7 @@ const void *_Nullable UnmanagedSpinSwap(OpaqueUnmanagedHelper *_Nonnull ptr, con
       _mm_pause();
 #else
       c += 1;
-      if ((c&0xc0) != 0) { sched_yield(); }
+      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
       pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
     }
@@ -365,7 +367,7 @@ _Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nulla
       _mm_pause();
 #else
       c += 1;
-      if ((c&0xc0) != 0) { sched_yield(); }
+      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
       pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
     }
