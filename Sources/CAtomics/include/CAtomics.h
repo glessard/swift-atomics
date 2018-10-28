@@ -82,46 +82,54 @@ SWIFT_ENUM(CASType, closed)
 # define SWIFT_NAME(_name)
 #endif
 
+#if defined(__x86_64__)
+#define __CACHE_LINE_WIDTH 64
+#elif defined(__arm64__)
+#define __CACHE_LINE_WIDTH 64
+#else
+#define __CACHE_LINE_WIDTH 32
+#endif
+
 // atomic integer generation
 
-#define CLANG_ATOMICS_STRUCT(sType, aType) \
-        typedef struct { volatile aType a; } sType;
+#define CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        typedef struct { _Alignas(alignment) volatile atomicType a; } swiftType;
 
-#define CLANG_ATOMICS_INIT(sType, pType) \
+#define CLANG_ATOMICS_INIT(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.initialize(self:_:)) \
-        void sType##Init(sType *_Nonnull ptr, pType value) \
+        SWIFT_NAME(swiftType.initialize(self:_:)) \
+        void swiftType##Init(swiftType *_Nonnull ptr, parameterType value) \
         { atomic_init(&(ptr->a), value); }
 
-#define CLANG_ATOMICS_LOAD(sType, pType) \
+#define CLANG_ATOMICS_LOAD(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.load(self:_:)) \
-        pType sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
+        SWIFT_NAME(swiftType.load(self:_:)) \
+        parameterType swiftType##Load(swiftType *_Nonnull ptr, enum LoadMemoryOrder order) \
         { return atomic_load_explicit(&(ptr->a), order); }
 
-#define CLANG_ATOMICS_STORE(sType, pType) \
+#define CLANG_ATOMICS_STORE(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.store(self:_:_:)) \
-        void sType##Store(sType *_Nonnull ptr, pType value, enum StoreMemoryOrder order) \
+        SWIFT_NAME(swiftType.store(self:_:_:)) \
+        void swiftType##Store(swiftType *_Nonnull ptr, parameterType value, enum StoreMemoryOrder order) \
         { atomic_store_explicit(&(ptr->a), value, order); }
 
-#define CLANG_ATOMICS_SWAP(sType, pType) \
+#define CLANG_ATOMICS_SWAP(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.swap(self:_:_:)) \
-        pType sType##Swap(sType *_Nonnull ptr, pType value, enum MemoryOrder order) \
+        SWIFT_NAME(swiftType.swap(self:_:_:)) \
+        parameterType swiftType##Swap(swiftType *_Nonnull ptr, parameterType value, enum MemoryOrder order) \
         { return atomic_exchange_explicit(&(ptr->a), value, order); }
 
-#define CLANG_ATOMICS_RMW(sType, pType, pName, op, opName) \
+#define CLANG_ATOMICS_RMW(swiftType, parameterType, pName, op, opName) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.op(self:_:_:)) \
-        pType sType##opName(sType *_Nonnull ptr, pType pName, enum MemoryOrder order) \
+        SWIFT_NAME(swiftType.op(self:_:_:)) \
+        parameterType swiftType##opName(swiftType *_Nonnull ptr, parameterType pName, enum MemoryOrder order) \
         { return atomic_##op##_explicit(&(ptr->a), pName, order); }
 
-#define CLANG_ATOMICS_CAS(sType, pType) \
+#define CLANG_ATOMICS_CAS(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.loadCAS(self:_:_:_:_:_:)) \
-        _Bool sType##LoadCAS(sType *_Nonnull ptr, pType *_Nonnull current, pType future, \
-                             enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
+        SWIFT_NAME(swiftType.loadCAS(self:_:_:_:_:_:)) \
+        _Bool swiftType##LoadCAS(swiftType *_Nonnull ptr, parameterType *_Nonnull current, parameterType future, \
+                                 enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
           assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
           assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
@@ -131,87 +139,92 @@ SWIFT_ENUM(CASType, closed)
             return atomic_compare_exchange_weak_explicit(&(ptr->a), current, future, orderSwap, orderLoad); \
         } \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.CAS(self:_:_:_:_:)) \
-        _Bool sType##CAS(sType *_Nonnull ptr, pType current, pType future, \
-                         enum CASType type, enum MemoryOrder order) \
+        SWIFT_NAME(swiftType.CAS(self:_:_:_:_:)) \
+        _Bool swiftType##CAS(swiftType *_Nonnull ptr, parameterType current, parameterType future, \
+                             enum CASType type, enum MemoryOrder order) \
         { \
-          pType expect = current; \
-          return sType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
+          parameterType expect = current; \
+          return swiftType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
-#define CLANG_ATOMICS_GENERATE(sType, aType, pType) \
-        CLANG_ATOMICS_STRUCT(sType, aType) \
-        CLANG_ATOMICS_INIT(sType, pType) \
-        CLANG_ATOMICS_LOAD(sType, pType) \
-        CLANG_ATOMICS_STORE(sType, pType) \
-        CLANG_ATOMICS_SWAP(sType, pType) \
-        CLANG_ATOMICS_RMW(sType, pType, increment, fetch_add, Add) \
-        CLANG_ATOMICS_RMW(sType, pType, increment, fetch_sub, Sub) \
-        CLANG_ATOMICS_RMW(sType, pType, bits, fetch_or, Or) \
-        CLANG_ATOMICS_RMW(sType, pType, bits, fetch_xor, Xor) \
-        CLANG_ATOMICS_RMW(sType, pType, bits, fetch_and, And) \
-        CLANG_ATOMICS_CAS(sType, pType)
+#define CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
+        CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_INIT(swiftType, parameterType) \
+        CLANG_ATOMICS_LOAD(swiftType, parameterType) \
+        CLANG_ATOMICS_STORE(swiftType, parameterType) \
+        CLANG_ATOMICS_SWAP(swiftType, parameterType) \
+        CLANG_ATOMICS_CAS(swiftType, parameterType)
+
+#define CLANG_ATOMICS_INT_GENERATE(swiftType, atomicType, parameterType, alignment) \
+        CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, increment, fetch_add, Add) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, increment, fetch_sub, Sub) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, bits, fetch_or, Or) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, bits, fetch_xor, Xor) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, bits, fetch_and, And)
 
 // integer atomics
 
-CLANG_ATOMICS_GENERATE(AtomicInt, atomic_long, long)
-CLANG_ATOMICS_GENERATE(AtomicUInt, atomic_ulong, unsigned long)
+CLANG_ATOMICS_INT_GENERATE(AtomicInt, atomic_long, long, _Alignof(atomic_long))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt, atomic_ulong, unsigned long, _Alignof(atomic_ulong))
 
-CLANG_ATOMICS_GENERATE(AtomicInt8, atomic_schar, signed char)
-CLANG_ATOMICS_GENERATE(AtomicUInt8, atomic_uchar, unsigned char)
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheAlignedInt, atomic_long, long, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheAlignedUInt, atomic_ulong, unsigned long, __CACHE_LINE_WIDTH)
 
-CLANG_ATOMICS_GENERATE(AtomicInt16, atomic_short, short)
-CLANG_ATOMICS_GENERATE(AtomicUInt16, atomic_ushort, unsigned short)
+CLANG_ATOMICS_INT_GENERATE(AtomicInt8, atomic_schar, signed char, _Alignof(atomic_schar))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt8, atomic_uchar, unsigned char, _Alignof(atomic_uchar))
 
-CLANG_ATOMICS_GENERATE(AtomicInt32, atomic_int, int)
-CLANG_ATOMICS_GENERATE(AtomicUInt32, atomic_uint, unsigned int)
+CLANG_ATOMICS_INT_GENERATE(AtomicInt16, atomic_short, short, _Alignof(atomic_short))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt16, atomic_ushort, unsigned short, _Alignof(atomic_ushort))
 
-CLANG_ATOMICS_GENERATE(AtomicInt64, atomic_llong, long long)
-CLANG_ATOMICS_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long)
+CLANG_ATOMICS_INT_GENERATE(AtomicInt32, atomic_int, int, _Alignof(atomic_int))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt32, atomic_uint, unsigned int, _Alignof(atomic_uint))
+
+CLANG_ATOMICS_INT_GENERATE(AtomicInt64, atomic_llong, long long, _Alignof(atomic_llong))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Alignof(atomic_ullong))
 
 // bool atomics
 
-CLANG_ATOMICS_STRUCT(AtomicBool, atomic_bool)
-CLANG_ATOMICS_INIT(AtomicBool, _Bool)
-CLANG_ATOMICS_LOAD(AtomicBool, _Bool)
-CLANG_ATOMICS_STORE(AtomicBool, _Bool)
-CLANG_ATOMICS_SWAP(AtomicBool, _Bool)
-CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_or, Or)
-CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_xor, Xor)
-CLANG_ATOMICS_RMW(AtomicBool, _Bool, value, fetch_and, And)
-CLANG_ATOMICS_CAS(AtomicBool, _Bool)
+#define CLANG_ATOMICS_BOOL_GENERATE(swiftType, atomicType, parameterType, alignment) \
+        CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, value, fetch_or, Or) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, value, fetch_xor, Xor) \
+        CLANG_ATOMICS_RMW(swiftType, parameterType, value, fetch_and, And)
+
+CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool))
+CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheAlignedBool, atomic_bool, _Bool, __CACHE_LINE_WIDTH)
 
 // pointer atomics
 
-#define CLANG_ATOMICS_POINTER_INIT(sType, pType, nullability) \
+#define CLANG_ATOMICS_POINTER_INIT(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.initialize(self:_:)) \
-        void sType##Init(sType *_Nonnull ptr, pType nullability value) \
+        SWIFT_NAME(swiftType.initialize(self:_:)) \
+        void swiftType##Init(swiftType *_Nonnull ptr, parameterType nullability value) \
         { atomic_init(&(ptr->a), (uintptr_t)value); }
 
-#define CLANG_ATOMICS_POINTER_LOAD(sType, pType, nullability) \
+#define CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.load(self:_:)) \
-        pType nullability sType##Load(sType *_Nonnull ptr, enum LoadMemoryOrder order) \
-        { return (pType) atomic_load_explicit(&(ptr->a), order); }
+        SWIFT_NAME(swiftType.load(self:_:)) \
+        parameterType nullability swiftType##Load(swiftType *_Nonnull ptr, enum LoadMemoryOrder order) \
+        { return (parameterType) atomic_load_explicit(&(ptr->a), order); }
 
-#define CLANG_ATOMICS_POINTER_STORE(sType, pType, nullability) \
+#define CLANG_ATOMICS_POINTER_STORE(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.store(self:_:_:)) \
-        void sType##Store(sType *_Nonnull ptr, pType nullability value, enum StoreMemoryOrder order) \
+        SWIFT_NAME(swiftType.store(self:_:_:)) \
+        void swiftType##Store(swiftType *_Nonnull ptr, parameterType nullability value, enum StoreMemoryOrder order) \
         { atomic_store_explicit(&(ptr->a), (uintptr_t)value, order); }
 
-#define CLANG_ATOMICS_POINTER_SWAP(sType, pType, nullability) \
+#define CLANG_ATOMICS_POINTER_SWAP(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.swap(self:_:_:)) \
-        pType nullability sType##Swap(sType *_Nonnull ptr, pType nullability value, enum MemoryOrder order) \
-        { return (pType) atomic_exchange_explicit(&(ptr->a), (uintptr_t)value, order); }
+        SWIFT_NAME(swiftType.swap(self:_:_:)) \
+        parameterType nullability swiftType##Swap(swiftType *_Nonnull ptr, parameterType nullability value, enum MemoryOrder order) \
+        { return (parameterType) atomic_exchange_explicit(&(ptr->a), (uintptr_t)value, order); }
 
-#define CLANG_ATOMICS_POINTER_CAS(sType, pType, nullability) \
+#define CLANG_ATOMICS_POINTER_CAS(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.loadCAS(self:_:_:_:_:_:)) \
-        _Bool sType##LoadCAS(sType *_Nonnull ptr, pType nullability* _Nonnull current, pType nullability future, \
-                             enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
+        SWIFT_NAME(swiftType.loadCAS(self:_:_:_:_:_:)) \
+        _Bool swiftType##LoadCAS(swiftType *_Nonnull ptr, parameterType nullability* _Nonnull current, parameterType nullability future, \
+                                 enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
           assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
           assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
@@ -221,57 +234,35 @@ CLANG_ATOMICS_CAS(AtomicBool, _Bool)
             return atomic_compare_exchange_weak_explicit(&(ptr->a), (uintptr_t*)current, (uintptr_t)future, orderSwap, orderLoad); \
         } \
         static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(sType.CAS(self:_:_:_:_:)) \
-        _Bool sType##CAS(sType *_Nonnull ptr, pType nullability current, pType nullability future, \
-                         enum CASType type, enum MemoryOrder order) \
+        SWIFT_NAME(swiftType.CAS(self:_:_:_:_:)) \
+        _Bool swiftType##CAS(swiftType *_Nonnull ptr, parameterType nullability current, parameterType nullability future, \
+                             enum CASType type, enum MemoryOrder order) \
         { \
-          pType expect = current; \
-          return sType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
+          parameterType expect = current; \
+          return swiftType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
-CLANG_ATOMICS_STRUCT(AtomicMutableRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicMutableRawPointer, void*, _Nullable)
-CLANG_ATOMICS_POINTER_LOAD(AtomicMutableRawPointer, void*, _Nullable)
-CLANG_ATOMICS_POINTER_STORE(AtomicMutableRawPointer, void*, _Nullable)
-CLANG_ATOMICS_POINTER_SWAP(AtomicMutableRawPointer, void*, _Nullable)
-CLANG_ATOMICS_POINTER_CAS(AtomicMutableRawPointer, void*, _Nullable)
+#define CLANG_ATOMICS_POINTER_GENERATE(swiftType, atomicType, parameterType, nullability, alignment) \
+        CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_POINTER_INIT(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_STORE(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_SWAP(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_CAS(swiftType, parameterType, nullability)
 
-CLANG_ATOMICS_STRUCT(AtomicNonNullMutableRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicNonNullMutableRawPointer, void*, _Nonnull)
-CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullMutableRawPointer, void*, _Nonnull)
-CLANG_ATOMICS_POINTER_STORE(AtomicNonNullMutableRawPointer, void*, _Nonnull)
-CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullMutableRawPointer, void*, _Nonnull)
-CLANG_ATOMICS_POINTER_CAS(AtomicNonNullMutableRawPointer, void*, _Nonnull)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicMutableRawPointer, atomic_uintptr_t, void*, _Nullable, _Alignof(atomic_uintptr_t))
+CLANG_ATOMICS_POINTER_GENERATE(AtomicNonNullMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, _Alignof(atomic_uintptr_t))
 
-CLANG_ATOMICS_STRUCT(AtomicRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicRawPointer, const void*, _Nullable)
-CLANG_ATOMICS_POINTER_LOAD(AtomicRawPointer, const void*, _Nullable)
-CLANG_ATOMICS_POINTER_STORE(AtomicRawPointer, const void*, _Nullable)
-CLANG_ATOMICS_POINTER_SWAP(AtomicRawPointer, const void*, _Nullable)
-CLANG_ATOMICS_POINTER_CAS(AtomicRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicRawPointer, atomic_uintptr_t, const void*, _Nullable, _Alignof(atomic_uintptr_t))
+CLANG_ATOMICS_POINTER_GENERATE(AtomicNonNullRawPointer, atomic_uintptr_t, const void*, _Nonnull, _Alignof(atomic_uintptr_t))
 
-CLANG_ATOMICS_STRUCT(AtomicNonNullRawPointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicNonNullRawPointer, const void*, _Nonnull)
-CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullRawPointer, const void*, _Nonnull)
-CLANG_ATOMICS_POINTER_STORE(AtomicNonNullRawPointer, const void*, _Nonnull)
-CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullRawPointer, const void*, _Nonnull)
-CLANG_ATOMICS_POINTER_CAS(AtomicNonNullRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheAlignedMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheAlignedOptionalMutableRawPointer, atomic_uintptr_t, void*, _Nullable, __CACHE_LINE_WIDTH)
 
 struct opaque;
 
-CLANG_ATOMICS_STRUCT(AtomicOpaquePointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicOpaquePointer, struct opaque*, _Nullable)
-CLANG_ATOMICS_POINTER_LOAD(AtomicOpaquePointer, struct opaque*, _Nullable)
-CLANG_ATOMICS_POINTER_STORE(AtomicOpaquePointer, struct opaque*, _Nullable)
-CLANG_ATOMICS_POINTER_SWAP(AtomicOpaquePointer, struct opaque*, _Nullable)
-CLANG_ATOMICS_POINTER_CAS(AtomicOpaquePointer, struct opaque*, _Nullable)
-
-CLANG_ATOMICS_STRUCT(AtomicNonNullOpaquePointer, atomic_uintptr_t)
-CLANG_ATOMICS_POINTER_INIT(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
-CLANG_ATOMICS_POINTER_LOAD(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
-CLANG_ATOMICS_POINTER_STORE(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
-CLANG_ATOMICS_POINTER_SWAP(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
-CLANG_ATOMICS_POINTER_CAS(AtomicNonNullOpaquePointer, struct opaque*, _Nonnull)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicOpaquePointer, atomic_uintptr_t, struct opaque*, _Nullable, _Alignof(atomic_uintptr_t))
+CLANG_ATOMICS_POINTER_GENERATE(AtomicNonNullOpaquePointer, atomic_uintptr_t, struct opaque*, _Nonnull, _Alignof(atomic_uintptr_t))
 
 // fence
 
