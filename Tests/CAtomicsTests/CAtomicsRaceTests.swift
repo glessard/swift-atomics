@@ -97,7 +97,7 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = AtomicMutableRawPointer()
+      var p = AtomicOptionalMutableRawPointer()
       p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
@@ -137,7 +137,7 @@ public class CAtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = AtomicMutableRawPointer()
+      var p = AtomicOptionalMutableRawPointer()
       p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
