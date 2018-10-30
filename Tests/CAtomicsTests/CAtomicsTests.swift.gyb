@@ -87,7 +87,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
 
-    var p = Atomic${nullable}${type}Pointer()
+    var p = Atomic${nullable}${type}Pointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -169,4 +171,3 @@ public class CAtomicsBasicTests: XCTestCase
     CAtomicsThreadFence(.acquire)
   }
 }
-

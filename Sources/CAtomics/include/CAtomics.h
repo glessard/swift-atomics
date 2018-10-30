@@ -95,11 +95,17 @@ SWIFT_ENUM(CASType, closed)
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
         typedef struct { _Alignas(alignment) volatile atomicType a; } swiftType;
 
-#define CLANG_ATOMICS_INIT(swiftType, parameterType) \
+#define CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.initialize(self:_:)) \
-        void swiftType##Init(swiftType *_Nonnull ptr, parameterType value) \
+        void swiftType##Initialize(swiftType *_Nonnull ptr, parameterType value) \
         { atomic_init(&(ptr->a), value); }
+
+#define CLANG_ATOMICS_CREATE(swiftType, parameterType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.init(_:)) \
+        swiftType swiftType##Create(parameterType value) \
+        { swiftType s; swiftType##Initialize(&s, value); return s; }
 
 #define CLANG_ATOMICS_LOAD(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -149,7 +155,8 @@ SWIFT_ENUM(CASType, closed)
 
 #define CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
-        CLANG_ATOMICS_INIT(swiftType, parameterType) \
+        CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
+        CLANG_ATOMICS_CREATE(swiftType, parameterType) \
         CLANG_ATOMICS_LOAD(swiftType, parameterType) \
         CLANG_ATOMICS_STORE(swiftType, parameterType) \
         CLANG_ATOMICS_SWAP(swiftType, parameterType) \
@@ -198,11 +205,17 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CA
 
 // pointer atomics
 
-#define CLANG_ATOMICS_POINTER_INIT(swiftType, parameterType, nullability) \
+#define CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.initialize(self:_:)) \
-        void swiftType##Init(swiftType *_Nonnull ptr, parameterType nullability value) \
+        void swiftType##Initialize(swiftType *_Nonnull ptr, parameterType nullability value) \
         { atomic_init(&(ptr->a), (uintptr_t)value); }
+
+#define CLANG_ATOMICS_POINTER_CREATE(swiftType, parameterType, nullability) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.init(_:)) \
+        swiftType swiftType##Create(parameterType nullability value) \
+        { swiftType s; swiftType##Initialize(&s, value); return s; }
 
 #define CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -246,7 +259,8 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CA
 
 #define CLANG_ATOMICS_POINTER_GENERATE(swiftType, atomicType, parameterType, nullability, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
-        CLANG_ATOMICS_POINTER_INIT(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
+        CLANG_ATOMICS_POINTER_CREATE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_STORE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_SWAP(swiftType, parameterType, nullability) \

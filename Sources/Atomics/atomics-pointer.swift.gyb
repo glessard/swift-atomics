@@ -25,12 +25,15 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
 #endif
 
 % if Nullable == 'Optional':
-  public init() { }
+  public init()
+  {
+    ptr.initialize(nil)
+  }
 
 % end
   public init(_ pointer: Unsafe${Mutable}${Pointer})
   {
-    self.initialize(pointer)
+    ptr.initialize(Unsafe${Mutable}RawPointer(pointer))
   }
 
   public mutating func initialize(_ pointer: Unsafe${Mutable}${Pointer})
@@ -148,12 +151,6 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
 
 extension ${AtomicType}
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: ${PointerType}) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: ${PointerType})
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: ${PointerType} {
     @inlinable

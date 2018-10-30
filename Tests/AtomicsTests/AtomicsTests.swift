@@ -14,8 +14,7 @@ public class AtomicsBasicTests: XCTestCase
 {
   public func testInt()
   {
-    var i = AtomicInt()
-    i.initialize(0)
+    var i = AtomicInt(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -80,8 +79,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testUInt()
   {
-    var i = AtomicUInt()
-    i.initialize(0)
+    var i = AtomicUInt(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -146,8 +144,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testInt8()
   {
-    var i = AtomicInt8()
-    i.initialize(0)
+    var i = AtomicInt8(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -212,8 +209,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testUInt8()
   {
-    var i = AtomicUInt8()
-    i.initialize(0)
+    var i = AtomicUInt8(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -278,8 +274,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testInt16()
   {
-    var i = AtomicInt16()
-    i.initialize(0)
+    var i = AtomicInt16(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -344,8 +339,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testUInt16()
   {
-    var i = AtomicUInt16()
-    i.initialize(0)
+    var i = AtomicUInt16(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -410,8 +404,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testInt32()
   {
-    var i = AtomicInt32()
-    i.initialize(0)
+    var i = AtomicInt32(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -476,8 +469,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testUInt32()
   {
-    var i = AtomicUInt32()
-    i.initialize(0)
+    var i = AtomicUInt32(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -542,8 +534,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testInt64()
   {
-    var i = AtomicInt64()
-    i.initialize(0)
+    var i = AtomicInt64(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -608,8 +599,7 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testUInt64()
   {
-    var i = AtomicUInt64()
-    i.initialize(0)
+    var i = AtomicUInt64(0)
     XCTAssert(i.value == 0)
 
 #if swift(>=4.0)
@@ -674,15 +664,19 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testOptionalUnsafeRawPointer()
   {
-    var i = AtomicOptionalRawPointer()
-    XCTAssert(i.pointer == nil)
+    var n = AtomicOptionalRawPointer()
+    XCTAssertEqual(n.pointer, nil)
 
+    let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
+    var i = AtomicOptionalRawPointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -702,16 +696,15 @@ public class AtomicsBasicTests: XCTestCase
   public func testNonNullUnsafeRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
-    var i = AtomicNonNullRawPointer()
-    i.initialize(r0)
-    XCTAssert(i.pointer == r0)
-
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
+    var i = AtomicNonNullRawPointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -730,15 +723,19 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testOptionalUnsafeMutableRawPointer()
   {
-    var i = AtomicOptionalMutableRawPointer()
-    XCTAssert(i.pointer == nil)
+    var n = AtomicOptionalMutableRawPointer()
+    XCTAssertEqual(n.pointer, nil)
 
+    let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
+    var i = AtomicOptionalMutableRawPointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -758,16 +755,15 @@ public class AtomicsBasicTests: XCTestCase
   public func testNonNullUnsafeMutableRawPointer()
   {
     let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
-    var i = AtomicNonNullMutableRawPointer()
-    i.initialize(r0)
-    XCTAssert(i.pointer == r0)
-
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
+    var i = AtomicNonNullMutableRawPointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -786,15 +782,19 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testOptionalUnsafePointer()
   {
-    var i = AtomicOptionalPointer<Int64>()
-    XCTAssert(i.pointer == nil)
+    var n = AtomicOptionalPointer<Int64>()
+    XCTAssertEqual(n.pointer, nil)
 
+    let r0 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
     let r1 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
     let r2 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
     let r3 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())
 
+    var i = AtomicOptionalPointer<Int64>(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -814,15 +814,15 @@ public class AtomicsBasicTests: XCTestCase
   public func testNonNullUnsafePointer()
   {
     let r0 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())!
-    var i = AtomicNonNullPointer<Int64>(r0)
-    XCTAssert(i.pointer == r0)
-
     let r1 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())!
     let r2 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())!
     let r3 = UnsafePointer<Int64>(bitPattern: UInt.randomPositive())!
 
+    var i = AtomicNonNullPointer<Int64>(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -841,15 +841,19 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testOptionalUnsafeMutablePointer()
   {
-    var i = AtomicOptionalMutablePointer<Int64>()
-    XCTAssert(i.pointer == nil)
+    var n = AtomicOptionalMutablePointer<Int64>()
+    XCTAssertEqual(n.pointer, nil)
 
+    let r0 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
     let r1 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
     let r2 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())
 
+    var i = AtomicOptionalMutablePointer<Int64>(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -869,15 +873,15 @@ public class AtomicsBasicTests: XCTestCase
   public func testNonNullUnsafeMutablePointer()
   {
     let r0 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())!
-    var i = AtomicNonNullMutablePointer<Int64>(r0)
-    XCTAssert(i.pointer == r0)
-
     let r1 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutablePointer<Int64>(bitPattern: UInt.randomPositive())!
 
+    var i = AtomicNonNullMutablePointer<Int64>(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -896,15 +900,19 @@ public class AtomicsBasicTests: XCTestCase
 
   public func testOptionalOpaquePointer()
   {
-    var i = AtomicOptionalOpaquePointer()
-    XCTAssert(i.pointer == nil)
+    var n = AtomicOptionalOpaquePointer()
+    XCTAssertEqual(n.pointer, nil)
 
+    let r0 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r1 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
+    var i = AtomicOptionalOpaquePointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -924,16 +932,15 @@ public class AtomicsBasicTests: XCTestCase
   public func testNonNullOpaquePointer()
   {
     let r0 = OpaquePointer(bitPattern: UInt.randomPositive())!
-    var i = AtomicNonNullOpaquePointer()
-    i.initialize(r0)
-    XCTAssert(i.pointer == r0)
-
     let r1 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
 
+    var i = AtomicNonNullOpaquePointer(r0)
+    XCTAssertEqual(i.pointer, r0)
+
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)

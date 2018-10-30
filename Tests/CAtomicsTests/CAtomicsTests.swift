@@ -599,7 +599,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicOptionalRawPointer()
+    var p = AtomicOptionalRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -629,7 +631,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullRawPointer()
+    var p = AtomicNonNullRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -659,7 +663,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicOptionalMutableRawPointer()
+    var p = AtomicOptionalMutableRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -689,7 +695,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullMutableRawPointer()
+    var p = AtomicNonNullMutableRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -719,7 +727,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicOptionalOpaquePointer()
+    var p = AtomicOptionalOpaquePointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -749,7 +759,9 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullOpaquePointer()
+    var p = AtomicNonNullOpaquePointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -829,4 +841,3 @@ public class CAtomicsBasicTests: XCTestCase
     CAtomicsThreadFence(.acquire)
   }
 }
-

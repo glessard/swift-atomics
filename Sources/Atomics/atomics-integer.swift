@@ -16,12 +16,6 @@
 
 extension AtomicInt
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Int) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Int)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Int {
     @inlinable
@@ -217,12 +211,6 @@ extension AtomicInt
 
 extension AtomicUInt
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt) after the default initializer, as long as the instance is unshared")
-  public init(_ value: UInt)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: UInt {
     @inlinable
@@ -418,12 +406,6 @@ extension AtomicUInt
 
 extension AtomicInt8
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Int8) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Int8)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Int8 {
     @inlinable
@@ -619,12 +601,6 @@ extension AtomicInt8
 
 extension AtomicUInt8
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt8) after the default initializer, as long as the instance is unshared")
-  public init(_ value: UInt8)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: UInt8 {
     @inlinable
@@ -820,12 +796,6 @@ extension AtomicUInt8
 
 extension AtomicInt16
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Int16) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Int16)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Int16 {
     @inlinable
@@ -1021,12 +991,6 @@ extension AtomicInt16
 
 extension AtomicUInt16
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt16) after the default initializer, as long as the instance is unshared")
-  public init(_ value: UInt16)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: UInt16 {
     @inlinable
@@ -1222,12 +1186,6 @@ extension AtomicUInt16
 
 extension AtomicInt32
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Int32) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Int32)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Int32 {
     @inlinable
@@ -1423,12 +1381,6 @@ extension AtomicInt32
 
 extension AtomicUInt32
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt32) after the default initializer, as long as the instance is unshared")
-  public init(_ value: UInt32)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: UInt32 {
     @inlinable
@@ -1624,12 +1576,6 @@ extension AtomicUInt32
 
 extension AtomicInt64
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Int64) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Int64)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Int64 {
     @inlinable
@@ -1825,12 +1771,6 @@ extension AtomicInt64
 
 extension AtomicUInt64
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: UInt64) after the default initializer, as long as the instance is unshared")
-  public init(_ value: UInt64)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: UInt64 {
     @inlinable
@@ -2026,12 +1966,6 @@ extension AtomicUInt64
 
 extension AtomicBool
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: Bool) after the default initializer, as long as the instance is unshared")
-  public init(_ value: Bool)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: Bool {
     @inlinable
