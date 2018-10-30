@@ -18,12 +18,6 @@
 
 extension ${AtomicType}
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ value: ${IntType}) after the default initializer, as long as the instance is unshared")
-  public init(_ value: ${IntType})
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var value: ${IntType} {
     @inlinable

@@ -22,7 +22,7 @@ public struct AtomicNonNullPointer<Pointee>
 
   public init(_ pointer: UnsafePointer<Pointee>)
   {
-    self.initialize(pointer)
+    ptr.initialize(UnsafeRawPointer(pointer))
   }
 
   public mutating func initialize(_ pointer: UnsafePointer<Pointee>)
@@ -143,7 +143,7 @@ public struct AtomicNonNullMutablePointer<Pointee>
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>)
   {
-    self.initialize(pointer)
+    ptr.initialize(UnsafeMutableRawPointer(pointer))
   }
 
   public mutating func initialize(_ pointer: UnsafeMutablePointer<Pointee>)
@@ -262,11 +262,14 @@ public struct AtomicOptionalPointer<Pointee>
   @_versioned var ptr = AtomicOptionalRawPointer()
 #endif
 
-  public init() { }
+  public init()
+  {
+    ptr.initialize(nil)
+  }
 
   public init(_ pointer: UnsafePointer<Pointee>?)
   {
-    self.initialize(pointer)
+    ptr.initialize(UnsafeRawPointer(pointer))
   }
 
   public mutating func initialize(_ pointer: UnsafePointer<Pointee>?)
@@ -385,11 +388,14 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @_versioned var ptr = AtomicOptionalMutableRawPointer()
 #endif
 
-  public init() { }
+  public init()
+  {
+    ptr.initialize(nil)
+  }
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>?)
   {
-    self.initialize(pointer)
+    ptr.initialize(UnsafeMutableRawPointer(pointer))
   }
 
   public mutating func initialize(_ pointer: UnsafeMutablePointer<Pointee>?)
@@ -504,12 +510,6 @@ public struct AtomicOptionalMutablePointer<Pointee>
 
 extension AtomicNonNullRawPointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeRawPointer) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeRawPointer)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: UnsafeRawPointer {
     @inlinable
@@ -613,12 +613,6 @@ extension AtomicNonNullRawPointer
 
 extension AtomicOptionalRawPointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeRawPointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeRawPointer?)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: UnsafeRawPointer? {
     @inlinable
@@ -722,12 +716,6 @@ extension AtomicOptionalRawPointer
 
 extension AtomicNonNullMutableRawPointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeMutableRawPointer) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeMutableRawPointer)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: UnsafeMutableRawPointer {
     @inlinable
@@ -831,12 +819,6 @@ extension AtomicNonNullMutableRawPointer
 
 extension AtomicOptionalMutableRawPointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: UnsafeMutableRawPointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: UnsafeMutableRawPointer?)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: UnsafeMutableRawPointer? {
     @inlinable
@@ -940,12 +922,6 @@ extension AtomicOptionalMutableRawPointer
 
 extension AtomicNonNullOpaquePointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: OpaquePointer) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: OpaquePointer)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: OpaquePointer {
     @inlinable
@@ -1049,12 +1025,6 @@ extension AtomicNonNullOpaquePointer
 
 extension AtomicOptionalOpaquePointer
 {
-  @available(*, unavailable, message: "If needed, use initialize(_ pointer: OpaquePointer?) after the default initializer, as long as the instance is unshared")
-  public init(_ pointer: OpaquePointer?)
-  {
-    self.init()
-  }
-
 #if swift(>=4.2)
   public var pointer: OpaquePointer? {
     @inlinable
