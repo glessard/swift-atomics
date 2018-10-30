@@ -12,7 +12,6 @@
 		031CA36620DBDCAE00F4B44B /* CAtomics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 031CA35D20DBDCAD00F4B44B /* CAtomics.framework */; };
 		031CA37720DBDD0E00F4B44B /* CAtomics.c in Sources */ = {isa = PBXBuildFile; fileRef = 031CA37520DBDD0E00F4B44B /* CAtomics.c */; };
 		031CA37F20DBE01500F4B44B /* CAtomics.h in Headers */ = {isa = PBXBuildFile; fileRef = 031CA37420DBDD0E00F4B44B /* CAtomics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		031CA38D20DBE51B00F4B44B /* CAtomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA38C20DBE51B00F4B44B /* CAtomics.swift */; };
 		031CA39520DBE58A00F4B44B /* CAtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */; };
 		031CA39620DBE58A00F4B44B /* CAtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39120DBE58A00F4B44B /* CAtomicsTests.swift */; };
 		031CA39720DBE58A00F4B44B /* MemoryOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031CA39220DBE58A00F4B44B /* MemoryOrderTests.swift */; };
@@ -121,7 +120,6 @@
 		031CA36C20DBDCAE00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		031CA37420DBDD0E00F4B44B /* CAtomics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CAtomics.h; path = ../../Sources/CAtomics/include/CAtomics.h; sourceTree = "<group>"; };
 		031CA37520DBDD0E00F4B44B /* CAtomics.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = CAtomics.c; path = ../../Sources/CAtomics/CAtomics.c; sourceTree = "<group>"; };
-		031CA38C20DBE51B00F4B44B /* CAtomics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CAtomics.swift; sourceTree = "<group>"; };
 		031CA38E20DBE58A00F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../../Tests/CAtomicsTests/XCTestManifests.swift; sourceTree = "<group>"; };
 		031CA38F20DBE58A00F4B44B /* CAtomicsTests.swift.gyb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CAtomicsTests.swift.gyb; path = ../../Tests/CAtomicsTests/CAtomicsTests.swift.gyb; sourceTree = "<group>"; };
 		031CA39020DBE58A00F4B44B /* CAtomicsRaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CAtomicsRaceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsRaceTests.swift; sourceTree = "<group>"; };
@@ -270,7 +268,6 @@
 			children = (
 				031CA37520DBDD0E00F4B44B /* CAtomics.c */,
 				031CA37420DBDD0E00F4B44B /* CAtomics.h */,
-				031CA38C20DBE51B00F4B44B /* CAtomics.swift */,
 				031CA36020DBDCAD00F4B44B /* Info.plist */,
 			);
 			path = CAtomics;
@@ -648,7 +645,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				031CA38D20DBE51B00F4B44B /* CAtomics.swift in Sources */,
 				031CA37720DBDD0E00F4B44B /* CAtomics.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1022,7 +1018,6 @@
 		031CA37220DBDCAE00F4B44B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -1044,7 +1039,6 @@
 		031CA37320DBDCAE00F4B44B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
