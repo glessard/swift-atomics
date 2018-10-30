@@ -87,7 +87,7 @@ SWIFT_ENUM(CASType, closed)
 #elif defined(__arm64__)
 #define __CACHE_LINE_WIDTH 64
 #else
-#define __CACHE_LINE_WIDTH 32
+// define __CACHE_LINE_WIDTH appropriately as needed
 #endif
 
 // atomic integer generation
@@ -168,9 +168,6 @@ SWIFT_ENUM(CASType, closed)
 CLANG_ATOMICS_INT_GENERATE(AtomicInt, atomic_long, long, _Alignof(atomic_long))
 CLANG_ATOMICS_INT_GENERATE(AtomicUInt, atomic_ulong, unsigned long, _Alignof(atomic_ulong))
 
-CLANG_ATOMICS_INT_GENERATE(AtomicCacheAlignedInt, atomic_long, long, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_INT_GENERATE(AtomicCacheAlignedUInt, atomic_ulong, unsigned long, __CACHE_LINE_WIDTH)
-
 CLANG_ATOMICS_INT_GENERATE(AtomicInt8, atomic_schar, signed char, _Alignof(atomic_schar))
 CLANG_ATOMICS_INT_GENERATE(AtomicUInt8, atomic_uchar, unsigned char, _Alignof(atomic_uchar))
 
@@ -192,7 +189,12 @@ CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Ali
         CLANG_ATOMICS_RMW(swiftType, parameterType, value, fetch_and, And)
 
 CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool))
-CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheAlignedBool, atomic_bool, _Bool, __CACHE_LINE_WIDTH)
+
+#ifdef __CACHE_LINE_WIDTH
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedInt, atomic_long, long, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedUInt, atomic_ulong, unsigned long, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CACHE_LINE_WIDTH)
+#endif
 
 // pointer atomics
 
@@ -256,8 +258,12 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicNonNullMutableRawPointer, atomic_uintptr_t,
 CLANG_ATOMICS_POINTER_GENERATE(AtomicRawPointer, atomic_uintptr_t, const void*, _Nullable, _Alignof(atomic_uintptr_t))
 CLANG_ATOMICS_POINTER_GENERATE(AtomicNonNullRawPointer, atomic_uintptr_t, const void*, _Nonnull, _Alignof(atomic_uintptr_t))
 
-CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheAlignedMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheAlignedOptionalMutableRawPointer, atomic_uintptr_t, void*, _Nullable, __CACHE_LINE_WIDTH)
+#ifdef __CACHE_LINE_WIDTH
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheLineAlignedMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheLineAlignedOptionalMutableRawPointer, atomic_uintptr_t, void*, _Nullable, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheLineAlignedRawPointer, atomic_uintptr_t, const void*, _Nonnull, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_POINTER_GENERATE(AtomicCacheLineAlignedOptionalRawPointer, atomic_uintptr_t, const void*, _Nullable, __CACHE_LINE_WIDTH)
+#endif
 
 struct opaque;
 
