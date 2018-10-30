@@ -98,7 +98,7 @@ public class AtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = AtomicMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
+      var p = AtomicOptionalMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
       let closure = {
         while true
         {
@@ -133,7 +133,7 @@ public class AtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = AtomicMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
+      var p = AtomicOptionalMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
       let closure = {
         var c = p.pointer
         while true
@@ -167,7 +167,7 @@ public class AtomicsRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      var p = AtomicMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
+      var p = AtomicOptionalMutablePointer(UnsafeMutablePointer<Point>.allocate(capacity: 1))
       let closure = {
         while true
         {

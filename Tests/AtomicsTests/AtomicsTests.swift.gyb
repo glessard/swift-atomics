@@ -84,16 +84,30 @@ public class AtomicsBasicTests: XCTestCase
 
 % end
 % for p in pointers:
+% for optional in [True, False]:
 % unsafe = 'Unsafe' if p != 'Opaque' else ''
 % pointee = '<Int64>' if (p == '' or p == 'Mutable') else ''
-  public func test${unsafe}${p}Pointer()
+% nullability = 'Optional' if optional else 'NonNull'
+  public func test${nullability}${unsafe}${p}Pointer()
   {
-    var i = Atomic${p}Pointer${pointee}()
+% if optional == True:
+    var i = Atomic${nullability}${p}Pointer${pointee}()
     XCTAssert(i.pointer == nil)
+% else:
+    let r0 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())!
+% if pointee == '':
+    var i = Atomic${nullability}${p}Pointer${pointee}()
+    i.initialize(r0)
+% else:
+    var i = Atomic${nullability}${p}Pointer${pointee}(r0)
+% end
+    XCTAssert(i.pointer == r0)
+% end
 
-    let r1 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())
-    let r2 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())
-    let r3 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())
+% bang = '' if optional else '!'
+    let r1 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r2 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r3 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
 
     i.store(r1)
     XCTAssert(r1 == i.load())
@@ -113,6 +127,7 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
+% end
 % end
 
   public func testBool()

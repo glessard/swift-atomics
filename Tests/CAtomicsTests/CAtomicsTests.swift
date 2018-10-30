@@ -592,14 +592,14 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, i.load(.relaxed))
   }
 
-  public func testRawPointer()
+  public func testOptionalRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicRawPointer()
+    var p = AtomicOptionalRawPointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -629,7 +629,7 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicRawPointer()
+    var p = AtomicNonNullRawPointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -652,14 +652,14 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testMutableRawPointer()
+  public func testOptionalMutableRawPointer()
   {
     let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicMutableRawPointer()
+    var p = AtomicOptionalMutableRawPointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -689,7 +689,7 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicMutableRawPointer()
+    var p = AtomicNonNullMutableRawPointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -712,14 +712,14 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testOpaquePointer()
+  public func testOptionalOpaquePointer()
   {
     let r0 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r1 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicOpaquePointer()
+    var p = AtomicOptionalOpaquePointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
@@ -749,7 +749,7 @@ public class CAtomicsBasicTests: XCTestCase
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicOpaquePointer()
+    var p = AtomicNonNullOpaquePointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 

@@ -75,19 +75,19 @@ public class CAtomicsBasicTests: XCTestCase
   }
 
 % end
-% nullability = ['', 'NonNull']
+% nullability = ['Optional', 'NonNull']
 % for type in pointers:
 % for nullable in nullability:
   public func test${nullable}${type}Pointer()
   {
-% native = type if (type == 'Opaque') else "Unsafe" + type
+% native = 'Opaque' if (type == 'Opaque') else 'Unsafe' + type
 % bang = '!' if (nullable == 'NonNull') else ''
     let r0 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
 
-    var p = Atomic${type}Pointer()
+    var p = Atomic${nullable}${type}Pointer()
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
 
