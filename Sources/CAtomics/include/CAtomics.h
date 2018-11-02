@@ -95,6 +95,12 @@ SWIFT_ENUM(CASType, closed)
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
         typedef struct { _Alignas(alignment) volatile atomicType a; } swiftType;
 
+#define CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.isLockFree(self:)) \
+        _Bool swiftType##IsLockFree(swiftType *_Nonnull ptr) \
+        { return atomic_is_lock_free(&(ptr->a)); }
+
 #define CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.initialize(self:_:)) \
@@ -155,6 +161,7 @@ SWIFT_ENUM(CASType, closed)
 
 #define CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
         CLANG_ATOMICS_CREATE(swiftType, parameterType) \
         CLANG_ATOMICS_LOAD(swiftType, parameterType) \
@@ -259,6 +266,7 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CA
 
 #define CLANG_ATOMICS_POINTER_GENERATE(swiftType, atomicType, parameterType, nullability, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_CREATE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
