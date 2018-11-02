@@ -93,7 +93,7 @@ SWIFT_ENUM(CASType, closed)
 // atomic integer generation
 
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
-        typedef struct { _Alignas(alignment) volatile atomicType a; } swiftType;
+        typedef struct { volatile atomicType a __attribute__ ((aligned(alignment))); } swiftType;
 
 #define CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         static __inline__ __attribute__((__always_inline__)) \
