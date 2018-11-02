@@ -165,5 +165,66 @@ public class CAtomicsRaceTests: XCTestCase
 
     q.sync(flags: .barrier) {}
   }
+
+  public func testRaceTaggedPointerCAS()
+  {
+    let q = DispatchQueue(label: #function, attributes: .concurrent)
+    let fakePointer = UnsafeMutableRawPointer(bitPattern: 0x7)!
+    var biggest = AtomicInt(0)
+
+    var t = AtomicTaggedRawPointer()
+    t.initialize(TaggedRawPointer(fakePointer, 0))
+    XCTAssert(t.isLockFree())
+
+    for _ in 1...iterations
+    {
+      var p = AtomicTaggedRawPointer()
+      let t = TaggedRawPointer(UnsafeMutablePointer<Point>.allocate(capacity: 1), 1)
+      p.initialize(t)
+
+      let closure = {
+        while true
+        {
+          let choice = UInt.randomPositive() % 4
+          if choice == 0
+          {
+            let invalidTaggedPointer = TaggedRawPointer(fakePointer, 0)
+            var taggedPointer = p.load(.relaxed)
+            repeat {
+              if taggedPointer.ptr == fakePointer { return }
+            } while !p.loadCAS(&taggedPointer, invalidTaggedPointer, .weak, .acquire, .relaxed)
+
+            let ptr = taggedPointer.ptr.assumingMemoryBound(to: Point.self)
+#if swift(>=4.1)
+            ptr.deallocate()
+#else
+            ptr.deallocate(capacity: 1)
+#endif
+
+            var b = biggest.load(.relaxed)
+            repeat {
+              if taggedPointer.tag <= b { break }
+            } while !biggest.loadCAS(&b, taggedPointer.tag, .weak, .relaxed, .relaxed)
+            break
+          }
+          else
+          {
+            var taggedPointer = p.load(.relaxed)
+            var incremented = taggedPointer
+            repeat {
+              if taggedPointer.ptr == fakePointer { return }
+              incremented.tag = taggedPointer.tag &+ 1
+            } while !p.loadCAS(&taggedPointer, incremented, .weak, .acquire, .relaxed)
+          }
+        }
+      }
+
+      q.async(execute: closure)
+      q.async(execute: closure)
+    }
+
+    q.sync(flags: .barrier) {}
+    print(biggest.load(.relaxed))
+  }
 }
 

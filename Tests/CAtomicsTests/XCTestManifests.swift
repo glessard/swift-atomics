@@ -33,6 +33,7 @@ extension CAtomicsRaceTests {
         ("testRacePointerCAS", testRacePointerCAS),
         ("testRacePointerSwap", testRacePointerSwap),
         ("testRaceSpinLock", testRaceSpinLock),
+        ("testRaceTaggedPointerCAS", testRaceTaggedPointerCAS),
     ]
 }
 
