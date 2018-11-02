@@ -20,6 +20,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = Atomic${i}()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = ${i}.randomPositive()
@@ -89,6 +90,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = Atomic${nullable}${type}Pointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -119,6 +121,7 @@ public class CAtomicsBasicTests: XCTestCase
     var boolean = AtomicBool()
     boolean.initialize(false)
     XCTAssert(boolean.load(.relaxed) == false)
+    XCTAssert(boolean.isLockFree())
 
     boolean.store(false, .relaxed)
     XCTAssert(boolean.load(.relaxed) == false)

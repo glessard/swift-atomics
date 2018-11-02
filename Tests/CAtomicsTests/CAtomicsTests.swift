@@ -17,6 +17,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicInt()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = Int.randomPositive()
@@ -75,6 +76,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicUInt()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = UInt.randomPositive()
@@ -133,6 +135,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicInt8()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = Int8.randomPositive()
@@ -191,6 +194,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicUInt8()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = UInt8.randomPositive()
@@ -249,6 +253,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicInt16()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = Int16.randomPositive()
@@ -307,6 +312,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicUInt16()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = UInt16.randomPositive()
@@ -365,6 +371,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicInt32()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = Int32.randomPositive()
@@ -423,6 +430,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicUInt32()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = UInt32.randomPositive()
@@ -481,6 +489,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicInt64()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = Int64.randomPositive()
@@ -539,6 +548,7 @@ public class CAtomicsBasicTests: XCTestCase
     var i = AtomicUInt64()
     i.initialize(0)
     XCTAssertEqual(0, i.load(.relaxed))
+    XCTAssert(i.isLockFree())
 
 #if swift(>=4.0)
     let r1 = UInt64.randomPositive()
@@ -601,6 +611,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicOptionalRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -633,6 +644,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicNonNullRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -665,6 +677,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicOptionalMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -697,6 +710,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicNonNullMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -729,6 +743,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicOptionalOpaquePointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -761,6 +776,7 @@ public class CAtomicsBasicTests: XCTestCase
 
     var p = AtomicNonNullOpaquePointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
 
     p.initialize(r0)
     XCTAssertEqual(r0, p.load(.relaxed))
@@ -789,6 +805,7 @@ public class CAtomicsBasicTests: XCTestCase
     var boolean = AtomicBool()
     boolean.initialize(false)
     XCTAssert(boolean.load(.relaxed) == false)
+    XCTAssert(boolean.isLockFree())
 
     boolean.store(false, .relaxed)
     XCTAssert(boolean.load(.relaxed) == false)
