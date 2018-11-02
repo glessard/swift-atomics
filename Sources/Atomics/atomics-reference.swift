@@ -122,11 +122,11 @@ extension AtomicReference
   {
     if let pointer = ptr.spinLoad(.lock, order)
     {
-      assert(ptr.rawLoad(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
-      ptr.rawStore(pointer, .release)
+      ptr.store(pointer, .release)
       return unmanaged.takeRetainedValue()
     }
     return nil
@@ -148,11 +148,11 @@ extension AtomicReference
   {
     if let pointer = ptr.spinLoad(.lock, order)
     {
-      assert(ptr.rawLoad(.acquire) == UnsafeRawPointer(bitPattern: 0x7))
+      assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
-      ptr.rawStore(pointer, .release)
+      ptr.store(pointer, .release)
       return unmanaged.takeRetainedValue()
     }
     return nil
