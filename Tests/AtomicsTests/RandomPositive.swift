@@ -29,7 +29,7 @@ extension FixedWidthInteger where Self.Magnitude: UnsignedInteger, Self.Stride: 
         t = t<<32 &+ Self(truncatingIfNeeded: random())
 #endif
       }
-    } while (t == Self())
+    } while t == Self()
 
     return t & (Self.max>>1)
 #endif
@@ -42,11 +42,17 @@ extension UInt
   // in this variant the least significant bit is always set.
   static func randomPositive() -> UInt
   {
+    var t: UInt
+    repeat {
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-    return UInt(arc4random() & 0x3fff_fffe + 1)
+      t = UInt(arc4random())
 #else
-    return UInt(random() & 0x3fff_fffe + 1)
+      t = UInt(random())
 #endif
+      t &= 0x3fff_ffff
+    } while t == 0
+
+    return t
   }
 }
 #endif
