@@ -93,7 +93,13 @@ SWIFT_ENUM(CASType, closed)
 // atomic integer generation
 
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
-        typedef struct { _Alignas(alignment) volatile atomicType a; } swiftType;
+        typedef struct { volatile atomicType a __attribute__ ((aligned(alignment))); } swiftType;
+
+#define CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.isLockFree(self:)) \
+        _Bool swiftType##IsLockFree(swiftType *_Nonnull ptr) \
+        { return atomic_is_lock_free(&(ptr->a)); }
 
 #define CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -155,6 +161,7 @@ SWIFT_ENUM(CASType, closed)
 
 #define CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         CLANG_ATOMICS_INITIALIZE(swiftType, parameterType) \
         CLANG_ATOMICS_CREATE(swiftType, parameterType) \
         CLANG_ATOMICS_LOAD(swiftType, parameterType) \
@@ -259,6 +266,7 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CA
 
 #define CLANG_ATOMICS_POINTER_GENERATE(swiftType, atomicType, parameterType, nullability, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, alignment) \
+        CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_CREATE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_LOAD(swiftType, parameterType, nullability) \
@@ -306,28 +314,15 @@ SWIFT_ENUM(SpinLoadAction, closed)
 
 #define __OPAQUE_UNMANAGED_SPINMASK (char)0xc0
 
-typedef struct { volatile atomic_uintptr_t a; } OpaqueUnmanagedHelper;
+CLANG_ATOMICS_STRUCT(OpaqueUnmanagedHelper, atomic_uintptr_t, _Alignof(atomic_uintptr_t))
+CLANG_ATOMICS_IS_LOCK_FREE(OpaqueUnmanagedHelper)
+CLANG_ATOMICS_POINTER_INITIALIZE(OpaqueUnmanagedHelper, const void*, _Nullable)
 
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedHelper.initialize(self:_:)) \
-void UnmanagedInitialize(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value)
-{
-  atomic_init(&(ptr->a), (uintptr_t)value);
-}
+// this should only be used for unlocking
+CLANG_ATOMICS_POINTER_STORE(OpaqueUnmanagedHelper, const void*, _Nullable)
 
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedHelper.rawStore(self:_:_:)) \
-void UnmanagedRawStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
-{ // this should only be used for unlocking
-  atomic_store_explicit(&(ptr->a), (uintptr_t)value, order);
-}
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedHelper.rawLoad(self:_:)) \
-const void *_Nullable UnmanagedRawLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enum LoadMemoryOrder order)
-{ // this should only be used for debugging and testing
-  return (void*) atomic_load_explicit(&(ptr->a), order);
-}
+// this should only be used for debugging and testing
+CLANG_ATOMICS_POINTER_LOAD(OpaqueUnmanagedHelper, const void*, _Nullable)
 
 static __inline__ __attribute__((__always_inline__)) \
 SWIFT_NAME(OpaqueUnmanagedHelper.spinLoad(self:_:_:)) \

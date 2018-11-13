@@ -40,6 +40,7 @@ public class UnmanagedTests: XCTestCase
       let r = p.map(Unmanaged<Witness>.fromOpaque)?.takeRetainedValue()
       XCTAssert(r != nil)
     }
+    XCTAssert(a.isLockFree())
 
     i = UInt.randomPositive()
     u = Unmanaged.passRetained(Witness(i))
@@ -57,8 +58,8 @@ public class UnmanagedTests: XCTestCase
     let v = a.spinLoad(.lock, .acquire)
     XCTAssert(v != nil)
     XCTAssert(v == UnsafeRawPointer(u.toOpaque()))
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
-    a.rawStore(nil, .release)
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    a.store(nil, .release)
     print("Releasing \(i)")
     v.map(Unmanaged<Witness>.fromOpaque)?.release()
   }
@@ -70,7 +71,7 @@ public class UnmanagedTests: XCTestCase
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "swap-to-nil after unlock")
     DispatchQueue.global().async {
@@ -82,10 +83,10 @@ public class UnmanagedTests: XCTestCase
       }
     }
 
-    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.rawStore(p, .release) })
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
     waitForExpectations(timeout: 0.2)
 
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
   }
 
   public func testSpinTake()
@@ -95,9 +96,9 @@ public class UnmanagedTests: XCTestCase
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
-    let e = expectation(description: "load-and-lock after unlock")
+    let e = expectation(description: "AtomicOptionalMutableRawPointer-and-lock after unlock")
     DispatchQueue.global().async {
       if let p = a.spinLoad(.null, .relaxed)
       {
@@ -107,10 +108,10 @@ public class UnmanagedTests: XCTestCase
       }
     }
 
-    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.rawStore(p, .release) })
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
     waitForExpectations(timeout: 0.2)
 
-    XCTAssert(a.rawLoad(.relaxed) == nil)
+    XCTAssert(a.load(.relaxed) == nil)
   }
 
   public func testSpinSwap() throws
@@ -120,7 +121,7 @@ public class UnmanagedTests: XCTestCase
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
     let e = expectation(description: "arbitrary swap after unlock")
@@ -133,11 +134,11 @@ public class UnmanagedTests: XCTestCase
       }
     }
 
-    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.rawStore(p, .release) })
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
     waitForExpectations(timeout: 0.2)
 
-    XCTAssert(a.rawLoad(.relaxed) != nil)
-    if let p = a.rawLoad(.relaxed)
+    XCTAssert(a.load(.relaxed) != nil)
+    if let p = a.load(.relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
       XCTAssert(t.id == j)
@@ -152,7 +153,7 @@ public class UnmanagedTests: XCTestCase
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
     let e = expectation(description: "succeed at swapping for nil")
@@ -162,11 +163,11 @@ public class UnmanagedTests: XCTestCase
       e.fulfill()
     }
 
-    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.rawStore(nil, .release) })
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(nil, .release) })
     waitForExpectations(timeout: 0.2)
 
-    XCTAssert(a.rawLoad(.relaxed) != nil)
-    if let p = a.rawLoad(.relaxed)
+    XCTAssert(a.load(.relaxed) != nil)
+    if let p = a.load(.relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
       XCTAssert(t.id == j)
@@ -187,7 +188,7 @@ public class UnmanagedTests: XCTestCase
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = a.spinLoad(.lock, .relaxed)
-    XCTAssert(a.rawLoad(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "failure to swap for nil")
     DispatchQueue.global().async {
@@ -196,11 +197,11 @@ public class UnmanagedTests: XCTestCase
       e.fulfill()
     }
 
-    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.rawStore(p, .release) })
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
     waitForExpectations(timeout: 0.2)
 
-    XCTAssert(a.rawLoad(.relaxed) != nil)
-    if let p = a.rawLoad(.relaxed)
+    XCTAssert(a.load(.relaxed) != nil)
+    if let p = a.load(.relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
       XCTAssert(t.id == i)
@@ -221,7 +222,7 @@ public class UnmanagedTests: XCTestCase
     // mock thread B decrements the object's reference count.
 
     // mock thread A needs a copy of the reference
-    guard let pointerA = atomic.rawLoad(.acquire)
+    guard let pointerA = atomic.load(.acquire)
       else { throw TestError.value(0) }
     // mock thread A is interrupted
 
@@ -233,7 +234,7 @@ public class UnmanagedTests: XCTestCase
     Unmanaged<Witness>.fromOpaque(pointerB).release()
     // mock thread B is done
 
-    XCTAssert(atomic.rawLoad(.relaxed) == nil)
+    XCTAssert(atomic.load(.relaxed) == nil)
     XCTAssertEqual(pointerA, pointerB)
 
     // mock thread A resumes execution
@@ -282,7 +283,7 @@ public class UnmanagedRaceTests: XCTestCase
           }
           else
           {
-            XCTAssert(r.rawLoad(.relaxed) == nil)
+            XCTAssert(r.load(.relaxed) == nil)
             break
           }
         }
