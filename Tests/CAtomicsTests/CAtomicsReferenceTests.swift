@@ -212,39 +212,46 @@ public class UnmanagedTests: XCTestCase
   {
     let i = UInt.randomPositive()
 
-    var a = OpaqueUnmanagedHelper()
-    a.initialize(Unmanaged.passRetained(Witness(i)).toOpaque())
+    var atomic = OpaqueUnmanagedHelper()
+    atomic.initialize(Unmanaged.passRetained(Witness(i)).toOpaque())
+
+    // this is a weird simulation of two threads racing to interact
+    // with an object stored in an "atomic reference".
+    // mock thread A wants to read the value stored in the object.
+    // mock thread B decrements the object's reference count.
 
     // mock thread A needs a copy of the reference
-    let p = a.rawLoad(.relaxed)
+    guard let pointerA = atomic.rawLoad(.acquire)
+      else { throw TestError.value(0) }
     // mock thread A is interrupted
 
     // mock thread B resumes execution
-    if let p = a.spinSwap(nil, .acquire)
-    {
-      print("Releasing \(i)")
-      Unmanaged<Thing>.fromOpaque(p).release()
-    }
-    else { throw TestError.value(i) }
+    guard let pointerB = atomic.spinSwap(nil, .acquire)
+      else { throw TestError.value(1) }
+
+    print("Releasing \(i)")
+    Unmanaged<Witness>.fromOpaque(pointerB).release()
     // mock thread B is done
 
-    XCTAssert(a.rawLoad(.relaxed) == nil)
-    XCTAssert(p != nil)
+    XCTAssert(atomic.rawLoad(.relaxed) == nil)
+    XCTAssertEqual(pointerA, pointerB)
 
     // mock thread A resumes execution
-    if let p = p
-    {
-      let u = Unmanaged<Witness>.fromOpaque(p)
-      _ = u
-      // when un-commented, either of the next two lines causes a crash
-      // u.release()
-      // let _ = u.takeRetainedValue()
+    // it does not know (and has no way to know)
+    // that the object has been released.
+    let u = Unmanaged<Witness>.fromOpaque(pointerA)
+    _ = u
+    // when un-commented, the next line causes a use-after-free error
+    // let w = u.takeRetainedValue()
+    // print("Reading   \(w.id)")
 
-      // this is similar to the Swift 2 runtime bug
-      // https://bugs.swift.org/browse/SR-192
-      // the only way to fix that -- short of a redesign --
-      // was to lock weak references for reading.
-    }
+    // the following causes an immediate use-after-free crash
+    // u.release()
+
+    // this is similar to the Swift 2 runtime bug
+    // https://bugs.swift.org/browse/SR-192
+    // the only way to fix that -- short of a redesign --
+    // was to lock weak references while being copied.
   }
 }
 
