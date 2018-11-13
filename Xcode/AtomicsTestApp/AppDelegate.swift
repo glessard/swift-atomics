@@ -29,6 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     assert(q == p)
     assert(padded.load(.relaxed) == nil)
 
+    var tagged = AtomicTaggedRawPointer()
+    var t = TaggedRawPointer(UnsafeRawPointer(bitPattern: 0x0731)!)
+    let u = TaggedRawPointer()
+    tagged.initialize(t)
+    let success = tagged.loadCAS(&t, u, .strong, .relaxed, .relaxed)
+    assert(success)
+
     var bool = AtomicBool()
     bool.store(false)
     let f = bool.swap(true, .sequential)
