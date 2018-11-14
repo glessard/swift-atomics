@@ -6,4 +6,4 @@ then
   swift package tools-version --set "${SWIFT_TOOLS_VERSION}"
 fi
 
-swift test
+swift test -Xcc -mcx16
