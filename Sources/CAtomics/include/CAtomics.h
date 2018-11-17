@@ -328,10 +328,67 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
         void swiftType##Increment(swiftType *_Nonnull ptr) \
         { ptr->tag++; }
 
+#define CLANG_ATOMICS_TAGGED_POINTER_INITIALIZE(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.initialize(self:_:)) \
+        void Atomic##swiftType##Initialize(Atomic##swiftType *_Nonnull ptr, swiftType value) \
+        { atomic_init(&(ptr->a), value.tag_ptr); } \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.init(_:)) \
+        Atomic##swiftType Atomic##swiftType##Create(swiftType value) \
+        { Atomic##swiftType s; Atomic##swiftType##Initialize(&s, value); return s; }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_LOAD(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.load(self:_:)) \
+        swiftType Atomic##swiftType##Load(Atomic##swiftType *_Nonnull ptr, enum LoadMemoryOrder order) \
+        { swiftType rp; rp.tag_ptr = atomic_load_explicit(&(ptr->a), order); return rp; }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_STORE(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.store(self:_:_:)) \
+        void Atomic##swiftType##Store(Atomic##swiftType *_Nonnull ptr, swiftType value, enum StoreMemoryOrder order) \
+        { atomic_store_explicit(&(ptr->a), value.tag_ptr, order); }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_SWAP(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.swap(self:_:_:)) \
+        swiftType Atomic##swiftType##Swap(Atomic##swiftType *_Nonnull ptr, swiftType value, enum MemoryOrder order) \
+        { swiftType rp; rp.tag_ptr = atomic_exchange_explicit(&(ptr->a), value.tag_ptr, order); return rp; }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_CAS(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.loadCAS(self:_:_:_:_:_:)) \
+        _Bool Atomic##swiftType##LoadCAS(Atomic##swiftType *_Nonnull ptr, swiftType *_Nonnull current, swiftType future, \
+                                         enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
+        { \
+          assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
+          assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
+          if(type == __ATOMIC_CAS_TYPE_STRONG) \
+            return atomic_compare_exchange_strong_explicit(&(ptr->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad); \
+          else \
+            return atomic_compare_exchange_weak_explicit(&(ptr->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad); \
+        } \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(Atomic##swiftType.CAS(self:_:_:_:_:)) \
+        _Bool Atomic##swiftType##CAS(Atomic##swiftType *_Nonnull ptr, swiftType current, swiftType future, \
+                                     enum CASType type, enum MemoryOrder order) \
+        { \
+          swiftType expect = current; \
+          return Atomic##swiftType##LoadCAS(ptr, &expect, future, type, order, LoadMemoryOrder_relaxed); \
+        }
+
 #define CLANG_ATOMICS_TAGGED_POINTER_GENERATE(swiftType, unionType, pointerType, nullability) \
         CLANG_ATOMICS_TAGGED_POINTER_STRUCT(swiftType, unionType, pointerType, nullability) \
         CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
-        CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType)
+        CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType) \
+        CLANG_ATOMICS_STRUCT(Atomic##swiftType, _Atomic(unionType), _Alignof(_Atomic(unionType))) \
+        CLANG_ATOMICS_IS_LOCK_FREE(Atomic##swiftType) \
+        CLANG_ATOMICS_TAGGED_POINTER_INITIALIZE(swiftType) \
+        CLANG_ATOMICS_TAGGED_POINTER_LOAD(swiftType) \
+        CLANG_ATOMICS_TAGGED_POINTER_STORE(swiftType) \
+        CLANG_ATOMICS_TAGGED_POINTER_SWAP(swiftType) \
+        CLANG_ATOMICS_TAGGED_POINTER_CAS(swiftType)
 
 #if defined(__has32bitPointer__)
 CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedRawPointer, long long, const void*, _Nonnull)
@@ -344,46 +401,6 @@ CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalRawPointer, __int128, const 
 CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedMutableRawPointer, __int128, void*, _Nonnull)
 CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalMutableRawPointer, __int128, void*, _Nullable)
 #endif
-
-#if defined(__has32bitPointer__)
-CLANG_ATOMICS_STRUCT(AtomicTaggedRawPointer, _Atomic(long long), _Alignof(_Atomic(long long)))
-#else
-CLANG_ATOMICS_STRUCT(AtomicTaggedRawPointer, _Atomic(__int128), _Alignof(_Atomic(__int128)))
-#endif
-CLANG_ATOMICS_IS_LOCK_FREE(AtomicTaggedRawPointer)
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(AtomicTaggedRawPointer.initialize(self:_:)) \
-void AtomicTaggedRawPointerInitialize(AtomicTaggedRawPointer *_Nonnull ptr, TaggedRawPointer value)
-{ atomic_init(&(ptr->a), value.tag_ptr); }
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(AtomicTaggedRawPointer.init(_:)) \
-AtomicTaggedRawPointer AtomicTaggedRawPointerCreate(TaggedRawPointer value)
-{ AtomicTaggedRawPointer s; AtomicTaggedRawPointerInitialize(&s, value); return s; }
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(AtomicTaggedRawPointer.store(self:_:_:)) \
-void AtomicTaggedRawPointerStore(AtomicTaggedRawPointer *_Nonnull ptr, TaggedRawPointer value, enum StoreMemoryOrder order)
-{ atomic_store_explicit(&(ptr->a), value.tag_ptr, order); }
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(AtomicTaggedRawPointer.load(self:_:)) \
-TaggedRawPointer AtomicTaggedRawPointerLoad(AtomicTaggedRawPointer *_Nonnull ptr, enum LoadMemoryOrder order)
-{ TaggedRawPointer rp; rp.tag_ptr = atomic_load_explicit(&(ptr->a), order); return rp; }
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(AtomicTaggedRawPointer.loadCAS(self:_:_:_:_:_:)) \
-_Bool AtomicTaggedRawPointerLoadCAS(AtomicTaggedRawPointer *_Nonnull ptr, TaggedRawPointer *_Nonnull current, TaggedRawPointer future, \
-                                    enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad)
-{
-  assert((unsigned int)orderLoad <= (unsigned int)orderSwap);
-  assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true);
-  if(type == __ATOMIC_CAS_TYPE_STRONG)
-    return atomic_compare_exchange_strong_explicit(&(ptr->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad);
-  else
-    return atomic_compare_exchange_weak_explicit(&(ptr->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad);
-}
 
 // fence
 
