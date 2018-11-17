@@ -303,27 +303,47 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
 
 // tagged pointers -- double-word load, store and CAS
 
-typedef union TaggedRawPointer {
+#define CLANG_ATOMICS_TAGGED_POINTER_STRUCT(swiftType, unionType, pointerType, nullability) \
+        typedef union { \
+          unionType tag_ptr; \
+          struct { \
+            pointerType nullability ptr; \
+            long tag; \
+          }; \
+        } swiftType;
+
+#define CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.init(_:tag:)) \
+        swiftType swiftType##Create(pointerType nullability ptr, long tag) \
+        { swiftType s; s.tag = tag; s.ptr = ptr; return s; } \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.init(_:)) \
+        swiftType swiftType##CreateDefaultTag(pointerType nullability ptr) \
+        { return swiftType##Create(ptr, 0); }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.increment(self:)) \
+        void swiftType##Increment(swiftType *_Nonnull ptr) \
+        { ptr->tag++; }
+
+#define CLANG_ATOMICS_TAGGED_POINTER_GENERATE(swiftType, unionType, pointerType, nullability) \
+        CLANG_ATOMICS_TAGGED_POINTER_STRUCT(swiftType, unionType, pointerType, nullability) \
+        CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
+        CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType)
+
 #if defined(__has32bitPointer__)
-  long long tag_ptr;
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedRawPointer, long long, const void*, _Nonnull)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalRawPointer, long long, const void*, _Nullable)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedMutableRawPointer, long long, void*, _Nonnull)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalMutableRawPointer, long long, void*, _Nullable)
 #else
-  __int128  tag_ptr;
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedRawPointer, __int128, const void*, _Nonnull)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalRawPointer, __int128, const void*, _Nullable)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedMutableRawPointer, __int128, void*, _Nonnull)
+CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalMutableRawPointer, __int128, void*, _Nullable)
 #endif
-  struct {
-    long  tag;
-    void* _Nonnull ptr;
-  };
-} TaggedRawPointer;
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(TaggedRawPointer.init(_:_:)) \
-TaggedRawPointer TaggedRawPointerCreate(void* _Nonnull ptr, long tag)
-{ TaggedRawPointer s; s.tag = tag; s.ptr = ptr; return s; }
-
-static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(TaggedRawPointer.increment(self:)) \
-void TaggedRawPointerIncrement(TaggedRawPointer *_Nonnull ptr)
-{ ptr->tag++; }
 
 #if defined(__has32bitPointer__)
 CLANG_ATOMICS_STRUCT(AtomicTaggedRawPointer, _Atomic(long long), _Alignof(_Atomic(long long)))
