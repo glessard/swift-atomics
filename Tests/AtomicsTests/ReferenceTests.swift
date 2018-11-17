@@ -28,13 +28,10 @@ public class ReferenceTests: XCTestCase
         let thing2 = Thing(UInt.randomPositive())
         let originalRetainCount = CFGetRetainCount(thing1)
         
-        var a = AtomicReference<Thing>()
-        _ = a.storeIfNil(thing1)
-        var currentRetainCount = CFGetRetainCount(thing1)
-        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
+        var a = AtomicReference(thing1)
         
         _ = a.storeIfNil(thing2)
-        currentRetainCount = CFGetRetainCount(thing1)
+        var currentRetainCount = CFGetRetainCount(thing1)
         XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
         currentRetainCount = CFGetRetainCount(thing2)
         XCTAssertEqual(currentRetainCount, originalRetainCount)
@@ -51,13 +48,19 @@ public class ReferenceTests: XCTestCase
         currentRetainCount = CFGetRetainCount(thing2)
         XCTAssertEqual(currentRetainCount, originalRetainCount)
         
-        let thing1a = a.load()
+        _ = a.load()
         currentRetainCount = CFGetRetainCount(thing1)
-        XCTAssertEqual(currentRetainCount, originalRetainCount + 2)
-        currentRetainCount = CFGetRetainCount(thing1a)
-        XCTAssertEqual(currentRetainCount, originalRetainCount + 2)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
         currentRetainCount = CFGetRetainCount(thing2)
         XCTAssertEqual(currentRetainCount, originalRetainCount)
+    
+        _ = a.swap(nil)
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount)
+        
+        _ = a.storeIfNil(thing1)
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
     }
     
   public func testUnmanaged()
