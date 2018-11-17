@@ -22,6 +22,44 @@ private class Thing
 
 public class ReferenceTests: XCTestCase
 {
+    
+    public func testRetainCount() {
+        let thing1 = Thing(UInt.randomPositive())
+        let thing2 = Thing(UInt.randomPositive())
+        let originalRetainCount = CFGetRetainCount(thing1)
+        
+        var a = AtomicReference<Thing>()
+        _ = a.storeIfNil(thing1)
+        var currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
+        
+        _ = a.storeIfNil(thing2)
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
+        currentRetainCount = CFGetRetainCount(thing2)
+        XCTAssertEqual(currentRetainCount, originalRetainCount)
+        
+        _ = a.CAS(current: thing1, future: thing2)
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount)
+        currentRetainCount = CFGetRetainCount(thing2)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
+        
+        _ = a.swap(thing1)
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 1)
+        currentRetainCount = CFGetRetainCount(thing2)
+        XCTAssertEqual(currentRetainCount, originalRetainCount)
+        
+        let thing1a = a.load()
+        currentRetainCount = CFGetRetainCount(thing1)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 2)
+        currentRetainCount = CFGetRetainCount(thing1a)
+        XCTAssertEqual(currentRetainCount, originalRetainCount + 2)
+        currentRetainCount = CFGetRetainCount(thing2)
+        XCTAssertEqual(currentRetainCount, originalRetainCount)
+    }
+    
   public func testUnmanaged()
   {
     var i = UInt.randomPositive()

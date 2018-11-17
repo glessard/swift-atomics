@@ -45,6 +45,7 @@ extension ReferenceRaceTests {
 
 extension ReferenceTests {
     static let __allTests = [
+        ("testRetainCount", testRetainCount),
         ("testUnmanaged", testUnmanaged),
     ]
 }
