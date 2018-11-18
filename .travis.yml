@@ -33,6 +33,10 @@ matrix:
       osx_image: xcode10
       env: SWIFT_VERSION=4.2
 
+    - os: osx
+      osx_image: xcode10.1
+      env: SWIFT_VERSION=4.2
+
 before_install:
   - clang --version
   - chmod u+x Tests/install-swift.sh

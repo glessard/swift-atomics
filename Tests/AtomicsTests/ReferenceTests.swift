@@ -17,6 +17,11 @@ private class Thing
 {
   let id: UInt
   init(_ x: UInt = UInt.randomPositive()) { id = x }
+}
+
+private class Witness: Thing
+{
+  override init(_ x: UInt) { super.init(x) }
   deinit { print("Released     \(id)") }
 }
 
@@ -25,7 +30,7 @@ public class ReferenceTests: XCTestCase
   public func testUnmanaged()
   {
     var i = UInt.randomPositive()
-    var a = AtomicReference(Thing(i))
+    var a = AtomicReference(Witness(i))
     do {
       let r1 = a.swap(.none)
       print("Will release \(i)")
@@ -34,16 +39,16 @@ public class ReferenceTests: XCTestCase
     }
 
     i = UInt.randomPositive()
-    XCTAssert(a.swap(Thing(i)) == nil)
+    XCTAssert(a.swap(Witness(i)) == nil)
     print("Releasing    \(i)")
     XCTAssert(a.swap(nil) != nil)
 
     i = UInt.randomPositive()
-    XCTAssert(a.storeIfNil(Thing(i)) == true)
+    XCTAssert(a.storeIfNil(Witness(i)) == true)
     let j = UInt.randomPositive()
     print("Will drop    \(j)")
     // a compiler warning is expected for the next line
-    XCTAssert(a.swapIfNil(Thing(j)) == false)
+    XCTAssert(a.swapIfNil(Witness(j)) == false)
 
     do {
       let v = a.load()
@@ -89,6 +94,33 @@ public class ReferenceRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 #endif
+
+  public func testRaceLoadVersusDeinit()
+  {
+    let q = DispatchQueue(label: #function, attributes: .concurrent)
+
+    for _ in 1...iterations
+    {
+      var r = AtomicReference(Thing())
+
+      let closure1 = {
+        while let thing = r.load()
+        {
+          let id = thing.id
+          _ = id
+        }
+      }
+
+      let closure2 = {
+        _ = r.swap(nil)
+      }
+
+      q.async(execute: closure1)
+      q.async(execute: closure2)
+    }
+
+    q.sync(flags: .barrier) {}
+  }
 
   public func testRaceAtomicReference()
   {
