@@ -95,6 +95,33 @@ public class ReferenceRaceTests: XCTestCase
   }
 #endif
 
+  public func testRaceLoadVersusDeinit()
+  {
+    let q = DispatchQueue(label: #function, attributes: .concurrent)
+
+    for _ in 1...iterations
+    {
+      var r = AtomicReference(Thing())
+
+      let closure1 = {
+        while let thing = r.load()
+        {
+          let id = thing.id
+          _ = id
+        }
+      }
+
+      let closure2 = {
+        _ = r.swap(nil)
+      }
+
+      q.async(execute: closure1)
+      q.async(execute: closure2)
+    }
+
+    q.sync(flags: .barrier) {}
+  }
+
   public func testRaceAtomicReference()
   {
     let q = DispatchQueue(label: "", attributes: .concurrent)

@@ -40,6 +40,7 @@ extension AtomicsRaceTests {
 extension ReferenceRaceTests {
     static let __allTests = [
         ("testRaceAtomicReference", testRaceAtomicReference),
+        ("testRaceLoadVersusDeinit", testRaceLoadVersusDeinit),
     ]
 }
 
