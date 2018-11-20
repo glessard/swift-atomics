@@ -9,7 +9,6 @@
 import XCTest
 
 import CAtomics
-% pointers = ['Raw', 'MutableRaw', 'Opaque']
 % integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
 
 public class CAtomicsBasicTests: XCTestCase
@@ -76,19 +75,20 @@ public class CAtomicsBasicTests: XCTestCase
   }
 
 % end
-% nullability = ['Optional', 'NonNull']
+% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheLineAlignedMutableRawPointer', 'AtomicCacheLineAlignedOptionalMutableRawPointer', 'AtomicCacheLineAlignedRawPointer', 'AtomicCacheLineAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
 % for type in pointers:
-% for nullable in nullability:
-  public func test${nullable}${type}Pointer()
+  public func test${type}()
   {
-% native = 'Opaque' if (type == 'Opaque') else 'Unsafe' + type
-% bang = '!' if (nullable == 'NonNull') else ''
+% mutptr = 'Mutable' if 'Mutable' in type else ''
+% prefix = 'Unsafe' + mutptr + 'Raw'
+% native = prefix if 'RawPointer' in type else 'Opaque'
+% bang = '' if ('Optional' in type) else '!'
     let r0 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
     let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
 
-    var p = Atomic${nullable}${type}Pointer(r3)
+    var p = ${type}(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -114,7 +114,6 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-% end
 % end
   public func testBool()
   {
