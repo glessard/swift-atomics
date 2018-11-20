@@ -326,7 +326,11 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.increment(self:)) \
         void swiftType##Increment(swiftType *_Nonnull ptr) \
-        { ptr->tag++; }
+        { ptr->tag++; } \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.incremented(self:)) \
+        swiftType swiftType##Incremented(swiftType t) \
+        { swiftType s; s = t; s.tag++; return s; }
 
 #define CLANG_ATOMICS_TAGGED_POINTER_INITIALIZE(swiftType) \
         static __inline__ __attribute__((__always_inline__)) \
