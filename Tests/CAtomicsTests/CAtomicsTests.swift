@@ -602,6 +602,61 @@ public class CAtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, i.load(.relaxed))
   }
 
+  public func testBool()
+  {
+    var boolean = AtomicBool()
+    boolean.initialize(false)
+    XCTAssert(boolean.load(.relaxed) == false)
+    XCTAssert(boolean.isLockFree())
+
+    boolean.store(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+
+    boolean.store(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+
+    boolean.store(false, .relaxed)
+    boolean.fetch_or(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+    boolean.fetch_or(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+    boolean.store(false, .relaxed)
+    boolean.fetch_or(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_or(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+
+    boolean.fetch_and(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_and(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+
+    boolean.fetch_xor(false, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == false)
+    boolean.fetch_xor(true, .relaxed)
+    XCTAssert(boolean.load(.relaxed) == true)
+
+    let old = boolean.swap(false, .relaxed)
+    XCTAssert(old == true)
+    XCTAssert(boolean.swap(true, .relaxed) == false)
+
+    var current = true
+    XCTAssert(boolean.load(.relaxed) == current)
+    boolean.loadCAS(&current, false, .strong, .relaxed, .relaxed)
+    current = boolean.load(.relaxed)
+    XCTAssert(current == false)
+    if boolean.loadCAS(&current, true, .strong, .relaxed, .relaxed)
+    {
+      current = !current
+      XCTAssert(boolean.loadCAS(&current, false, .weak, .relaxed, .relaxed))
+      current = !current
+      XCTAssert(boolean.loadCAS(&current, true, .weak, .relaxed, .relaxed))
+    }
+  }
+}
+
+extension CAtomicsBasicTests
+{
   public func testAtomicOptionalRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
@@ -930,58 +985,6 @@ public class CAtomicsBasicTests: XCTestCase
     while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, p.load(.relaxed))
-  }
-
-  public func testBool()
-  {
-    var boolean = AtomicBool()
-    boolean.initialize(false)
-    XCTAssert(boolean.load(.relaxed) == false)
-    XCTAssert(boolean.isLockFree())
-
-    boolean.store(false, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == false)
-
-    boolean.store(true, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == true)
-
-    boolean.store(false, .relaxed)
-    boolean.fetch_or(true, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == true)
-    boolean.fetch_or(false, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == true)
-    boolean.store(false, .relaxed)
-    boolean.fetch_or(false, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == false)
-    boolean.fetch_or(true, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == true)
-
-    boolean.fetch_and(false, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == false)
-    boolean.fetch_and(true, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == false)
-
-    boolean.fetch_xor(false, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == false)
-    boolean.fetch_xor(true, .relaxed)
-    XCTAssert(boolean.load(.relaxed) == true)
-
-    let old = boolean.swap(false, .relaxed)
-    XCTAssert(old == true)
-    XCTAssert(boolean.swap(true, .relaxed) == false)
-
-    var current = true
-    XCTAssert(boolean.load(.relaxed) == current)
-    boolean.loadCAS(&current, false, .strong, .relaxed, .relaxed)
-    current = boolean.load(.relaxed)
-    XCTAssert(current == false)
-    if boolean.loadCAS(&current, true, .strong, .relaxed, .relaxed)
-    {
-      current = !current
-      XCTAssert(boolean.loadCAS(&current, false, .weak, .relaxed, .relaxed))
-      current = !current
-      XCTAssert(boolean.loadCAS(&current, true, .weak, .relaxed, .relaxed))
-    }
   }
 
   public func testFence()
