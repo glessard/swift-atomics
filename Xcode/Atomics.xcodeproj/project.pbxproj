@@ -441,7 +441,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0382B64520DC4A2D00F4B44B /* Build configuration list for PBXNativeTarget "AtomicsTestAppTests" */;
 			buildPhases = (
-				0330BB0D20DC60A600F4B44B /* ShellScript */,
 				0382B63520DC4A2D00F4B44B /* Sources */,
 				0382B63620DC4A2D00F4B44B /* Frameworks */,
 				0382B63720DC4A2D00F4B44B /* Resources */,
@@ -591,20 +590,6 @@
 			showEnvVarsInLog = 0;
 		};
 		031CA39C20DC3F7C00F4B44B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
-			showEnvVarsInLog = 0;
-		};
-		0330BB0D20DC60A600F4B44B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

@@ -86,6 +86,10 @@ SWIFT_ENUM(CASType, closed)
 #define __CACHE_LINE_WIDTH 64
 #elif defined(__arm64__)
 #define __CACHE_LINE_WIDTH 64
+#elif defined(__arm__)
+#define __CACHE_LINE_WIDTH 64
+#elif defined(__i386__)
+#define __CACHE_LINE_WIDTH 64
 #else
 // define __CACHE_LINE_WIDTH appropriately as needed
 #endif
@@ -405,4 +409,5 @@ _Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nulla
   return true;
 }
 
+#undef __CACHE_LINE_WIDTH
 #endif

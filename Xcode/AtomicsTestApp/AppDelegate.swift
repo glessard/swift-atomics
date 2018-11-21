@@ -17,7 +17,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
+  {
+    var padded = AtomicCacheLineAlignedOptionalRawPointer()
+    assert(MemoryLayout<AtomicCacheLineAlignedOptionalRawPointer>.alignment > MemoryLayout<UnsafeRawPointer>.alignment)
+    assert(MemoryLayout<AtomicCacheLineAlignedOptionalRawPointer>.alignment == 64)
+    let p = UnsafeRawPointer(bitPattern: 1013)
+    padded.initialize(p)
+    assert(padded.load(.relaxed) != nil)
+    let q = padded.swap(nil, .sequential)
+    assert(q == p)
+    assert(padded.load(.relaxed) == nil)
+
     var bool = AtomicBool()
     bool.store(false)
     let f = bool.swap(true, .sequential)
