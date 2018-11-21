@@ -1031,11 +1031,19 @@ extension TaggedOptionalMutableRawPointer: TaggedOptionalPointer {}
 
 extension CAtomicsBasicTests
 {
-  public func testAtomicTaggedRawPointer()
+  public func testTaggedRawPointer()
   {
     let r0 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!)
-    var r1 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    var r1 = r0
     let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+
+    XCTAssertEqual(MemoryLayout<TaggedRawPointer>.size, MemoryLayout<UnsafeRawPointer>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
 
     XCTAssertEqual(r1.tag, 1)
     r1.increment()
@@ -1051,6 +1059,14 @@ extension CAtomicsBasicTests
     var r4 = r2
     r4.tag += 1
     XCTAssertEqual(r3, r4)
+  }
+
+  public func testAtomicTaggedRawPointer()
+  {
+    let r0 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!)
+    let r1 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+    let r3 = r2.incremented()
 
     var p = AtomicTaggedRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
@@ -1078,11 +1094,52 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicTaggedMutableRawPointer()
+  public func testAtomicCacheLineAlignedTaggedRawPointer()
+  {
+    let r0 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!)
+    let r1 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+    let r3 = r2.incremented()
+
+    var p = AtomicCacheLineAlignedTaggedRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testTaggedMutableRawPointer()
   {
     let r0 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!)
-    var r1 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    var r1 = r0
     let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+
+    XCTAssertEqual(MemoryLayout<TaggedMutableRawPointer>.size, MemoryLayout<UnsafeMutableRawPointer>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
 
     XCTAssertEqual(r1.tag, 1)
     r1.increment()
@@ -1098,6 +1155,14 @@ extension CAtomicsBasicTests
     var r4 = r2
     r4.tag += 1
     XCTAssertEqual(r3, r4)
+  }
+
+  public func testAtomicTaggedMutableRawPointer()
+  {
+    let r0 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!)
+    let r1 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+    let r3 = r2.incremented()
 
     var p = AtomicTaggedMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
@@ -1125,11 +1190,52 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicTaggedOptionalRawPointer()
+  public func testAtomicCacheLineAlignedTaggedMutableRawPointer()
+  {
+    let r0 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!)
+    let r1 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
+    let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
+    let r3 = r2.incremented()
+
+    var p = AtomicCacheLineAlignedTaggedMutableRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testTaggedOptionalRawPointer()
   {
     let r0 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()))
-    var r1 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    var r1 = r0
     let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+
+    XCTAssertEqual(MemoryLayout<TaggedOptionalRawPointer>.size, MemoryLayout<UnsafeRawPointer>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
 
     XCTAssertEqual(r1.tag, 1)
     r1.increment()
@@ -1145,6 +1251,14 @@ extension CAtomicsBasicTests
     var r4 = r2
     r4.tag += 1
     XCTAssertEqual(r3, r4)
+  }
+
+  public func testAtomicTaggedOptionalRawPointer()
+  {
+    let r0 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()))
+    let r1 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+    let r3 = r2.incremented()
 
     var p = AtomicTaggedOptionalRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
@@ -1172,11 +1286,52 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicTaggedOptionalMutableRawPointer()
+  public func testAtomicCacheLineAlignedTaggedOptionalRawPointer()
+  {
+    let r0 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()))
+    let r1 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+    let r3 = r2.incremented()
+
+    var p = AtomicCacheLineAlignedTaggedOptionalRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testTaggedOptionalMutableRawPointer()
   {
     let r0 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()))
-    var r1 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    var r1 = r0
     let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+
+    XCTAssertEqual(MemoryLayout<TaggedOptionalMutableRawPointer>.size, MemoryLayout<UnsafeMutableRawPointer>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
 
     XCTAssertEqual(r1.tag, 1)
     r1.increment()
@@ -1192,8 +1347,49 @@ extension CAtomicsBasicTests
     var r4 = r2
     r4.tag += 1
     XCTAssertEqual(r3, r4)
+  }
+
+  public func testAtomicTaggedOptionalMutableRawPointer()
+  {
+    let r0 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()))
+    let r1 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+    let r3 = r2.incremented()
 
     var p = AtomicTaggedOptionalMutableRawPointer(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+  public func testAtomicCacheLineAlignedTaggedOptionalMutableRawPointer()
+  {
+    let r0 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()))
+    let r1 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
+    let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
+    let r3 = r2.incremented()
+
+    var p = AtomicCacheLineAlignedTaggedOptionalMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 

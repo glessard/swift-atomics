@@ -213,13 +213,20 @@ extension CAtomicsBasicTests
 % for mutable in mutability:
 % nativeType = 'Unsafe' + mutable + 'RawPointer'
 % taggedType = 'Tagged' + optional + mutable + 'RawPointer'
-% atomicType = 'Atomic' + taggedType
-  public func test${atomicType}()
+  public func test${taggedType}()
   {
 % bang = '!' if (optional is '') else ''
     let r0 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang})
-    var r1 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 1)
+    var r1 = r0
     let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 2)
+
+    XCTAssertEqual(MemoryLayout<${taggedType}>.size, MemoryLayout<${nativeType}>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
 
     XCTAssertEqual(r1.tag, 1)
     r1.increment()
@@ -235,6 +242,17 @@ extension CAtomicsBasicTests
     var r4 = r2
     r4.tag += 1
     XCTAssertEqual(r3, r4)
+  }
+
+% for aligned in ['', 'CacheLineAligned']:
+% atomicType = 'Atomic' + aligned + taggedType
+  public func test${atomicType}()
+  {
+% bang = '!' if (optional is '') else ''
+    let r0 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang})
+    let r1 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 1)
+    let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 2)
+    let r3 = r2.incremented()
 
     var p = ${atomicType}(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
@@ -262,6 +280,7 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
+% end
 % end
 % end
 }
