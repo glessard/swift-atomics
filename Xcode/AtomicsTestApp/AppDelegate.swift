@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     assert(padded.load(.relaxed) == nil)
 
     var tagged = AtomicTaggedRawPointer()
+    assert(MemoryLayout<TaggedRawPointer>.size == 2*MemoryLayout<UnsafeRawPointer>.size)
     var t = TaggedRawPointer(UnsafeRawPointer(bitPattern: 0x0731)!)
     let u = TaggedRawPointer()
     tagged.initialize(t)
