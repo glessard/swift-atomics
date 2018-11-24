@@ -530,5 +530,17 @@ _Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nulla
   return true;
 }
 
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(OpaqueUnmanagedHelper.CAS(self:_:_:_:_:)) \
+_Bool UnmanagedCompareAndSwap(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable current, const void *_Nullable future,
+                              enum CASType type, enum MemoryOrder order)
+{
+  uintptr_t expect = (uintptr_t) current;
+  if(type == __ATOMIC_CAS_TYPE_WEAK)
+    return atomic_compare_exchange_weak_explicit(&(ptr->a), &expect, (uintptr_t)future, order, memory_order_relaxed);
+  else
+    return atomic_compare_exchange_strong_explicit(&(ptr->a), &expect, (uintptr_t)future, order, memory_order_relaxed);
+}
+
 #undef __CACHE_LINE_WIDTH
 #endif
