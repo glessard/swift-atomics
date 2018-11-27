@@ -171,6 +171,7 @@ extension AtomicReference
         let success = ptr.CAS(cu?.toOpaque(), fu?.toOpaque(), type, order)
         if success {
             _ = fu?.retain()
+            cu?.release()
         }
         
         return success
@@ -187,6 +188,7 @@ extension AtomicReference
         let success = ptr.CAS(cu?.toOpaque(), fu?.toOpaque(), type, order)
         if success {
             _ = fu?.retain()
+            cu?.release()
         }
     
         return success
