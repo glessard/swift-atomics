@@ -44,9 +44,8 @@ public class ReferenceTests: XCTestCase
     XCTAssert(a.swap(nil) != nil)
 
     i = UInt.randomPositive()
-    let witness = Witness(i)
-    XCTAssert(a.storeIfNil(witness) == true)
-    let j = UInt.randomPositive()
+    XCTAssert(a.storeIfNil(Witness(i)) == true)
+    var j = UInt.randomPositive()
     print("Will drop    \(j)")
     // a compiler warning is expected for the next line
     XCTAssert(a.swapIfNil(Witness(j)) == false)
@@ -55,12 +54,18 @@ public class ReferenceTests: XCTestCase
       let v = a.load()
       XCTAssert(v?.id == i)
     }
-    
-    XCTAssertFalse(a.CAS(current: nil, future: Witness(i)))
-    XCTAssertFalse(a.CAS(current: Witness(j), future: Witness(i)))
-    XCTAssertTrue(a.CAS(current: witness, future: Witness(j)))
+
+    var witnessi: Optional = a.load()
+    j = UInt.randomPositive()
+    var witnessj: Optional = Witness(j)
+    XCTAssertFalse(a.CAS(current: nil, future: witnessi))
+    XCTAssertFalse(a.CAS(current: witnessj, future: witnessi))
+    XCTAssertTrue(a.CAS(current: witnessi, future: witnessj))
+    witnessj = nil
 
     print("Will release \(i)")
+    witnessi = nil
+    print("Will release \(j)")
     XCTAssert(a.take() != nil)
     XCTAssert(a.take() == nil)
   }
