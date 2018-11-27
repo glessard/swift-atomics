@@ -75,46 +75,6 @@ public class CAtomicsBasicTests: XCTestCase
   }
 
 % end
-% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheLineAlignedMutableRawPointer', 'AtomicCacheLineAlignedOptionalMutableRawPointer', 'AtomicCacheLineAlignedRawPointer', 'AtomicCacheLineAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
-% for type in pointers:
-  public func test${type}()
-  {
-% mutptr = 'Mutable' if 'Mutable' in type else ''
-% prefix = 'Unsafe' + mutptr + 'Raw'
-% native = prefix if 'RawPointer' in type else 'Opaque'
-% bang = '' if ('Optional' in type) else '!'
-    let r0 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
-    let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
-    let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
-    let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
-
-    var p = ${type}(r3)
-    XCTAssertEqual(r3, p.load(.relaxed))
-    XCTAssert(p.isLockFree())
-
-    p.initialize(r0)
-    XCTAssertEqual(r0, p.load(.relaxed))
-
-    p.store(r1, .relaxed)
-    XCTAssertEqual(r1, p.load(.relaxed))
-
-    var j = p.swap(r2, .relaxed)
-    XCTAssertEqual(r1, j)
-    XCTAssertEqual(r2, p.load(.relaxed))
-
-    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
-    XCTAssertEqual(r3, p.load(.relaxed))
-
-    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
-    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
-    j = p.load(.relaxed)
-    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
-    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
-    XCTAssertEqual(r1, j)
-    XCTAssertEqual(r3, p.load(.relaxed))
-  }
-
-% end
   public func testBool()
   {
     var boolean = AtomicBool()
@@ -166,10 +126,161 @@ public class CAtomicsBasicTests: XCTestCase
       XCTAssert(boolean.loadCAS(&current, true, .weak, .relaxed, .relaxed))
     }
   }
+}
 
+% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheLineAlignedMutableRawPointer', 'AtomicCacheLineAlignedOptionalMutableRawPointer', 'AtomicCacheLineAlignedRawPointer', 'AtomicCacheLineAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
+extension CAtomicsBasicTests
+{
+% for type in pointers:
+  public func test${type}()
+  {
+% mutptr = 'Mutable' if 'Mutable' in type else ''
+% prefix = 'Unsafe' + mutptr + 'Raw'
+% native = prefix if 'RawPointer' in type else 'Opaque'
+% bang = '' if ('Optional' in type) else '!'
+    let r0 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r1 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r2 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+    let r3 = ${native}Pointer(bitPattern: UInt.randomPositive())${bang}
+
+    var p = ${type}(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+% end
   public func testFence()
   {
     CAtomicsThreadFence(.release)
     CAtomicsThreadFence(.acquire)
   }
+}
+% optionality = ['', 'Optional']
+% for optional in optionality:
+
+protocol Tagged${optional}Pointer: Equatable
+{
+  associatedtype Pointer: Equatable
+% if optional == 'Optional':
+  var ptr: Optional<Pointer> { get }
+% else:
+  var ptr: Pointer { get }
+% end
+  var tag: Int { get }
+}
+
+extension Tagged${optional}Pointer
+{
+  static public func ==(lhs: Self, rhs: Self) -> Bool
+  {
+    return (lhs.ptr == rhs.ptr) && (lhs.tag == rhs.tag)
+  }
+}
+% end
+
+% mutability = ['', 'Mutable']
+% for optional in optionality:
+% for mutable in mutability:
+% type = 'Tagged' + optional + mutable + 'RawPointer'
+extension ${type}: Tagged${optional}Pointer {}
+% end
+% end
+
+extension CAtomicsBasicTests
+{
+% for optional in optionality:
+% for mutable in mutability:
+% nativeType = 'Unsafe' + mutable + 'RawPointer'
+% taggedType = 'Tagged' + optional + mutable + 'RawPointer'
+  public func test${taggedType}()
+  {
+% bang = '!' if (optional is '') else ''
+    let r0 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang})
+    var r1 = r0
+    let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 2)
+
+    XCTAssertEqual(MemoryLayout<${taggedType}>.size, MemoryLayout<${nativeType}>.size*2)
+
+    XCTAssertEqual(r0, r1)
+    r1 = r0.incremented()
+    XCTAssertNotEqual(r0, r1)
+    XCTAssertEqual(r0.ptr, r1.ptr)
+    XCTAssertEqual(r0.tag+1, r1.tag)
+
+    XCTAssertEqual(r1.tag, 1)
+    r1.increment()
+    XCTAssertEqual(r1.tag, 2)
+    XCTAssertEqual(r1.tag, r2.tag)
+    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    XCTAssertNotEqual(r1, r2)
+
+    let r3 = r2.incremented()
+    XCTAssertNotEqual(r2, r3)
+    XCTAssertEqual(r2.ptr, r3.ptr)
+    XCTAssertEqual(r2.tag, r3.tag-1)
+    var r4 = r2
+    r4.tag += 1
+    XCTAssertEqual(r3, r4)
+  }
+
+% for aligned in ['', 'CacheLineAligned']:
+% atomicType = 'Atomic' + aligned + taggedType
+  public func test${atomicType}()
+  {
+% bang = '!' if (optional is '') else ''
+    let r0 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang})
+    let r1 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 1)
+    let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 2)
+    let r3 = r2.incremented()
+
+    var p = ${atomicType}(r3)
+    XCTAssertEqual(r3, p.load(.relaxed))
+    XCTAssert(p.isLockFree())
+
+    p.initialize(r0)
+    XCTAssertEqual(r0, p.load(.relaxed))
+
+    p.store(r1, .relaxed)
+    XCTAssertEqual(r1, p.load(.relaxed))
+
+    var j = p.swap(r2, .relaxed)
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r2, p.load(.relaxed))
+
+    XCTAssertTrue(p.CAS(r2, r3, .strong, .relaxed))
+    XCTAssertEqual(r3, p.load(.relaxed))
+
+    XCTAssertFalse(p.CAS(j, r2, .strong, .relaxed))
+    XCTAssertTrue(p.CAS(r3, r2, .strong, .relaxed))
+    j = p.load(.relaxed)
+    XCTAssertTrue(p.CAS(r2, r1, .strong, .relaxed))
+    while !p.loadCAS(&j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r3, p.load(.relaxed))
+  }
+
+% end
+% end
+% end
 }
