@@ -59,9 +59,17 @@ public class UnmanagedTests: XCTestCase
     XCTAssert(v != nil)
     XCTAssert(v == UnsafeRawPointer(u.toOpaque()))
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
-    a.store(nil, .release)
+    a.store(v, .release)
+
+    let j = UInt.randomPositive()
+    u = Unmanaged.passRetained(Witness(j))
+    XCTAssert(a.CAS(nil, u.toOpaque(), .strong, .relaxed) == false)
+    XCTAssert(a.CAS(v, u.toOpaque(), .strong, .relaxed) == true)
     print("Releasing \(i)")
     v.map(Unmanaged<Witness>.fromOpaque)?.release()
+    while !a.CAS(u.toOpaque(), nil, .weak, .relaxed) {}
+    print("Releasing \(j)")
+    u.release()
   }
 
   public func testSpinLoad()

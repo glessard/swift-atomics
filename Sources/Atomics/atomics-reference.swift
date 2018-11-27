@@ -158,4 +158,41 @@ extension AtomicReference
     return nil
   }
 #endif
+    
+#if swift(>=4.2)
+    @inlinable
+    public mutating func CAS(current: T?, future: T?,
+                             type: CASType = .strong,
+                             order: MemoryOrder = .sequential) -> Bool
+    {
+        let cu = current.map { Unmanaged.passUnretained($0) }
+        let fu = future.map { Unmanaged.passUnretained($0) }
+        
+        let success = ptr.CAS(cu?.toOpaque(), fu?.toOpaque(), type, order)
+        if success {
+            _ = fu?.retain()
+            cu?.release()
+        }
+        
+        return success
+    }
+#else
+    @inline(__always) @discardableResult
+    public mutating func CAS(current: T?, future: T?,
+    type: CASType = .strong,
+    order: MemoryOrder = .sequential) -> Bool
+    {
+        let cu = current.map { Unmanaged.passUnretained($0) }
+        let fu = future.map { Unmanaged.passUnretained($0) }
+    
+        let success = ptr.CAS(cu?.toOpaque(), fu?.toOpaque(), type, order)
+        if success {
+            _ = fu?.retain()
+            cu?.release()
+        }
+    
+        return success
+    }
+#endif
+
 }
