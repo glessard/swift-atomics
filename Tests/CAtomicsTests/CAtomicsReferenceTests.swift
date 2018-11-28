@@ -217,6 +217,32 @@ public class UnmanagedTests: XCTestCase
     else { throw TestError.value(i) }
   }
 
+  public func testCasBlocked() throws
+  {
+    let i = UInt.randomPositive()
+    let j = UInt.randomPositive()
+    var a = OpaqueUnmanagedHelper()
+    a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
+
+    let p = a.lockAndLoad(.relaxed)
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+
+    let e = expectation(description: "succeed at strong CAS")
+    DispatchQueue.global().async {
+      let f = Unmanaged.passRetained(Thing(j)).toOpaque()
+      XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+      while !a.CAS(p, f, .strong, .sequential) {}
+      XCTAssert(a.load(.relaxed) == UnsafeRawPointer(f))
+      e.fulfill()
+    }
+
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
+    waitForExpectations(timeout: 0.2)
+
+    XCTAssert(a.spinSwap(nil, .acquire) != nil)
+    XCTAssert(a.load(.relaxed) == nil)
+  }
+
   public func testDemonstrateWhyLockIsNecessary() throws
   {
     let i = UInt.randomPositive()

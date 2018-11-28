@@ -527,11 +527,37 @@ SWIFT_NAME(OpaqueUnmanagedHelper.CAS(self:_:_:_:_:)) \
 _Bool UnmanagedCompareAndSwap(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable current, const void *_Nullable future,
                               enum CASType type, enum MemoryOrder order)
 {
-  uintptr_t expect = (uintptr_t) current;
   if(type == __ATOMIC_CAS_TYPE_WEAK)
-    return atomic_compare_exchange_weak_explicit(&(ptr->a), &expect, (uintptr_t)future, order, memory_order_relaxed);
+  {
+    uintptr_t pointer = (uintptr_t) current;
+    return atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
+  }
   else
-    return atomic_compare_exchange_strong_explicit(&(ptr->a), &expect, (uintptr_t)future, order, memory_order_relaxed);
+  { // we should consider that __OPAQUE_UNMANAGED_LOCKED is a spurious value
+#ifndef __SSE2__
+    char c;
+    c = 0;
+#endif
+    _Bool success;
+    while (true)
+    {
+      uintptr_t pointer = (uintptr_t) current;
+      success = atomic_compare_exchange_strong_explicit(&(ptr->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
+      if (pointer != __OPAQUE_UNMANAGED_LOCKED) { break; }
+
+      while (pointer == __OPAQUE_UNMANAGED_LOCKED)
+      { // don't fruitlessly invalidate the cache line if the value is locked
+#ifdef __SSE2__
+        _mm_pause();
+#else
+        c += 1;
+        if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
+#endif
+        pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+      }
+    }
+    return success;
+  }
 }
 
 #undef __CACHE_LINE_WIDTH
