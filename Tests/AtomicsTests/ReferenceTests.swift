@@ -50,21 +50,18 @@ public class ReferenceTests: XCTestCase
     // a compiler warning is expected for the next line
     XCTAssert(a.swapIfNil(Witness(j)) == false)
 
-    do {
-      let v = a.load()
-      XCTAssert(v?.id == i)
-    }
+    weak var witnessi = a.load()
+    XCTAssert(witnessi?.id == i)
 
-    var witnessi: Optional = a.load()
     j = UInt.randomPositive()
-    var witnessj: Optional = Witness(j)
+    var witnessj = Optional(Witness(j))
     XCTAssertFalse(a.CAS(current: nil, future: witnessi))
     XCTAssertFalse(a.CAS(current: witnessj, future: witnessi))
+
+    print("Will release \(i)")
     XCTAssertTrue(a.CAS(current: witnessi, future: witnessj))
     witnessj = nil
 
-    print("Will release \(i)")
-    witnessi = nil
     print("Will release \(j)")
     XCTAssert(a.take() != nil)
     XCTAssert(a.take() == nil)
