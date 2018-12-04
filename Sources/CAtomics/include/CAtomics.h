@@ -496,33 +496,6 @@ const void *_Nullable UnmanagedSpinSwap(OpaqueUnmanagedHelper *_Nonnull ptr, con
 }
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedHelper.safeStore(self:_:_:)) \
-_Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable value, enum StoreMemoryOrder order)
-{ // store `value` if and only if our pointer contains NULL; spin for the lock if necessary
-#ifndef __SSE2__
-  char c;
-  c = 0;
-#endif
-  uintptr_t pointer;
-  pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
-  do { // don't fruitlessly invalidate the cache line if the value is locked
-    while (pointer == __OPAQUE_UNMANAGED_LOCKED)
-    {
-#ifdef __SSE2__
-      _mm_pause();
-#else
-      c += 1;
-      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
-#endif
-      pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
-    }
-    if (pointer != (uintptr_t) NULL) { return false; }
-  } while (!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, (uintptr_t)value, order, __ATOMIC_RELAXED));
-
-  return true;
-}
-
-static __inline__ __attribute__((__always_inline__)) \
 SWIFT_NAME(OpaqueUnmanagedHelper.CAS(self:_:_:_:_:)) \
 _Bool UnmanagedCompareAndSwap(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nullable current, const void *_Nullable future,
                               enum CASType type, enum MemoryOrder order)

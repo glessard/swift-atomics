@@ -79,7 +79,7 @@ extension AtomicReference
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
-    if ptr.safeStore(u.toOpaque(), order)
+    if ptr.CAS(nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
     {
       _ = u.retain()
       return true
@@ -91,7 +91,7 @@ extension AtomicReference
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
-    if ptr.safeStore(u.toOpaque(), order)
+    if ptr.CAS(nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
     {
       _ = u.retain()
       return true
