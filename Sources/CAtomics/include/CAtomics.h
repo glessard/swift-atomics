@@ -428,15 +428,7 @@ void CAtomicsThreadFence(enum MemoryOrder order)
 
 // unmanaged
 
-#define __OPAQUE_UNMANAGED_LOCKED (uintptr_t)0x7
-#define __OPAQUE_UNMANAGED_NULL   (uintptr_t)0x0
-
-SWIFT_ENUM(SpinLoadAction, closed)
-{
-  SpinLoadAction_lock = __OPAQUE_UNMANAGED_LOCKED,
-  SpinLoadAction_null = __OPAQUE_UNMANAGED_NULL
-};
-
+#define __OPAQUE_UNMANAGED_LOCKED   (uintptr_t)0x7
 #define __OPAQUE_UNMANAGED_SPINMASK (char)0xc0
 
 CLANG_ATOMICS_STRUCT(OpaqueUnmanagedHelper, atomic_uintptr_t, _Alignof(atomic_uintptr_t))
@@ -450,8 +442,8 @@ CLANG_ATOMICS_POINTER_STORE(OpaqueUnmanagedHelper, const void*, _Nullable)
 CLANG_ATOMICS_POINTER_LOAD(OpaqueUnmanagedHelper, const void*, _Nullable)
 
 static __inline__ __attribute__((__always_inline__)) \
-SWIFT_NAME(OpaqueUnmanagedHelper.spinLoad(self:_:_:)) \
-const void *_Nullable UnmanagedSpinLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enum SpinLoadAction action, enum LoadMemoryOrder order)
+SWIFT_NAME(OpaqueUnmanagedHelper.lockAndLoad(self:_:)) \
+const void *_Nullable UnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enum LoadMemoryOrder order)
 { // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
 #ifndef __SSE2__
   char c;
@@ -471,8 +463,8 @@ const void *_Nullable UnmanagedSpinLoad(OpaqueUnmanagedHelper *_Nonnull ptr, enu
       pointer = atomic_load_explicit(&(ptr->a), order);
     }
     // return immediately if pointer is NULL (importantly: without locking)
-    if (pointer == __OPAQUE_UNMANAGED_NULL) { return NULL; }
-  } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, action, order, order));
+    if (pointer == (uintptr_t) NULL) { return NULL; }
+  } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, order, order));
 
   return (void*) pointer;
 }
@@ -524,7 +516,7 @@ _Bool UnmanagedSafeStore(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_Nulla
 #endif
       pointer = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
     }
-    if (pointer != __OPAQUE_UNMANAGED_NULL) { return false; }
+    if (pointer != (uintptr_t) NULL) { return false; }
   } while (!atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer, (uintptr_t)value, order, __ATOMIC_RELAXED));
 
   return true;

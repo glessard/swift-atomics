@@ -55,7 +55,7 @@ public class UnmanagedTests: XCTestCase
     XCTAssert(a.safeStore(u.toOpaque(), .release) == true)
     XCTAssert(a.safeStore(u.toOpaque(), .relaxed) == false)
 
-    let v = a.spinLoad(.lock, .acquire)
+    let v = a.lockAndLoad(.acquire)
     XCTAssert(v != nil)
     XCTAssert(v == UnsafeRawPointer(u.toOpaque()))
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
@@ -78,12 +78,12 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = a.spinLoad(.lock, .relaxed)
+    let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
-    let e = expectation(description: "swap-to-nil after unlock")
+    let e = expectation(description: "load and relock after unlock")
     DispatchQueue.global().async {
-      if let p = a.spinLoad(.lock, .relaxed)
+      if let p = a.lockAndLoad(.relaxed)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
         XCTAssert(t.id == i)
@@ -103,12 +103,12 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = a.spinLoad(.lock, .relaxed)
+    let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
-    let e = expectation(description: "AtomicOptionalMutableRawPointer-and-lock after unlock")
+    let e = expectation(description: "swap-to-nil after unlock")
     DispatchQueue.global().async {
-      if let p = a.spinLoad(.null, .relaxed)
+      if let p = a.spinSwap(nil, .relaxed)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
         XCTAssert(t.id == i)
@@ -128,7 +128,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = a.spinLoad(.lock, .relaxed)
+    let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
@@ -160,7 +160,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = a.spinLoad(.lock, .relaxed)
+    let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
@@ -195,7 +195,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = a.spinLoad(.lock, .relaxed)
+    let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "failure to swap for nil")
@@ -284,7 +284,7 @@ public class UnmanagedRaceTests: XCTestCase
       let closure = {
         while true
         {
-          if let p = r.spinLoad(.null, .relaxed)
+          if let p = r.spinSwap(nil, .relaxed)
           {
             let buffer = Unmanaged<ManagedBuffer<Int, Int>>.fromOpaque(p).takeRetainedValue()
             XCTAssert(buffer.header == 1)
