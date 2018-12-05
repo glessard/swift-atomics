@@ -93,14 +93,14 @@ extension AtomicReference
   @inlinable
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    let pointer = ptr.spinLoad(.null, order)
+    let pointer = ptr.spinSwap(nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #else
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    let pointer = ptr.spinLoad(.null, order)
+    let pointer = ptr.spinSwap(nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #endif
@@ -120,7 +120,7 @@ extension AtomicReference
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.spinLoad(.lock, order)
+    if let pointer = ptr.lockAndLoad(order)
     {
       assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
@@ -146,7 +146,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.spinLoad(.lock, order)
+    if let pointer = ptr.lockAndLoad(order)
     {
       assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
