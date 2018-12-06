@@ -1,14 +1,19 @@
 #!/bin/bash
 set -e
 
-if [[ -n "$SWIFT_VERSION" ]]
+if [[ -n "$SWIFT" ]]
 then
-  export SWIFT_TOOLS_VERSION=`echo $SWIFT_VERSION | awk -F . '{print $1"."$2}'`
-  if [[ "$SWIFT_TOOLS_VERSION" == "3.2" ]]
+  if [[ "$SWIFT" == "4.1.50" ]]
   then
-    SWIFT_PACKAGE_VERSION=`echo $SWIFT_VERSION | awk -F . -v ver=4.0 '{if(NF==2) print ver; else print ver"."$3}'`
+    export SWIFT_TOOLS_VERSION="4.0"
+    export SWIFT_PACKAGE_VERSION="4.2"
+  elif [[ "$SWIFT" == "3.2" ]]
+  then
+    export SWIFT_TOOLS_VERSION="3.1"
+    export SWIFT_PACKAGE_VERSION="4.0"
   else
-    SWIFT_PACKAGE_VERSION=$SWIFT_VERSION
+    export SWIFT_TOOLS_VERSION=`echo $SWIFT | awk -F . '{print $1"."$2}'`
+    export SWIFT_PACKAGE_VERSION=$SWIFT
   fi
 
   if [[ -n "$SNAPSHOT" ]]
@@ -45,7 +50,7 @@ then
   fi
 elif [[ -z $(which swift) ]]
 then
-  echo "Set SWIFT_VERSION to define which version to install"
+  echo "Set SWIFT to define which version to install"
   exit 1
 fi
 
