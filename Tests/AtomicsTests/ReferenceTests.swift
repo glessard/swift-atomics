@@ -113,20 +113,22 @@ public class ReferenceRaceTests: XCTestCase
     {
       var r = AtomicReference(Thing())
 
-      let closure1 = {
-        while let thing = r.load()
-        {
-          let id = thing.id
-          _ = id
+      let closure = {
+        (b: Bool) -> () -> Void in
+        return {
+          () -> Void in
+          var c = b
+          while true
+          {
+            let thing = c ? r.load() : r.swap(nil)
+            if thing == nil { return }
+            c = !c
+          }
         }
       }
 
-      let closure2 = {
-        _ = r.swap(nil)
-      }
-
-      q.async(execute: closure1)
-      q.async(execute: closure2)
+      q.async(execute: closure(true))
+      q.async(execute: closure(false))
     }
 
     q.sync(flags: .barrier) {}
