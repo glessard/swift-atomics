@@ -16,7 +16,7 @@ extension FixedWidthInteger where Self.Magnitude: UnsignedInteger, Self.Stride: 
   // returns a positive random integer greater than 0 and less-than-or-equal to Self.max/2
   static func randomPositive() -> Self
   {
-#if swift(>=4.2)
+#if swift(>=4.1.50)
     return Self.random(in: 1...(Self.max>>1))
 #else
     var t = Self()
