@@ -13,6 +13,22 @@
 
 import struct CAtomics.OpaqueUnmanagedHelper
 
+#if swift(>=3.2)
+#else
+extension MemoryOrder
+{
+  @_versioned init(order: LoadMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+
+  @_versioned init(order: StoreMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+}
+#endif
+
 public struct AtomicReference<T: AnyObject>
 {
 #if swift(>=4.2)
@@ -68,7 +84,19 @@ extension AtomicReference
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
-    if ptr.safeStore(u.toOpaque(), order)
+    if ptr.CAS(nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
+    {
+      _ = u.retain()
+      return true
+    }
+    return false
+  }
+#elseif swift(>=3.2)
+  @inline(__always)
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  {
+    let u = Unmanaged.passUnretained(reference)
+    if ptr.CAS(nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
     {
       _ = u.retain()
       return true
@@ -80,7 +108,7 @@ extension AtomicReference
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
-    if ptr.safeStore(u.toOpaque(), order)
+    if ptr.CAS(nil, u.toOpaque(), .strong, MemoryOrder(order: order))
     {
       _ = u.retain()
       return true
@@ -93,14 +121,21 @@ extension AtomicReference
   @inlinable
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    let pointer = ptr.spinLoad(.null, order)
+    let pointer = ptr.spinSwap(nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
-#else
+#elseif swift(>=3.2)
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    let pointer = ptr.spinLoad(.null, order)
+    let pointer = ptr.spinSwap(nil, MemoryOrder(rawValue: order.rawValue)!)
+    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+  }
+#else // swift 3.1
+  @inline(__always)
+  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
+  {
+    let pointer = ptr.spinSwap(nil, MemoryOrder(order: order))
     return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
   }
 #endif
@@ -120,7 +155,7 @@ extension AtomicReference
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.spinLoad(.lock, order)
+    if let pointer = ptr.lockAndLoad(order)
     {
       assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
@@ -146,7 +181,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = ptr.spinLoad(.lock, order)
+    if let pointer = ptr.lockAndLoad(order)
     {
       assert(ptr.load(.sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
