@@ -52,8 +52,8 @@ public class UnmanagedTests: XCTestCase
 
     i = UInt.randomPositive()
     u = Unmanaged.passRetained(Witness(i))
-    XCTAssert(a.safeStore(u.toOpaque(), .release) == true)
-    XCTAssert(a.safeStore(u.toOpaque(), .relaxed) == false)
+    XCTAssert(a.CAS(nil, u.toOpaque(), .strong, .release) == true)
+    XCTAssert(a.CAS(nil, u.toOpaque(), .weak, .relaxed) == false)
 
     let v = a.lockAndLoad(.acquire)
     XCTAssert(v != nil)
@@ -166,7 +166,7 @@ public class UnmanagedTests: XCTestCase
     let j = UInt.randomPositive()
     let e = expectation(description: "succeed at swapping for nil")
     DispatchQueue.global().async {
-      let stored = a.safeStore(Unmanaged.passRetained(Thing(j)).toOpaque(), .relaxed)
+      let stored = a.CAS(nil, Unmanaged.passRetained(Thing(j)).toOpaque(), .strong, .relaxed)
       XCTAssert(stored)
       e.fulfill()
     }
@@ -198,9 +198,10 @@ public class UnmanagedTests: XCTestCase
     let p = a.lockAndLoad(.relaxed)
     XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
+    let t = Thing(0)
     let e = expectation(description: "failure to swap for nil")
     DispatchQueue.global().async {
-      let stored = a.safeStore(nil, .relaxed)
+      let stored = a.CAS(nil, Unmanaged.passUnretained(t).toOpaque(), .strong, .relaxed)
       XCTAssert(!stored)
       e.fulfill()
     }
@@ -215,6 +216,32 @@ public class UnmanagedTests: XCTestCase
       XCTAssert(t.id == i)
     }
     else { throw TestError.value(i) }
+  }
+
+  public func testCasBlocked() throws
+  {
+    let i = UInt.randomPositive()
+    let j = UInt.randomPositive()
+    var a = OpaqueUnmanagedHelper()
+    a.initialize(Unmanaged.passRetained(Thing(i)).toOpaque())
+
+    let p = a.lockAndLoad(.relaxed)
+    XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+
+    let e = expectation(description: "succeed at strong CAS")
+    DispatchQueue.global().async {
+      let f = Unmanaged.passRetained(Thing(j)).toOpaque()
+      XCTAssert(a.load(.relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+      while !a.CAS(p, f, .strong, .sequential) {}
+      XCTAssert(a.load(.relaxed) == UnsafeRawPointer(f))
+      e.fulfill()
+    }
+
+    DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { a.store(p, .release) })
+    waitForExpectations(timeout: 0.2)
+
+    XCTAssert(a.spinSwap(nil, .acquire) != nil)
+    XCTAssert(a.load(.relaxed) == nil)
   }
 
   public func testDemonstrateWhyLockIsNecessary() throws
