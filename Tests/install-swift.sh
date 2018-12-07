@@ -3,14 +3,18 @@ set -e
 
 if [[ -n "$SWIFT" ]]
 then
-  if [[ "$SWIFT" == "4.1.50" ]]
-  then
-    export SWIFT_TOOLS_VERSION="4.0"
-    export SWIFT_PACKAGE_VERSION="4.2"
-  elif [[ "$SWIFT" == "3.2" ]]
+  if [[ "$SWIFT" == "3.2" ]]
   then
     export SWIFT_TOOLS_VERSION="3.1"
     export SWIFT_PACKAGE_VERSION="4.0"
+  elif [[ "$SWIFT" == "3.3" ]]
+  then
+    export SWIFT_TOOLS_VERSION="3.1"
+    export SWIFT_PACKAGE_VERSION="4.2"
+  elif [[ "$SWIFT" == "4.1.50" ]]
+  then
+    export SWIFT_TOOLS_VERSION="4.0"
+    export SWIFT_PACKAGE_VERSION="4.2"
   else
     export SWIFT_TOOLS_VERSION=`echo $SWIFT | awk -F . '{print $1"."$2}'`
     export SWIFT_PACKAGE_VERSION=$SWIFT
