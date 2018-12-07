@@ -47,7 +47,7 @@ extension UInt
 #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
       t = UInt(arc4random())
 #else
-      t = UInt(random())
+      t = UInt(Glibc.random())
 #endif
       t &= 0x3fff_ffff
     } while t == 0
