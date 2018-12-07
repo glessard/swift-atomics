@@ -6,28 +6,28 @@ then
   if [[ "$SWIFT" == "3.2" ]]
   then
     export SWIFT_TOOLS_VERSION="3.1"
-    export SWIFT_PACKAGE_VERSION="4.0"
+    export SWIFT_COMPILER_VERSION="4.0"
   elif [[ "$SWIFT" == "3.3" ]]
   then
     export SWIFT_TOOLS_VERSION="3.1"
-    export SWIFT_PACKAGE_VERSION="4.2"
+    export SWIFT_COMPILER_VERSION="4.2"
   elif [[ "$SWIFT" == "4.1.50" ]]
   then
     export SWIFT_TOOLS_VERSION="4.0"
-    export SWIFT_PACKAGE_VERSION="4.2"
+    export SWIFT_COMPILER_VERSION="4.2"
   else
     export SWIFT_TOOLS_VERSION=`echo $SWIFT | awk -F . '{print $1"."$2}'`
-    export SWIFT_PACKAGE_VERSION=$SWIFT
+    export SWIFT_COMPILER_VERSION=$SWIFT
   fi
 
   if [[ -n "$SNAPSHOT" ]]
   then
     ID="DEVELOPMENT-SNAPSHOT-${SNAPSHOT}"
-    VERSION="swift-${SWIFT_PACKAGE_VERSION}-${ID}"
-    BRANCH="swift-${SWIFT_PACKAGE_VERSION}-branch"
+    VERSION="swift-${SWIFT_COMPILER_VERSION}-${ID}"
+    BRANCH="swift-${SWIFT_COMPILER_VERSION}-branch"
   else
-    VERSION="swift-${SWIFT_PACKAGE_VERSION}-RELEASE"
-    BRANCH="swift-${SWIFT_PACKAGE_VERSION}-release"
+    VERSION="swift-${SWIFT_COMPILER_VERSION}-RELEASE"
+    BRANCH="swift-${SWIFT_COMPILER_VERSION}-release"
   fi
   URLBASE="https://swift.org/builds/${BRANCH}"
 
