@@ -12,6 +12,8 @@
 @_exported import enum CAtomics.StoreMemoryOrder
 
 import struct CAtomics.OpaqueUnmanagedHelper
+import struct CAtomics.TaggedOpaqueUnmanagedHelper
+import struct CAtomics.TaggedOptionalRawPointer
 
 #if swift(>=3.2)
 #else
@@ -230,4 +232,74 @@ extension AtomicReference
     }
 #endif
 
+}
+
+public struct AtomicTaggedReference<T: AnyObject> {
+    
+    #if swift(>=4.2)
+    @usableFromInline internal var ptr = TaggedOpaqueUnmanagedHelper()
+    #else
+    @_versioned internal var ptr = TaggedOpaqueUnmanagedHelper()
+    #endif
+    
+    public init(_ reference: T? = nil, tag: Int = 0) {
+        initialize(reference, tag: tag)
+    }
+    
+    public mutating func initialize(_ reference: T?, tag: Int) {
+        let u = reference.map(Unmanaged.passRetained)
+        let tp = TaggedOptionalRawPointer(u?.toOpaque(), tag: tag)
+        
+        ptr.initialize(tp)
+    }
+    
+    @discardableResult @inlinable public mutating func swap(_ reference: T?, tag: Int, order: MemoryOrder = .sequential) -> (ref: T?, tag: Int) {
+        let u = reference.map(Unmanaged.passRetained)
+        let tp = TaggedOptionalRawPointer(u?.toOpaque(), tag: tag)
+
+        let pointer = ptr.spinSwap(tp, order)
+        return (pointer.ptr.map(Unmanaged.fromOpaque)?.takeRetainedValue(), pointer.tag)
+    }
+    
+    @inlinable mutating func take(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
+        let tp = TaggedOptionalRawPointer(nil, tag: 0)
+        let pointer = ptr.spinSwap(tp, MemoryOrder(rawValue: order.rawValue)!)
+        return (tp.ptr.map(Unmanaged<T>.fromOpaque)?.takeRetainedValue(), pointer.tag)
+    }
+
+    @inlinable public mutating func loadTag(order: LoadMemoryOrder = .sequential) -> Int {
+        return ptr.lockAndLoad(order).tag
+    }
+    
+    @inlinable public mutating func load(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
+        let tp = ptr.lockAndLoad(order)
+        if let pointer = tp.ptr
+        {
+            assert(ptr.load(.sequential).ptr == UnsafeRawPointer(bitPattern: 0x7))
+            let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
+            // ensure the reference counting operation has occurred before unlocking,
+            // by performing our store operation with StoreMemoryOrder.release
+            ptr.store(tp, .release)
+            return (unmanaged.takeRetainedValue(), tp.tag)
+        }
+        return (nil, tp.tag)
+    }
+    
+    @inlinable public mutating func CAS(current: T?, future: T?,
+                                 currentTag: Int, futureTag: Int,
+                                 type: CASType = .strong, order: MemoryOrder = .sequential) -> Bool {
+        let cu = current.map(Unmanaged.passUnretained)
+        let fu = future.map(Unmanaged.passUnretained)
+        let ct = TaggedOptionalRawPointer(cu?.toOpaque(), tag: currentTag)
+        let ft = TaggedOptionalRawPointer(fu?.toOpaque(), tag: futureTag)
+        
+        let success = ptr.CAS(ct, ft, type, order)
+        if success {
+            _ = fu?.retain()
+            cu?.release()
+        }
+        
+        return success
+    }
+    
 }
