@@ -535,3 +535,106 @@ _Bool UnmanagedCompareAndSwap(OpaqueUnmanagedHelper *_Nonnull ptr, const void *_
 
 #undef __CACHE_LINE_WIDTH
 #endif
+
+// tagged
+
+CLANG_ATOMICS_STRUCT(TaggedOpaqueUnmanagedHelper, _Atomic(__UNION_TYPE), _Alignof(_Atomic(__UNION_TYPE)))
+CLANG_ATOMICS_IS_LOCK_FREE(TaggedOpaqueUnmanagedHelper)
+CLANG_ATOMICS_TAGGED_POINTER_INITIALIZE(TaggedOpaqueUnmanagedHelper, TaggedOptionalRawPointer)
+CLANG_ATOMICS_TAGGED_POINTER_LOAD(TaggedOpaqueUnmanagedHelper, TaggedOptionalRawPointer)
+CLANG_ATOMICS_TAGGED_POINTER_STORE(TaggedOpaqueUnmanagedHelper, TaggedOptionalRawPointer)
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(TaggedOpaqueUnmanagedHelper.lockAndLoad(self:_:)) \
+TaggedOptionalRawPointer TaggedUnmanagedLockAndLoad(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, enum LoadMemoryOrder order)
+{ // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
+#ifndef __SSE2__
+    char c;
+    c = 0;
+#endif
+    TaggedOptionalRawPointer rp;
+    rp.tag_ptr = atomic_load_explicit(&(ptr->a), order);
+    do { // don't fruitlessly invalidate the cache line if the value is locked
+        while (rp.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
+        {
+#ifdef __SSE2__
+            _mm_pause();
+#else
+            c += 1;
+            if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
+#endif
+            rp.tag_ptr = atomic_load_explicit(&(ptr->a), order);
+        }
+        // return immediately if pointer is NULL (importantly: without locking)
+        if (rp.tag_ptr == (uintptr_t) NULL) { return rp; }
+    } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &rp.tag_ptr, __OPAQUE_UNMANAGED_LOCKED, order, order));
+   
+    printf("lock and load 0x%08X\n", (unsigned int)rp.tag_ptr);
+    
+    return rp;
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(TaggedOpaqueUnmanagedHelper.spinSwap(self:_:_:)) \
+TaggedOptionalRawPointer TaggedUnmanagedSpinSwap(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, TaggedOptionalRawPointer value, enum MemoryOrder order)
+{ // swap the pointer with `value`, spinning until the lock becomes unlocked if necessary
+#ifndef __SSE2__
+    char c;
+    c = 0;
+#endif
+    TaggedOptionalRawPointer rp;
+    rp.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+    
+    do { // don't fruitlessly invalidate the cache line if the value is locked
+        while (rp.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
+        {
+#ifdef __SSE2__
+            _mm_pause();
+#else
+            c += 1;
+            if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
+#endif
+            rp.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+        }
+    } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &rp.tag_ptr, (uintptr_t)&value, order, __ATOMIC_RELAXED));
+    
+    printf("swap 0x%08X\n", (unsigned int)rp.tag_ptr);
+    
+    return rp;
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+SWIFT_NAME(TaggedOpaqueUnmanagedHelper.CAS(self:_:_:_:_:)) \
+_Bool TaggedUnmanagedCompareAndSwap(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, TaggedOptionalRawPointer current, TaggedOptionalRawPointer future, enum CASType type, enum MemoryOrder order)
+{
+    if(type == __ATOMIC_CAS_TYPE_WEAK)
+    {
+        return atomic_compare_exchange_weak_explicit(&(ptr->a), &current.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
+    }
+    else
+    { // we should consider that __OPAQUE_UNMANAGED_LOCKED is a spurious value
+#ifndef __SSE2__
+        char c;
+        c = 0;
+#endif
+        _Bool success;
+        while (true)
+        {
+            success = atomic_compare_exchange_strong_explicit(&(ptr->a), &current.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
+            if (current.tag_ptr != __OPAQUE_UNMANAGED_LOCKED) { break; }
+            
+            while (current.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
+            { // don't fruitlessly invalidate the cache line if the value is locked
+#ifdef __SSE2__
+                _mm_pause();
+#else
+                c += 1;
+                if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
+#endif
+                current.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+            }
+        }
+        return success;
+    }
+}
+
