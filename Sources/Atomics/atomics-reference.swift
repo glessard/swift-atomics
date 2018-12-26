@@ -281,20 +281,18 @@ public struct AtomicTaggedReference<T: AnyObject> {
         return (nil, tp.tag)
     }
     
-    @inlinable public mutating func CAS(current: T?, future: T?,
-                                 currentTag: Int, futureTag: Int,
+    @inlinable public mutating func CAS(current: (T?, Int), future: (T?, Int),
                                  type: CASType = .strong, order: MemoryOrder = .sequential) -> Bool {
-        let cu = current.map(Unmanaged.passUnretained)
-        let fu = future.map(Unmanaged.passUnretained)
-        let ct = TaggedOptionalRawPointer(cu?.toOpaque(), tag: currentTag)
-        let ft = TaggedOptionalRawPointer(fu?.toOpaque(), tag: futureTag)
+        let cu = current.0.map(Unmanaged.passUnretained)
+        let fu = future.0.map(Unmanaged.passUnretained)
+        let ct = TaggedOptionalRawPointer(cu?.toOpaque(), tag: current.1)
+        let ft = TaggedOptionalRawPointer(fu?.toOpaque(), tag: future.1)
         
         let success = ptr.CAS(ct, ft, type, order)
         if success {
-            _ = fu?.retain()
             cu?.release()
         }
-        
+
         return success
     }
     

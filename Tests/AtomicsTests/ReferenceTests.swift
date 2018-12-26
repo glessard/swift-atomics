@@ -104,11 +104,11 @@ public class TaggedReferenceTests: XCTestCase
 
         var j = UInt.randomPositive()
         var witnessj = Optional(Witness(j))
-        XCTAssertFalse(a.CAS(current: nil, future: witnessi, currentTag: x, futureTag: y))
-        XCTAssertFalse(a.CAS(current: witnessj, future: witnessi, currentTag: x, futureTag: y))
+        XCTAssertFalse(a.CAS(current: (nil, x), future: (witnessi, y)))
+        XCTAssertFalse(a.CAS(current: (witnessj, x), future: (witnessi, y)))
 
         print("Will release \(i)")
-        XCTAssertTrue(a.CAS(current: witnessi, future: witnessj, currentTag: x, futureTag: y))
+        XCTAssertTrue(a.CAS(current: (witnessi, x), future: (witnessj, y)))
         witnessj = nil
         
         r = a.load()
