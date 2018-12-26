@@ -68,6 +68,59 @@ public class ReferenceTests: XCTestCase
   }
 }
 
+public class TaggedReferenceTests: XCTestCase
+{
+    public func testUnmanaged()
+    {
+        var i = UInt.randomPositive()
+        let x = Int.randomPositive()
+        let y = Int.randomPositive()
+        var a = AtomicTaggedReference(Witness(i), tag: x)
+        do {
+            let r1 = a.swap(.none, tag: y)
+            print("Will release \(i)")
+            XCTAssert(r1.ref != nil && r1.tag == x)
+            let r2 = a.load()
+            XCTAssert(r2.ref == nil && r2.tag == y)
+        }
+        
+        i = UInt.randomPositive()
+        var r = a.swap(Witness(i), tag: 0)
+        XCTAssert(r.ref == nil && r.tag == y)
+        print("Releasing    \(i)")
+        r = a.swap(nil, tag: x)
+        XCTAssert(r.ref != nil && r.tag == 0)
+
+        i = UInt.randomPositive()
+//        XCTAssert(a.storeIfNil(Witness(i)) == true)
+//        var j = UInt.randomPositive()
+//        print("Will drop    \(j)")
+//        // a compiler warning is expected for the next line
+//        XCTAssert(a.swapIfNil(Witness(j)) == false)
+//
+        a.swap(Witness(i), tag: x)
+        weak var witnessi = a.load().ref
+        XCTAssert(witnessi?.id == i)
+
+        var j = UInt.randomPositive()
+        var witnessj = Optional(Witness(j))
+        XCTAssertFalse(a.CAS(current: nil, future: witnessi, currentTag: x, futureTag: y))
+        XCTAssertFalse(a.CAS(current: witnessj, future: witnessi, currentTag: x, futureTag: y))
+
+        print("Will release \(i)")
+        XCTAssertTrue(a.CAS(current: witnessi, future: witnessj, currentTag: x, futureTag: y))
+        witnessj = nil
+        
+        r = a.load()
+        XCTAssert(r.ref?.id == j && r.tag == y)
+//
+//        print("Will release \(j)")
+//        XCTAssert(a.take() != nil)
+//        XCTAssert(a.take() == nil)
+    }
+}
+
+
 private let iterations = 200_000//_000
 
 public class ReferenceRaceTests: XCTestCase
