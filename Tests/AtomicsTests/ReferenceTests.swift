@@ -212,4 +212,63 @@ public class ReferenceRaceTests: XCTestCase
 
     q.sync(flags: .barrier) {}
   }
+    
+    public func testRaceTaggedLoadVersusDeinit()
+    {
+        let q = DispatchQueue(label: #function, attributes: .concurrent)
+        
+        for _ in 1...iterations
+        {
+            var r = AtomicTaggedReference(Thing(), tag: 0)
+            
+            let closure = {
+                (b: Bool) -> () -> Void in
+                return {
+                    () -> Void in
+                    var c = b
+                    while true
+                    {
+                        let thing = c ? r.load() : r.swap(nil, tag: 0)
+                        if thing.ref == nil { return }
+                        c = !c
+                    }
+                }
+            }
+            
+            q.async(execute: closure(true))
+            q.async(execute: closure(false))
+        }
+        
+        q.sync(flags: .barrier) {}
+    }
+    
+    public func testRaceAtomicTaggedReference()
+    {
+        let q = DispatchQueue(label: "", attributes: .concurrent)
+        
+        for _ in 1...iterations
+        {
+            let b = ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 })
+            var r = AtomicTaggedReference(b, tag: 0)
+            let closure = {
+                while true
+                {
+                    if let buffer = r.take().ref
+                    {
+                        XCTAssert(buffer.header == 1)
+                    }
+                    else
+                    {
+                        break
+                    }
+                }
+            }
+            
+            q.async(execute: closure)
+            q.async(execute: closure)
+        }
+        
+        q.sync(flags: .barrier) {}
+    }
+    
 }
