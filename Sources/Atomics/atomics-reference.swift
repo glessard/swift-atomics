@@ -261,14 +261,10 @@ public struct AtomicTaggedReference<T: AnyObject> {
         return (pointer.ptr.map(Unmanaged.fromOpaque)?.takeRetainedValue(), pointer.tag)
     }
     
-    @inlinable mutating func take(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
+    @inlinable public mutating func take(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
         let tp = TaggedOptionalRawPointer(nil, tag: 0)
         let pointer = ptr.spinSwap(tp, MemoryOrder(rawValue: order.rawValue)!)
         return (tp.ptr.map(Unmanaged<T>.fromOpaque)?.takeRetainedValue(), pointer.tag)
-    }
-
-    @inlinable public mutating func loadTag(order: LoadMemoryOrder = .sequential) -> Int {
-        return ptr.load(order).tag
     }
     
     @inlinable public mutating func load(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
