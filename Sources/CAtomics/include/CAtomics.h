@@ -566,10 +566,8 @@ TaggedOptionalRawPointer TaggedUnmanagedLockAndLoad(TaggedOpaqueUnmanagedHelper 
             rp.tag_ptr = atomic_load_explicit(&(ptr->a), order);
         }
         // return immediately if pointer is NULL (importantly: without locking)
-        if (rp.tag_ptr == (uintptr_t) NULL) { return rp; }
+        if ((void*)rp.tag_ptr == NULL) { return rp; }
     } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &rp.tag_ptr, __OPAQUE_UNMANAGED_LOCKED, order, order));
-   
-    printf("lock and load 0x%08X\n", (unsigned int)rp.tag_ptr);
     
     return rp;
 }
@@ -596,9 +594,7 @@ TaggedOptionalRawPointer TaggedUnmanagedSpinSwap(TaggedOpaqueUnmanagedHelper *_N
 #endif
             rp.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
         }
-    } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &rp.tag_ptr, (uintptr_t)&value, order, __ATOMIC_RELAXED));
-    
-    printf("swap 0x%08X\n", (unsigned int)rp.tag_ptr);
+    } while(!atomic_compare_exchange_weak_explicit(&(ptr->a), &rp.tag_ptr, value.tag_ptr, order, __ATOMIC_RELAXED));
     
     return rp;
 }

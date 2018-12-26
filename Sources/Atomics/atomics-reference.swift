@@ -268,14 +268,14 @@ public struct AtomicTaggedReference<T: AnyObject> {
     }
 
     @inlinable public mutating func loadTag(order: LoadMemoryOrder = .sequential) -> Int {
-        return ptr.lockAndLoad(order).tag
+        return ptr.load(order).tag
     }
     
     @inlinable public mutating func load(order: LoadMemoryOrder = .sequential) -> (ref: T?, tag: Int) {
         let tp = ptr.lockAndLoad(order)
         if let pointer = tp.ptr
         {
-            assert(ptr.load(.sequential).ptr == UnsafeRawPointer(bitPattern: 0x7))
+            assert(ptr.load(.sequential).ptr == UnsafeRawPointer(bitPattern: 0x7) && ptr.load(.sequential).tag == 0)
             let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
             // ensure the reference counting operation has occurred before unlocking,
             // by performing our store operation with StoreMemoryOrder.release
