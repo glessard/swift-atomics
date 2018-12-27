@@ -582,7 +582,6 @@ TaggedOptionalRawPointer TaggedUnmanagedSpinSwap(TaggedOpaqueUnmanagedHelper *_N
 #endif
     TaggedOptionalRawPointer rp;
     rp.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
-    
     do { // don't fruitlessly invalidate the cache line if the value is locked
         while (rp.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
         {
@@ -605,7 +604,8 @@ _Bool TaggedUnmanagedCompareAndSwap(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, T
 {
     if(type == __ATOMIC_CAS_TYPE_WEAK)
     {
-        return atomic_compare_exchange_weak_explicit(&(ptr->a), &current.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
+        TaggedOptionalRawPointer pointer = current;
+        return atomic_compare_exchange_weak_explicit(&(ptr->a), &pointer.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
     }
     else
     { // we should consider that __OPAQUE_UNMANAGED_LOCKED is a spurious value
@@ -616,10 +616,11 @@ _Bool TaggedUnmanagedCompareAndSwap(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, T
         _Bool success;
         while (true)
         {
-            success = atomic_compare_exchange_strong_explicit(&(ptr->a), &current.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
-            if (current.tag_ptr != __OPAQUE_UNMANAGED_LOCKED) { break; }
+            TaggedOptionalRawPointer pointer = current;
+            success = atomic_compare_exchange_strong_explicit(&(ptr->a), &pointer.tag_ptr, future.tag_ptr, order, memory_order_relaxed);
+            if (pointer.tag_ptr != __OPAQUE_UNMANAGED_LOCKED) { break; }
             
-            while (current.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
+            while (pointer.tag_ptr == __OPAQUE_UNMANAGED_LOCKED)
             { // don't fruitlessly invalidate the cache line if the value is locked
 #ifdef __SSE2__
                 _mm_pause();
@@ -627,7 +628,7 @@ _Bool TaggedUnmanagedCompareAndSwap(TaggedOpaqueUnmanagedHelper *_Nonnull ptr, T
                 c += 1;
                 if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
-                current.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
+                pointer.tag_ptr = atomic_load_explicit(&(ptr->a), __ATOMIC_RELAXED);
             }
         }
         return success;
