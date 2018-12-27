@@ -272,11 +272,11 @@ public struct AtomicTaggedReference<T: AnyObject> {
         if let pointer = tp.ptr
         {
             assert(ptr.load(.sequential).ptr == UnsafeRawPointer(bitPattern: 0x7) && ptr.load(.sequential).tag == 0)
-            let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
+            let u = Unmanaged<T>.fromOpaque(pointer).retain()
             // ensure the reference counting operation has occurred before unlocking,
             // by performing our store operation with StoreMemoryOrder.release
             ptr.store(tp, .release)
-            return (unmanaged.takeRetainedValue(), tp.tag)
+            return (u.takeRetainedValue(), tp.tag)
         }
         return (nil, tp.tag)
     }
@@ -290,6 +290,7 @@ public struct AtomicTaggedReference<T: AnyObject> {
         
         let success = ptr.CAS(ct, ft, type, order)
         if success {
+            _ = fu?.retain()
             cu?.release()
         }
 
