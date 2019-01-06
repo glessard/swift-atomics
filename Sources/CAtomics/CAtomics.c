@@ -6,7 +6,7 @@
 //  This file is distributed under the BSD 3-clause license. See LICENSE for details.
 //
 
-#import "CAtomics.h"
+#include "CAtomics.h"
 
 // See: http://clang.llvm.org/doxygen/stdatomic_8h_source.html
 //      http://clang.llvm.org/docs/LanguageExtensions.html#c11-atomic-builtins
