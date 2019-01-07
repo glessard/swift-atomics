@@ -187,8 +187,8 @@ SWIFT_ENUM(CASType, closed)
 
 // integer atomics
 
-CLANG_ATOMICS_INT_GENERATE(AtomicInt, atomic_long, long, _Alignof(atomic_long))
-CLANG_ATOMICS_INT_GENERATE(AtomicUInt, atomic_ulong, unsigned long, _Alignof(atomic_ulong))
+CLANG_ATOMICS_INT_GENERATE(AtomicInt, atomic_intptr_t, intptr_t, _Alignof(atomic_intptr_t))
+CLANG_ATOMICS_INT_GENERATE(AtomicUInt, atomic_uintptr_t, uintptr_t, _Alignof(atomic_uintptr_t))
 
 CLANG_ATOMICS_INT_GENERATE(AtomicInt8, atomic_schar, signed char, _Alignof(atomic_schar))
 CLANG_ATOMICS_INT_GENERATE(AtomicUInt8, atomic_uchar, unsigned char, _Alignof(atomic_uchar))
@@ -213,8 +213,8 @@ CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Ali
 CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool))
 
 #ifdef __CACHE_LINE_WIDTH
-CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedInt, atomic_long, long, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedUInt, atomic_ulong, unsigned long, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedInt, atomic_intptr_t, intptr_t, __CACHE_LINE_WIDTH)
+CLANG_ATOMICS_INT_GENERATE(AtomicCacheLineAlignedUInt, atomic_uintptr_t, uintptr_t, __CACHE_LINE_WIDTH)
 CLANG_ATOMICS_BOOL_GENERATE(AtomicCacheLineAlignedBool, atomic_bool, _Bool, __CACHE_LINE_WIDTH)
 #endif
 
