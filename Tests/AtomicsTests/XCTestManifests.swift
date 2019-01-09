@@ -40,11 +40,19 @@ extension AtomicsRaceTests {
 extension ReferenceRaceTests {
     static let __allTests = [
         ("testRaceAtomicReference", testRaceAtomicReference),
+        ("testRaceAtomicTaggedReference", testRaceAtomicTaggedReference),
         ("testRaceLoadVersusDeinit", testRaceLoadVersusDeinit),
+        ("testRaceTaggedLoadVersusDeinit", testRaceTaggedLoadVersusDeinit),
     ]
 }
 
 extension ReferenceTests {
+    static let __allTests = [
+        ("testUnmanaged", testUnmanaged),
+    ]
+}
+
+extension TaggedReferenceTests {
     static let __allTests = [
         ("testUnmanaged", testUnmanaged),
     ]
@@ -57,6 +65,7 @@ public func __allTests() -> [XCTestCaseEntry] {
         testCase(AtomicsRaceTests.__allTests),
         testCase(ReferenceRaceTests.__allTests),
         testCase(ReferenceTests.__allTests),
+        testCase(TaggedReferenceTests.__allTests),
     ]
 }
 #endif
