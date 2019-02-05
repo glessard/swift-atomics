@@ -173,7 +173,7 @@ public class CAtomicsRaceTests: XCTestCase
     var biggest = AtomicInt(0)
 
     var t = AtomicTaggedMutableRawPointer()
-    t.initialize(TaggedMutableRawPointer(fakePointer))
+    t.initialize(TaggedMutableRawPointer(fakePointer, tag: 0))
     XCTAssert(t.isLockFree())
 
     for _ in 1...iterations
@@ -188,7 +188,7 @@ public class CAtomicsRaceTests: XCTestCase
           let choice = UInt.randomPositive() % 4
           if choice == 0
           {
-            let invalidTaggedPointer = TaggedMutableRawPointer(fakePointer)
+            let invalidTaggedPointer = TaggedMutableRawPointer(fakePointer, tag: 0)
             var taggedPointer = p.load(.relaxed)
             repeat {
               if taggedPointer.ptr == fakePointer { return }
