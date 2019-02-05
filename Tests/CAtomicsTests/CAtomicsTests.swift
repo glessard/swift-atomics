@@ -1035,7 +1035,7 @@ extension CAtomicsBasicTests
   {
     let r0 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
     var r1 = r0
-    let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 5)
+    let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 4)
 
     XCTAssertEqual(MemoryLayout<TaggedRawPointer>.size, MemoryLayout<UnsafeRawPointer>.size*2)
 
@@ -1046,12 +1046,12 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r0.tag &+ 1, r1.tag)
 
     XCTAssertEqual(r1.tag, 3)
-    r1.increment()
-    XCTAssertEqual(r1.tag, 4)
-    r1.increment()
-    XCTAssertEqual(r1.tag, r2.tag)
-    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    r1 = r0.incremented(with: r2.ptr)
+    XCTAssertEqual(r0.tag &+ 1, r1.tag)
+    XCTAssertEqual(r1.ptr, r2.ptr)
     XCTAssertNotEqual(r1, r2)
+    r1.increment()
+    XCTAssertEqual(r1, r2)
 
     let r3 = r2.incremented()
     XCTAssertNotEqual(r2, r3)
@@ -1132,7 +1132,7 @@ extension CAtomicsBasicTests
   {
     let r0 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
     var r1 = r0
-    let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 5)
+    let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 4)
 
     XCTAssertEqual(MemoryLayout<TaggedMutableRawPointer>.size, MemoryLayout<UnsafeMutableRawPointer>.size*2)
 
@@ -1143,12 +1143,12 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r0.tag &+ 1, r1.tag)
 
     XCTAssertEqual(r1.tag, 3)
-    r1.increment()
-    XCTAssertEqual(r1.tag, 4)
-    r1.increment()
-    XCTAssertEqual(r1.tag, r2.tag)
-    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    r1 = r0.incremented(with: r2.ptr)
+    XCTAssertEqual(r0.tag &+ 1, r1.tag)
+    XCTAssertEqual(r1.ptr, r2.ptr)
     XCTAssertNotEqual(r1, r2)
+    r1.increment()
+    XCTAssertEqual(r1, r2)
 
     let r3 = r2.incremented()
     XCTAssertNotEqual(r2, r3)
@@ -1229,7 +1229,7 @@ extension CAtomicsBasicTests
   {
     let r0 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
     var r1 = r0
-    let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 5)
+    let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 4)
 
     XCTAssertEqual(MemoryLayout<TaggedOptionalRawPointer>.size, MemoryLayout<UnsafeRawPointer>.size*2)
 
@@ -1240,12 +1240,12 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r0.tag &+ 1, r1.tag)
 
     XCTAssertEqual(r1.tag, 3)
-    r1.increment()
-    XCTAssertEqual(r1.tag, 4)
-    r1.increment()
-    XCTAssertEqual(r1.tag, r2.tag)
-    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    r1 = r0.incremented(with: r2.ptr)
+    XCTAssertEqual(r0.tag &+ 1, r1.tag)
+    XCTAssertEqual(r1.ptr, r2.ptr)
     XCTAssertNotEqual(r1, r2)
+    r1.increment()
+    XCTAssertEqual(r1, r2)
 
     let r3 = r2.incremented()
     XCTAssertNotEqual(r2, r3)
@@ -1326,7 +1326,7 @@ extension CAtomicsBasicTests
   {
     let r0 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
     var r1 = r0
-    let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 5)
+    let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 4)
 
     XCTAssertEqual(MemoryLayout<TaggedOptionalMutableRawPointer>.size, MemoryLayout<UnsafeMutableRawPointer>.size*2)
 
@@ -1337,12 +1337,12 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r0.tag &+ 1, r1.tag)
 
     XCTAssertEqual(r1.tag, 3)
-    r1.increment()
-    XCTAssertEqual(r1.tag, 4)
-    r1.increment()
-    XCTAssertEqual(r1.tag, r2.tag)
-    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    r1 = r0.incremented(with: r2.ptr)
+    XCTAssertEqual(r0.tag &+ 1, r1.tag)
+    XCTAssertEqual(r1.ptr, r2.ptr)
     XCTAssertNotEqual(r1, r2)
+    r1.increment()
+    XCTAssertEqual(r1, r2)
 
     let r3 = r2.incremented()
     XCTAssertNotEqual(r2, r3)

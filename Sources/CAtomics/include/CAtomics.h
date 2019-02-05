@@ -315,10 +315,10 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
 #define CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.init(_:tag:)) \
-        swiftType swiftType##Create(pointerType nullability ptr, long tag) \
-        { swiftType s; s.tag = tag; s.ptr = ptr; return s; }
+        swiftType swiftType##Create(pointerType nullability p, long tag) \
+        { swiftType s; s.tag = tag; s.ptr = p; return s; }
 
-#define CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType) \
+#define CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType, pointerType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.increment(self:)) \
         void swiftType##Increment(swiftType *_Nonnull ptr) \
@@ -326,7 +326,11 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.incremented(self:)) \
         swiftType swiftType##Incremented(swiftType t) \
-        { swiftType s; s = t; s.tag++; return s; }
+        { swiftType s; s = t; s.tag++; return s; } \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.incremented(self:with:)) \
+        swiftType swiftType##IncrementedWith(swiftType t, pointerType nullability p) \
+        { swiftType s; s.tag = t.tag+1; s.ptr = p; return s; }
 
 #define CLANG_ATOMICS_TAGGED_POINTER_INITIALIZE(atomicType, structType) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -387,7 +391,7 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
 #define CLANG_ATOMICS_TAGGED_POINTER_GENERATE(swiftType, pointerType, nullability) \
         CLANG_ATOMICS_TAGGED_POINTER_STRUCT(swiftType, __UNION_TYPE, pointerType, nullability) \
         CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
-        CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType)
+        CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType, pointerType, nullability)
 
 #define CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(atomicType, structType, alignment) \
         CLANG_ATOMICS_STRUCT(atomicType, _Atomic(__UNION_TYPE), alignment) \

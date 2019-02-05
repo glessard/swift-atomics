@@ -218,7 +218,7 @@ extension CAtomicsBasicTests
 % bang = '!' if (optional is '') else ''
     let r0 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 2)
     var r1 = r0
-    let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 5)
+    let r2 = ${taggedType}(${nativeType}(bitPattern: UInt.randomPositive())${bang}, tag: 4)
 
     XCTAssertEqual(MemoryLayout<${taggedType}>.size, MemoryLayout<${nativeType}>.size*2)
 
@@ -229,12 +229,12 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r0.tag &+ 1, r1.tag)
 
     XCTAssertEqual(r1.tag, 3)
-    r1.increment()
-    XCTAssertEqual(r1.tag, 4)
-    r1.increment()
-    XCTAssertEqual(r1.tag, r2.tag)
-    XCTAssertNotEqual(r1.ptr, r2.ptr)
+    r1 = r0.incremented(with: r2.ptr)
+    XCTAssertEqual(r0.tag &+ 1, r1.tag)
+    XCTAssertEqual(r1.ptr, r2.ptr)
     XCTAssertNotEqual(r1, r2)
+    r1.increment()
+    XCTAssertEqual(r1, r2)
 
     let r3 = r2.incremented()
     XCTAssertNotEqual(r2, r3)
