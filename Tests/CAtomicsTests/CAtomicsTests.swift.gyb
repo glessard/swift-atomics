@@ -128,7 +128,7 @@ public class CAtomicsBasicTests: XCTestCase
   }
 }
 
-% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheLineAlignedMutableRawPointer', 'AtomicCacheLineAlignedOptionalMutableRawPointer', 'AtomicCacheLineAlignedRawPointer', 'AtomicCacheLineAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
+% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheAlignedMutableRawPointer', 'AtomicCacheAlignedOptionalMutableRawPointer', 'AtomicCacheAlignedRawPointer', 'AtomicCacheAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
 extension CAtomicsBasicTests
 {
 % for type in pointers:
@@ -245,7 +245,7 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, r4)
   }
 
-% for aligned in ['', 'CacheLineAligned']:
+% for aligned in ['', 'CacheAligned']:
 % atomicType = 'Atomic' + aligned + taggedType
   public func test${atomicType}()
   {
@@ -284,4 +284,27 @@ extension CAtomicsBasicTests
 % end
 % end
 % end
+  public func testCacheAlignedPointers()
+  {
+    var p: UnsafeMutableRawPointer?
+% for mutable in ['', 'Mutable']:
+% variable = 'm' if mutable is 'Mutable' else 'c'
+
+    p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
+    let ${variable}1 = CacheAlignedOptional${mutable}RawPointer(pointer: p)
+    XCTAssert(MemoryLayout.size(ofValue: ${variable}1) > MemoryLayout.size(ofValue: ${variable}1.pointer))
+    XCTAssert(MemoryLayout.alignment(ofValue: ${variable}1) > MemoryLayout.alignment(ofValue: ${variable}1.pointer))
+    XCTAssert(MemoryLayout.stride(ofValue: ${variable}1) > MemoryLayout.stride(ofValue: ${variable}1.pointer))
+    if let p1 = ${variable}1.pointer
+    {
+      let ${variable}2 = CacheAligned${mutable}RawPointer(pointer: p1)
+      XCTAssert(MemoryLayout.size(ofValue: ${variable}2) > MemoryLayout.size(ofValue: ${variable}2.pointer))
+      XCTAssert(MemoryLayout.alignment(ofValue: ${variable}2) > MemoryLayout.alignment(ofValue: ${variable}2.pointer))
+      XCTAssert(MemoryLayout.stride(ofValue: ${variable}2) > MemoryLayout.stride(ofValue: ${variable}2.pointer))
+      let p2 = ${variable}2.pointer
+      XCTAssert(p1 == p2)
+      XCTAssert(Int(bitPattern: p2) == Int(bitPattern: p))
+    }
+% end
+  }
 }
