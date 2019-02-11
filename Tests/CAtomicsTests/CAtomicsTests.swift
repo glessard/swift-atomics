@@ -1425,15 +1425,15 @@ extension CAtomicsBasicTests
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let c1 = CacheAlignedOptionalRawPointer(pointer: p)
-    XCTAssert(MemoryLayout.size(ofValue: c1) > MemoryLayout.size(ofValue: c1.pointer))
-    XCTAssert(MemoryLayout.alignment(ofValue: c1) > MemoryLayout.alignment(ofValue: c1.pointer))
-    XCTAssert(MemoryLayout.stride(ofValue: c1) > MemoryLayout.stride(ofValue: c1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.size(ofValue: c1), MemoryLayout.size(ofValue: c1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: c1), MemoryLayout.alignment(ofValue: c1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.stride(ofValue: c1), MemoryLayout.stride(ofValue: c1.pointer))
     if let p1 = c1.pointer
     {
       let c2 = CacheAlignedRawPointer(pointer: p1)
-      XCTAssert(MemoryLayout.size(ofValue: c2) > MemoryLayout.size(ofValue: c2.pointer))
-      XCTAssert(MemoryLayout.alignment(ofValue: c2) > MemoryLayout.alignment(ofValue: c2.pointer))
-      XCTAssert(MemoryLayout.stride(ofValue: c2) > MemoryLayout.stride(ofValue: c2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.size(ofValue: c2), MemoryLayout.size(ofValue: c2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: c2), MemoryLayout.alignment(ofValue: c2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.stride(ofValue: c2), MemoryLayout.stride(ofValue: c2.pointer))
       let p2 = c2.pointer
       XCTAssert(p1 == p2)
       XCTAssert(Int(bitPattern: p2) == Int(bitPattern: p))
@@ -1441,15 +1441,15 @@ extension CAtomicsBasicTests
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let m1 = CacheAlignedOptionalMutableRawPointer(pointer: p)
-    XCTAssert(MemoryLayout.size(ofValue: m1) > MemoryLayout.size(ofValue: m1.pointer))
-    XCTAssert(MemoryLayout.alignment(ofValue: m1) > MemoryLayout.alignment(ofValue: m1.pointer))
-    XCTAssert(MemoryLayout.stride(ofValue: m1) > MemoryLayout.stride(ofValue: m1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.size(ofValue: m1), MemoryLayout.size(ofValue: m1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: m1), MemoryLayout.alignment(ofValue: m1.pointer))
+    XCTAssertGreaterThan(MemoryLayout.stride(ofValue: m1), MemoryLayout.stride(ofValue: m1.pointer))
     if let p1 = m1.pointer
     {
       let m2 = CacheAlignedMutableRawPointer(pointer: p1)
-      XCTAssert(MemoryLayout.size(ofValue: m2) > MemoryLayout.size(ofValue: m2.pointer))
-      XCTAssert(MemoryLayout.alignment(ofValue: m2) > MemoryLayout.alignment(ofValue: m2.pointer))
-      XCTAssert(MemoryLayout.stride(ofValue: m2) > MemoryLayout.stride(ofValue: m2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.size(ofValue: m2), MemoryLayout.size(ofValue: m2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: m2), MemoryLayout.alignment(ofValue: m2.pointer))
+      XCTAssertGreaterThan(MemoryLayout.stride(ofValue: m2), MemoryLayout.stride(ofValue: m2.pointer))
       let p2 = m2.pointer
       XCTAssert(p1 == p2)
       XCTAssert(Int(bitPattern: p2) == Int(bitPattern: p))
