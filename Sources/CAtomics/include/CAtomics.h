@@ -101,7 +101,7 @@ SWIFT_ENUM(CASType, closed)
 // atomic integer generation
 
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, atomName, alignment) \
-        typedef struct { volatile atomicType atomName __attribute__ ((aligned(alignment))); } swiftType;
+        typedef struct { volatile atomicType atomName; atomic_uchar padding[alignment-sizeof(atomicType)]; } swiftType;
 
 #define CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -424,10 +424,17 @@ CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicCacheAlignedTaggedOptionalMut
 // non-atomic padded pointer wrappers
 
 #ifdef __CACHE_LINE_WIDTH
-CLANG_ATOMICS_STRUCT(CacheAlignedRawPointer, const void *_Nonnull, pointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_STRUCT(CacheAlignedOptionalRawPointer, const void *_Nullable, pointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_STRUCT(CacheAlignedMutableRawPointer, void *_Nonnull, pointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_STRUCT(CacheAlignedOptionalMutableRawPointer, void *_Nullable, pointer, __CACHE_LINE_WIDTH)
+#define CLANG_ATOMICS_ALIGNED_POINTER_CREATE(swiftType, pointerType, nullability) \
+        CLANG_ATOMICS_STRUCT(swiftType, pointerType nullability, pointer, __CACHE_LINE_WIDTH) \
+        static __inline__ __attribute__((__always_inline__)) \
+        SWIFT_NAME(swiftType.init(_:)) \
+        swiftType swiftType##Create(pointerType nullability p) \
+        { swiftType s; s.pointer = p; return s; }
+
+CLANG_ATOMICS_ALIGNED_POINTER_CREATE(CacheAlignedRawPointer, const void*, _Nonnull)
+CLANG_ATOMICS_ALIGNED_POINTER_CREATE(CacheAlignedOptionalRawPointer, const void*, _Nullable)
+CLANG_ATOMICS_ALIGNED_POINTER_CREATE(CacheAlignedMutableRawPointer, void *, _Nonnull)
+CLANG_ATOMICS_ALIGNED_POINTER_CREATE(CacheAlignedOptionalMutableRawPointer, void *, _Nullable)
 #endif
 
 // fence

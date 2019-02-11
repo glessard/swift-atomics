@@ -291,16 +291,18 @@ extension CAtomicsBasicTests
 % variable = 'm' if mutable is 'Mutable' else 'c'
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let ${variable}1 = CacheAlignedOptional${mutable}RawPointer(pointer: p)
+    let ${variable}1 = CacheAlignedOptional${mutable}RawPointer(p)
     XCTAssertGreaterThan(MemoryLayout.size(ofValue: ${variable}1), MemoryLayout.size(ofValue: ${variable}1.pointer))
-    XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: ${variable}1), MemoryLayout.alignment(ofValue: ${variable}1.pointer))
+    XCTAssertEqual(MemoryLayout.alignment(ofValue: ${variable}1), MemoryLayout.alignment(ofValue: ${variable}1.pointer))
     XCTAssertGreaterThan(MemoryLayout.stride(ofValue: ${variable}1), MemoryLayout.stride(ofValue: ${variable}1.pointer))
+    XCTAssertEqual(MemoryLayout.stride(ofValue: ${variable}1), 64)
     if let p1 = ${variable}1.pointer
     {
-      let ${variable}2 = CacheAligned${mutable}RawPointer(pointer: p1)
+      let ${variable}2 = CacheAligned${mutable}RawPointer(p1)
       XCTAssertGreaterThan(MemoryLayout.size(ofValue: ${variable}2), MemoryLayout.size(ofValue: ${variable}2.pointer))
-      XCTAssertGreaterThan(MemoryLayout.alignment(ofValue: ${variable}2), MemoryLayout.alignment(ofValue: ${variable}2.pointer))
+      XCTAssertEqual(MemoryLayout.alignment(ofValue: ${variable}2), MemoryLayout.alignment(ofValue: ${variable}2.pointer))
       XCTAssertGreaterThan(MemoryLayout.stride(ofValue: ${variable}2), MemoryLayout.stride(ofValue: ${variable}2.pointer))
+      XCTAssertEqual(MemoryLayout.stride(ofValue: ${variable}2), 64)
       let p2 = ${variable}2.pointer
       XCTAssert(p1 == p2)
       XCTAssert(Int(bitPattern: p2) == Int(bitPattern: p))
