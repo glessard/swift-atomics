@@ -128,7 +128,7 @@ public class CAtomicsBasicTests: XCTestCase
   }
 }
 
-% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicCacheAlignedMutableRawPointer', 'AtomicCacheAlignedOptionalMutableRawPointer', 'AtomicCacheAlignedRawPointer', 'AtomicCacheAlignedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
+% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicPaddedMutableRawPointer', 'AtomicPaddedOptionalMutableRawPointer', 'AtomicPaddedRawPointer', 'AtomicPaddedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
 extension CAtomicsBasicTests
 {
 % for type in pointers:
@@ -245,7 +245,7 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, r4)
   }
 
-% for aligned in ['', 'CacheAligned']:
+% for aligned in ['', 'Padded']:
 % atomicType = 'Atomic' + aligned + taggedType
   public func test${atomicType}()
   {
@@ -284,21 +284,21 @@ extension CAtomicsBasicTests
 % end
 % end
 % end
-  public func testCacheAlignedPointers()
+  public func testPaddedPointers()
   {
     var p: UnsafeMutableRawPointer?
 % for mutable in ['', 'Mutable']:
 % variable = 'm' if mutable is 'Mutable' else 'c'
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let ${variable}1 = CacheAlignedOptional${mutable}RawPointer(p)
+    let ${variable}1 = PaddedOptional${mutable}RawPointer(p)
     XCTAssertGreaterThan(MemoryLayout.size(ofValue: ${variable}1), MemoryLayout.size(ofValue: ${variable}1.pointer))
     XCTAssertEqual(MemoryLayout.alignment(ofValue: ${variable}1), MemoryLayout.alignment(ofValue: ${variable}1.pointer))
     XCTAssertGreaterThan(MemoryLayout.stride(ofValue: ${variable}1), MemoryLayout.stride(ofValue: ${variable}1.pointer))
     XCTAssertEqual(MemoryLayout.stride(ofValue: ${variable}1), 64)
     if let p1 = ${variable}1.pointer
     {
-      let ${variable}2 = CacheAligned${mutable}RawPointer(p1)
+      let ${variable}2 = Padded${mutable}RawPointer(p1)
       XCTAssertGreaterThan(MemoryLayout.size(ofValue: ${variable}2), MemoryLayout.size(ofValue: ${variable}2.pointer))
       XCTAssertEqual(MemoryLayout.alignment(ofValue: ${variable}2), MemoryLayout.alignment(ofValue: ${variable}2.pointer))
       XCTAssertGreaterThan(MemoryLayout.stride(ofValue: ${variable}2), MemoryLayout.stride(ofValue: ${variable}2.pointer))

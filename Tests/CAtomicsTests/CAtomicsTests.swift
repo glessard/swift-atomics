@@ -789,14 +789,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedMutableRawPointer()
+  public func testAtomicPaddedMutableRawPointer()
   {
     let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicCacheAlignedMutableRawPointer(r3)
+    var p = AtomicPaddedMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -822,14 +822,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedOptionalMutableRawPointer()
+  public func testAtomicPaddedOptionalMutableRawPointer()
   {
     let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicCacheAlignedOptionalMutableRawPointer(r3)
+    var p = AtomicPaddedOptionalMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -855,14 +855,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedRawPointer()
+  public func testAtomicPaddedRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicCacheAlignedRawPointer(r3)
+    var p = AtomicPaddedRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -888,14 +888,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedOptionalRawPointer()
+  public func testAtomicPaddedOptionalRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
-    var p = AtomicCacheAlignedOptionalRawPointer(r3)
+    var p = AtomicPaddedOptionalRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -1095,14 +1095,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedTaggedRawPointer()
+  public func testAtomicPaddedTaggedRawPointer()
   {
     let r0 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 0)
     let r1 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
     let r2 = TaggedRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
     let r3 = r2.incremented()
 
-    var p = AtomicCacheAlignedTaggedRawPointer(r3)
+    var p = AtomicPaddedTaggedRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -1192,14 +1192,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedTaggedMutableRawPointer()
+  public func testAtomicPaddedTaggedMutableRawPointer()
   {
     let r0 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 0)
     let r1 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 1)
     let r2 = TaggedMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, tag: 2)
     let r3 = r2.incremented()
 
-    var p = AtomicCacheAlignedTaggedMutableRawPointer(r3)
+    var p = AtomicPaddedTaggedMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -1289,14 +1289,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedTaggedOptionalRawPointer()
+  public func testAtomicPaddedTaggedOptionalRawPointer()
   {
     let r0 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 0)
     let r1 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
     let r2 = TaggedOptionalRawPointer(UnsafeRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
     let r3 = r2.incremented()
 
-    var p = AtomicCacheAlignedTaggedOptionalRawPointer(r3)
+    var p = AtomicPaddedTaggedOptionalRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -1386,14 +1386,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testAtomicCacheAlignedTaggedOptionalMutableRawPointer()
+  public func testAtomicPaddedTaggedOptionalMutableRawPointer()
   {
     let r0 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 0)
     let r1 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 1)
     let r2 = TaggedOptionalMutableRawPointer(UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), tag: 2)
     let r3 = r2.incremented()
 
-    var p = AtomicCacheAlignedTaggedOptionalMutableRawPointer(r3)
+    var p = AtomicPaddedTaggedOptionalMutableRawPointer(r3)
     XCTAssertEqual(r3, p.load(.relaxed))
     XCTAssert(p.isLockFree())
 
@@ -1419,19 +1419,19 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, p.load(.relaxed))
   }
 
-  public func testCacheAlignedPointers()
+  public func testPaddedPointers()
   {
     var p: UnsafeMutableRawPointer?
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let c1 = CacheAlignedOptionalRawPointer(p)
+    let c1 = PaddedOptionalRawPointer(p)
     XCTAssertGreaterThan(MemoryLayout.size(ofValue: c1), MemoryLayout.size(ofValue: c1.pointer))
     XCTAssertEqual(MemoryLayout.alignment(ofValue: c1), MemoryLayout.alignment(ofValue: c1.pointer))
     XCTAssertGreaterThan(MemoryLayout.stride(ofValue: c1), MemoryLayout.stride(ofValue: c1.pointer))
     XCTAssertEqual(MemoryLayout.stride(ofValue: c1), 64)
     if let p1 = c1.pointer
     {
-      let c2 = CacheAlignedRawPointer(p1)
+      let c2 = PaddedRawPointer(p1)
       XCTAssertGreaterThan(MemoryLayout.size(ofValue: c2), MemoryLayout.size(ofValue: c2.pointer))
       XCTAssertEqual(MemoryLayout.alignment(ofValue: c2), MemoryLayout.alignment(ofValue: c2.pointer))
       XCTAssertGreaterThan(MemoryLayout.stride(ofValue: c2), MemoryLayout.stride(ofValue: c2.pointer))
@@ -1442,14 +1442,14 @@ extension CAtomicsBasicTests
     }
 
     p = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
-    let m1 = CacheAlignedOptionalMutableRawPointer(p)
+    let m1 = PaddedOptionalMutableRawPointer(p)
     XCTAssertGreaterThan(MemoryLayout.size(ofValue: m1), MemoryLayout.size(ofValue: m1.pointer))
     XCTAssertEqual(MemoryLayout.alignment(ofValue: m1), MemoryLayout.alignment(ofValue: m1.pointer))
     XCTAssertGreaterThan(MemoryLayout.stride(ofValue: m1), MemoryLayout.stride(ofValue: m1.pointer))
     XCTAssertEqual(MemoryLayout.stride(ofValue: m1), 64)
     if let p1 = m1.pointer
     {
-      let m2 = CacheAlignedMutableRawPointer(p1)
+      let m2 = PaddedMutableRawPointer(p1)
       XCTAssertGreaterThan(MemoryLayout.size(ofValue: m2), MemoryLayout.size(ofValue: m2.pointer))
       XCTAssertEqual(MemoryLayout.alignment(ofValue: m2), MemoryLayout.alignment(ofValue: m2.pointer))
       XCTAssertGreaterThan(MemoryLayout.stride(ofValue: m2), MemoryLayout.stride(ofValue: m2.pointer))

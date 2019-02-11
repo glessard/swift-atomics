@@ -19,9 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
   {
-    var padded = AtomicCacheLineAlignedOptionalRawPointer()
-    assert(MemoryLayout<AtomicCacheLineAlignedOptionalRawPointer>.alignment > MemoryLayout<UnsafeRawPointer>.alignment)
-    assert(MemoryLayout<AtomicCacheLineAlignedOptionalRawPointer>.alignment == 64)
+    var padded = AtomicPaddedOptionalRawPointer()
+    assert(MemoryLayout<AtomicPaddedOptionalRawPointer>.alignment == MemoryLayout<UnsafeRawPointer>.alignment)
+    assert(MemoryLayout<AtomicPaddedOptionalRawPointer>.stride == 64)
     let p = UnsafeRawPointer(bitPattern: 1013)
     padded.initialize(p)
     assert(padded.load(.relaxed) != nil)
@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var tagged = AtomicTaggedRawPointer()
     assert(MemoryLayout<TaggedRawPointer>.size == 2*MemoryLayout<UnsafeRawPointer>.size)
-    var t = TaggedRawPointer(UnsafeRawPointer(bitPattern: 0x0731)!)
+    var t = TaggedRawPointer(UnsafeRawPointer(bitPattern: 0x0731)!, tag: 1841)
     let u = TaggedRawPointer()
     tagged.initialize(t)
     let success = tagged.loadCAS(&t, u, .strong, .relaxed, .relaxed)
