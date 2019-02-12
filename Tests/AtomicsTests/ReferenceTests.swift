@@ -48,7 +48,11 @@ public class ReferenceTests: XCTestCase
     var j = UInt.randomPositive()
     print("Will drop    \(j)")
     // a compiler warning is expected for the next line
+#if swift(>=5.0)
+    XCTAssert(a.storeIfNil(Witness(j)) == false)
+#else
     XCTAssert(a.swapIfNil(Witness(j)) == false)
+#endif
 
     weak var witnessi = a.load()
     XCTAssert(witnessi?.id == i)

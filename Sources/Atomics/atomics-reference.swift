@@ -71,13 +71,17 @@ extension AtomicReference
   }
 #endif
 
+#if swift(>=5.0)
+  @available(swift, obsoleted: 5.0, renamed: "storeIfNil(_:order:)")
+  public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool { fatalError() }
+#else
   @available(*, deprecated, renamed: "storeIfNil(_:order:)")
   public mutating func swapIfNil(_ ref: T, order: MemoryOrder = .sequential) -> Bool
   {
     let newOrder = StoreMemoryOrder(rawValue: order.rawValue) ?? .sequential
     return self.storeIfNil(ref, order: newOrder)
   }
-
+#endif
 
 #if swift(>=4.2)
   @inlinable
