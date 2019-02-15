@@ -52,7 +52,6 @@ extension CAtomicsRaceTests {
 
 extension MemoryOrderTests {
     static let __allTests = [
-        ("testEnumCases", testEnumCases),
         ("testMemoryOrder", testMemoryOrder),
     ]
 }
