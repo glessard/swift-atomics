@@ -2,20 +2,30 @@ language: swift
 
 matrix:
   include:
+    - os: osx
+      osx_image: xcode8.3
+      env: SWIFT=3.1.1
+
+    - os: osx
+      osx_image: xcode9.2
+      env: SWIFT=4.0.3
+
+    - os: osx
+      osx_image: xcode9.4
+      env: SWIFT=4.1.2
+
+    - os: osx
+      osx_image: xcode10.1
+      env: SWIFT=4.2.1
+
+    - os: osx
+      osx_image: xcode10.2
+      env: SWIFT=5.0
+
     - os: linux
       dist: xenial
       language: generic
       env: SWIFT=3.1.1
-
-    - os: linux
-      dist: xenial
-      language: generic
-      env: SWIFT=3.2
-
-    - os: linux
-      dist: xenial
-      language: generic
-      env: SWIFT=3.3
 
     - os: linux
       dist: xenial
@@ -30,31 +40,6 @@ matrix:
     - os: linux
       dist: xenial
       language: generic
-      env: SWIFT=4.1.50
-
-    - os: linux
-      dist: xenial
-      language: generic
-      env: SWIFT=4.2.1
-
-    - os: osx
-      osx_image: xcode8.3
-      env: SWIFT=3.1.1
-
-    - os: osx
-      osx_image: xcode9
-      env: SWIFT=3.2
-
-    - os: osx
-      osx_image: xcode9.2
-      env: SWIFT=4.0.2
-
-    - os: osx
-      osx_image: xcode9.4
-      env: SWIFT=4.1.2
-
-    - os: osx
-      osx_image: xcode10.1
       env: SWIFT=4.2.1
 
 before_install:
