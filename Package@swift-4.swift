@@ -2,8 +2,6 @@
 
 import PackageDescription
 
-#if swift(>=4.0)
-
 let package = Package(
   name: "Atomics",
   products: [
@@ -16,16 +14,5 @@ let package = Package(
     .target(name: "CAtomics", dependencies: []),
     .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
   ],
-  swiftLanguageVersions: [.v3, .v4, .v4_2, .version("5")]
+  swiftLanguageVersions: [3,4,5]
 )
-
-#else
-
-let package = Package(
-  name: "Atomics",
-  targets: [
-    Target(name: "Atomics", dependencies: ["CAtomics"]),
-  ]
-)
-
-#endif
