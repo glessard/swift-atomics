@@ -40,7 +40,7 @@ matrix:
     - os: linux
       dist: xenial
       language: generic
-      env: SWIFT=4.2.1
+      env: SWIFT=4.2.2
 
 before_install:
   - clang --version
