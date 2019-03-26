@@ -58,15 +58,15 @@ public class CAtomicsRaceTests: XCTestCase
     {
       var p: Optional = UnsafeMutablePointer<Point>.allocate(capacity: 1)
       var lock = AtomicInt()
-      lock.initialize(0)
+      CAtomicsInitialize(&lock, 0)
 
       let closure = {
         while true
         {
           var current = 0
-          if lock.loadCAS(&current, 1, .weak, .sequential, .relaxed)
+          if CAtomicsCompareAndExchange(&lock, &current, 1, .weak, .sequential, .relaxed)
           {
-            defer { lock.store(0, .sequential) }
+            defer { CAtomicsStore(&lock, 0, .sequential) }
             if let c = p
             {
               p = nil
@@ -98,13 +98,13 @@ public class CAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p = AtomicOptionalMutableRawPointer()
-      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
+      CAtomicsInitialize(&p, UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
         var c = UnsafeMutableRawPointer(bitPattern: 0x1)
         while true
         {
-          if p.loadCAS(&c, nil, .weak, .release, .relaxed)
+          if CAtomicsCompareAndExchange(&p, &c, nil, .weak, .release, .relaxed)
           {
             if let c = UnsafeMutableRawPointer(mutating: c)
             {
@@ -138,12 +138,12 @@ public class CAtomicsRaceTests: XCTestCase
     for _ in 1...iterations
     {
       var p = AtomicOptionalMutableRawPointer()
-      p.initialize(UnsafeMutablePointer<Point>.allocate(capacity: 1))
+      CAtomicsInitialize(&p, UnsafeMutablePointer<Point>.allocate(capacity: 1))
 
       let closure = {
         while true
         {
-          if let c = p.swap(nil, .acquire)
+          if let c = CAtomicsExchange(&p, nil, .acquire)
           {
             let pointer = UnsafeMutableRawPointer(mutating: c).assumingMemoryBound(to: Point.self)
             #if swift(>=4.1)
@@ -170,17 +170,18 @@ public class CAtomicsRaceTests: XCTestCase
   {
     let q = DispatchQueue(label: #function, attributes: .concurrent)
     let fakePointer = UnsafeMutableRawPointer(bitPattern: 0x7)!
-    var biggest = AtomicInt(0)
+    var biggest = AtomicInt()
+    CAtomicsInitialize(&biggest, 0)
 
     var t = AtomicTaggedMutableRawPointer()
-    t.initialize(TaggedMutableRawPointer(fakePointer, tag: 0))
-    XCTAssert(t.isLockFree())
+    CAtomicsInitialize(&t, TaggedMutableRawPointer(fakePointer, tag: 0))
+    XCTAssert(CAtomicsIsLockFree(&t))
 
     for _ in 1...iterations
     {
       var p = AtomicTaggedMutableRawPointer()
       let t = TaggedMutableRawPointer(UnsafeMutablePointer<Point>.allocate(capacity: 1), tag: 1)
-      p.initialize(t)
+      CAtomicsInitialize(&p, t)
 
       let closure = {
         while true
@@ -189,10 +190,10 @@ public class CAtomicsRaceTests: XCTestCase
           if choice == 0
           {
             let invalidTaggedPointer = TaggedMutableRawPointer(fakePointer, tag: 0)
-            var taggedPointer = p.load(.relaxed)
+            var taggedPointer = CAtomicsLoad(&p, .relaxed)
             repeat {
               if taggedPointer.ptr == fakePointer { return }
-            } while !p.loadCAS(&taggedPointer, invalidTaggedPointer, .weak, .acquire, .relaxed)
+            } while !CAtomicsCompareAndExchange(&p, &taggedPointer, invalidTaggedPointer, .weak, .acquire, .relaxed)
 
             let ptr = taggedPointer.ptr.assumingMemoryBound(to: Point.self)
 #if swift(>=4.1)
@@ -201,20 +202,20 @@ public class CAtomicsRaceTests: XCTestCase
             ptr.deallocate(capacity: 1)
 #endif
 
-            var b = biggest.load(.relaxed)
+            var b = CAtomicsLoad(&biggest, .relaxed)
             repeat {
               if taggedPointer.tag <= b { break }
-            } while !biggest.loadCAS(&b, taggedPointer.tag, .weak, .relaxed, .relaxed)
+            } while CAtomicsCompareAndExchange(&biggest, &b, taggedPointer.tag, .weak, .relaxed, .relaxed)
             break
           }
           else
           {
-            var taggedPointer = p.load(.relaxed)
+            var taggedPointer = CAtomicsLoad(&p, .relaxed)
             var incremented = taggedPointer
             repeat {
               if taggedPointer.ptr == fakePointer { return }
               incremented.tag = taggedPointer.tag &+ 1
-            } while !p.loadCAS(&taggedPointer, incremented, .weak, .acquire, .relaxed)
+            } while !CAtomicsCompareAndExchange(&p, &taggedPointer, incremented, .weak, .acquire, .relaxed)
           }
         }
       }
@@ -224,7 +225,7 @@ public class CAtomicsRaceTests: XCTestCase
     }
 
     q.sync(flags: .barrier) {}
-    print(biggest.load(.relaxed))
+    print(CAtomicsLoad(&biggest, .relaxed))
   }
 }
 
