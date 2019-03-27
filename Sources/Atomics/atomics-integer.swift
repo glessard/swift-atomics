@@ -11,6 +11,7 @@
 @_exported import enum CAtomics.LoadMemoryOrder
 @_exported import enum CAtomics.StoreMemoryOrder
 @_exported import enum CAtomics.CASType
+import CAtomics
 
 @_exported import struct CAtomics.AtomicInt
 
@@ -19,12 +20,26 @@ extension AtomicInt
 #if swift(>=4.2)
   public var value: Int {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Int {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Int)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Int)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -32,13 +47,13 @@ extension AtomicInt
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -46,13 +61,13 @@ extension AtomicInt
   @inlinable
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Int, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -60,13 +75,13 @@ extension AtomicInt
   @inlinable
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -74,13 +89,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -88,13 +103,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -102,13 +117,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -116,13 +131,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -130,13 +145,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int, order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -144,13 +159,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -158,13 +173,13 @@ extension AtomicInt
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -175,7 +190,7 @@ extension AtomicInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -184,7 +199,7 @@ extension AtomicInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -194,7 +209,7 @@ extension AtomicInt
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -202,7 +217,7 @@ extension AtomicInt
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -214,12 +229,26 @@ extension AtomicUInt
 #if swift(>=4.2)
   public var value: UInt {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: UInt {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: UInt)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: UInt)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -227,13 +256,13 @@ extension AtomicUInt
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -241,13 +270,13 @@ extension AtomicUInt
   @inlinable
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: UInt, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -255,13 +284,13 @@ extension AtomicUInt
   @inlinable
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -269,13 +298,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -283,13 +312,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -297,13 +326,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -311,13 +340,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -325,13 +354,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt, order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -339,13 +368,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -353,13 +382,13 @@ extension AtomicUInt
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -370,7 +399,7 @@ extension AtomicUInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -379,7 +408,7 @@ extension AtomicUInt
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -389,7 +418,7 @@ extension AtomicUInt
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -397,7 +426,7 @@ extension AtomicUInt
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -409,12 +438,26 @@ extension AtomicInt8
 #if swift(>=4.2)
   public var value: Int8 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Int8 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Int8)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Int8)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -422,13 +465,13 @@ extension AtomicInt8
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int8
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -436,13 +479,13 @@ extension AtomicInt8
   @inlinable
   public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Int8, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -450,13 +493,13 @@ extension AtomicInt8
   @inlinable
   public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -464,13 +507,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -478,13 +521,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -492,13 +535,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -506,13 +549,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -520,13 +563,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int8, order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -534,13 +577,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -548,13 +591,13 @@ extension AtomicInt8
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int8
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -565,7 +608,7 @@ extension AtomicInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -574,7 +617,7 @@ extension AtomicInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -584,7 +627,7 @@ extension AtomicInt8
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -592,7 +635,7 @@ extension AtomicInt8
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -604,12 +647,26 @@ extension AtomicUInt8
 #if swift(>=4.2)
   public var value: UInt8 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: UInt8 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: UInt8)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: UInt8)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -617,13 +674,13 @@ extension AtomicUInt8
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt8
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -631,13 +688,13 @@ extension AtomicUInt8
   @inlinable
   public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: UInt8, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -645,13 +702,13 @@ extension AtomicUInt8
   @inlinable
   public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -659,13 +716,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -673,13 +730,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -687,13 +744,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -701,13 +758,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -715,13 +772,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt8, order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -729,13 +786,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -743,13 +800,13 @@ extension AtomicUInt8
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt8
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -760,7 +817,7 @@ extension AtomicUInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -769,7 +826,7 @@ extension AtomicUInt8
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -779,7 +836,7 @@ extension AtomicUInt8
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -787,7 +844,7 @@ extension AtomicUInt8
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -799,12 +856,26 @@ extension AtomicInt16
 #if swift(>=4.2)
   public var value: Int16 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Int16 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Int16)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Int16)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -812,13 +883,13 @@ extension AtomicInt16
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int16
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -826,13 +897,13 @@ extension AtomicInt16
   @inlinable
   public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Int16, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -840,13 +911,13 @@ extension AtomicInt16
   @inlinable
   public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -854,13 +925,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -868,13 +939,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -882,13 +953,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -896,13 +967,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -910,13 +981,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int16, order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -924,13 +995,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -938,13 +1009,13 @@ extension AtomicInt16
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int16
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -955,7 +1026,7 @@ extension AtomicInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -964,7 +1035,7 @@ extension AtomicInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -974,7 +1045,7 @@ extension AtomicInt16
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -982,7 +1053,7 @@ extension AtomicInt16
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -994,12 +1065,26 @@ extension AtomicUInt16
 #if swift(>=4.2)
   public var value: UInt16 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: UInt16 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: UInt16)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: UInt16)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1007,13 +1092,13 @@ extension AtomicUInt16
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt16
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1021,13 +1106,13 @@ extension AtomicUInt16
   @inlinable
   public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: UInt16, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -1035,13 +1120,13 @@ extension AtomicUInt16
   @inlinable
   public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -1049,13 +1134,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -1063,13 +1148,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -1077,13 +1162,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -1091,13 +1176,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -1105,13 +1190,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt16, order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -1119,13 +1204,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -1133,13 +1218,13 @@ extension AtomicUInt16
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt16
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -1150,7 +1235,7 @@ extension AtomicUInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -1159,7 +1244,7 @@ extension AtomicUInt16
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1169,7 +1254,7 @@ extension AtomicUInt16
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -1177,7 +1262,7 @@ extension AtomicUInt16
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -1189,12 +1274,26 @@ extension AtomicInt32
 #if swift(>=4.2)
   public var value: Int32 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Int32 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Int32)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Int32)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1202,13 +1301,13 @@ extension AtomicInt32
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int32
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1216,13 +1315,13 @@ extension AtomicInt32
   @inlinable
   public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Int32, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -1230,13 +1329,13 @@ extension AtomicInt32
   @inlinable
   public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -1244,13 +1343,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -1258,13 +1357,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -1272,13 +1371,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -1286,13 +1385,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -1300,13 +1399,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int32, order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -1314,13 +1413,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -1328,13 +1427,13 @@ extension AtomicInt32
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int32
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -1345,7 +1444,7 @@ extension AtomicInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -1354,7 +1453,7 @@ extension AtomicInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1364,7 +1463,7 @@ extension AtomicInt32
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -1372,7 +1471,7 @@ extension AtomicInt32
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -1384,12 +1483,26 @@ extension AtomicUInt32
 #if swift(>=4.2)
   public var value: UInt32 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: UInt32 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: UInt32)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: UInt32)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1397,13 +1510,13 @@ extension AtomicUInt32
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt32
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1411,13 +1524,13 @@ extension AtomicUInt32
   @inlinable
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: UInt32, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -1425,13 +1538,13 @@ extension AtomicUInt32
   @inlinable
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -1439,13 +1552,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -1453,13 +1566,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -1467,13 +1580,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -1481,13 +1594,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -1495,13 +1608,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt32, order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -1509,13 +1622,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -1523,13 +1636,13 @@ extension AtomicUInt32
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt32
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -1540,7 +1653,7 @@ extension AtomicUInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -1549,7 +1662,7 @@ extension AtomicUInt32
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1559,7 +1672,7 @@ extension AtomicUInt32
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -1567,7 +1680,7 @@ extension AtomicUInt32
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -1579,12 +1692,26 @@ extension AtomicInt64
 #if swift(>=4.2)
   public var value: Int64 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Int64 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Int64)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Int64)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1592,13 +1719,13 @@ extension AtomicInt64
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Int64
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1606,13 +1733,13 @@ extension AtomicInt64
   @inlinable
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Int64, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -1620,13 +1747,13 @@ extension AtomicInt64
   @inlinable
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -1634,13 +1761,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -1648,13 +1775,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -1662,13 +1789,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -1676,13 +1803,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -1690,13 +1817,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: Int64, order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -1704,13 +1831,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -1718,13 +1845,13 @@ extension AtomicInt64
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> Int64
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -1735,7 +1862,7 @@ extension AtomicInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -1744,7 +1871,7 @@ extension AtomicInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1754,7 +1881,7 @@ extension AtomicInt64
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -1762,7 +1889,7 @@ extension AtomicInt64
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -1774,12 +1901,26 @@ extension AtomicUInt64
 #if swift(>=4.2)
   public var value: UInt64 {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: UInt64 {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: UInt64)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: UInt64)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1787,13 +1928,13 @@ extension AtomicUInt64
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> UInt64
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1801,13 +1942,13 @@ extension AtomicUInt64
   @inlinable
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: UInt64, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -1815,13 +1956,13 @@ extension AtomicUInt64
   @inlinable
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -1829,13 +1970,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func add(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_add(delta, order)
+    return CAtomicsAdd(&self, delta, order)
   }
 #endif
 
@@ -1843,13 +1984,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func subtract(_ delta: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_sub(delta, order)
+    return CAtomicsSubtract(&self, delta, order)
   }
 #endif
 
@@ -1857,13 +1998,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseOr(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_or(bits, order)
+    return CAtomicsBitwiseOr(&self, bits, order)
   }
 #endif
 
@@ -1871,13 +2012,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseXor(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_xor(bits, order)
+    return CAtomicsBitwiseXor(&self, bits, order)
   }
 #endif
 
@@ -1885,13 +2026,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func bitwiseAnd(_ bits: UInt64, order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_and(bits, order)
+    return CAtomicsBitwiseAnd(&self, bits, order)
   }
 #endif
 
@@ -1899,13 +2040,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func increment(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_add(1, order)
+    return CAtomicsAdd(&self, 1, order)
   }
 #endif
 
@@ -1913,13 +2054,13 @@ extension AtomicUInt64
   @inlinable @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func decrement(order: MemoryOrder = .relaxed) -> UInt64
   {
-    return fetch_sub(1, order)
+    return CAtomicsSubtract(&self, 1, order)
   }
 #endif
 
@@ -1930,7 +2071,7 @@ extension AtomicUInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -1939,7 +2080,7 @@ extension AtomicUInt64
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1949,7 +2090,7 @@ extension AtomicUInt64
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -1957,7 +2098,7 @@ extension AtomicUInt64
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
@@ -1969,12 +2110,26 @@ extension AtomicBool
 #if swift(>=4.2)
   public var value: Bool {
     @inlinable
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
 #else
   public var value: Bool {
     @inline(__always)
-    mutating get { return load(.relaxed) }
+    mutating get { return CAtomicsLoad(&self, .relaxed) }
+  }
+#endif
+
+#if swift(>=4.2)
+  @inlinable
+  public mutating func initialize(_ value: Bool)
+  {
+    CAtomicsInitialize(&self, value)
+  }
+#else
+  @inline(__always)
+  public mutating func initialize(_ value: Bool)
+  {
+    CAtomicsInitialize(&self, value)
   }
 #endif
 
@@ -1982,13 +2137,13 @@ extension AtomicBool
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return load(order)
+    return CAtomicsLoad(&self, order)
   }
 #endif
 
@@ -1996,13 +2151,13 @@ extension AtomicBool
   @inlinable
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ value: Bool, order: StoreMemoryOrder = .relaxed)
   {
-    store(value, order)
+    CAtomicsStore(&self, value, order)
   }
 #endif
 
@@ -2010,13 +2165,13 @@ extension AtomicBool
   @inlinable
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #else
   @inline(__always)
   public mutating func swap(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return swap(value, order)
+    return CAtomicsExchange(&self, value, order)
   }
 #endif
 
@@ -2024,13 +2179,13 @@ extension AtomicBool
   @inlinable @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_or(value, order)
+    return CAtomicsOr(&self, value, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func or(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_or(value, order)
+    return CAtomicsOr(&self, value, order)
   }
 #endif
 
@@ -2038,13 +2193,13 @@ extension AtomicBool
   @inlinable @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_xor(value, order)
+    return CAtomicsXor(&self, value, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func xor(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_xor(value, order)
+    return CAtomicsXor(&self, value, order)
   }
 #endif
 
@@ -2052,13 +2207,13 @@ extension AtomicBool
   @inlinable @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_and(value, order)
+    return CAtomicsAnd(&self, value, order)
   }
 #else
   @inline(__always) @discardableResult
   public mutating func and(_ value: Bool, order: MemoryOrder = .relaxed) -> Bool
   {
-    return fetch_and(value, order)
+    return CAtomicsAnd(&self, value, order)
   }
 #endif
 
@@ -2069,7 +2224,7 @@ extension AtomicBool
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -2078,7 +2233,7 @@ extension AtomicBool
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return loadCAS(current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -2088,7 +2243,7 @@ extension AtomicBool
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #else
   @inline(__always) @discardableResult
@@ -2096,7 +2251,7 @@ extension AtomicBool
                            type: CASType = .strong,
                            order: MemoryOrder = .relaxed) -> Bool
   {
-    return CAS(current, future, type, order)
+    return CAtomicsCompareAndExchange(&self, current, future, type, order)
   }
 #endif
 }
