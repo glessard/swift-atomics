@@ -2,6 +2,10 @@ import XCTest
 
 extension AtomicsBasicTests {
     static let __allTests = [
+        ("testAtomicTaggedMutableRawPointer", testAtomicTaggedMutableRawPointer),
+        ("testAtomicTaggedOptionalMutableRawPointer", testAtomicTaggedOptionalMutableRawPointer),
+        ("testAtomicTaggedOptionalRawPointer", testAtomicTaggedOptionalRawPointer),
+        ("testAtomicTaggedRawPointer", testAtomicTaggedRawPointer),
         ("testBool", testBool),
         ("testFence", testFence),
         ("testInt", testInt),

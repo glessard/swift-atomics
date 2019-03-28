@@ -1007,6 +1007,169 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r3, i.load())
   }
 
+  public func testAtomicTaggedRawPointer()
+  {
+    let r0 = (UnsafeRawPointer(bitPattern: UInt.randomPositive())!, 0)
+    let r1 = (UnsafeRawPointer(bitPattern: UInt.randomPositive())!, 1)
+    let r2 = (UnsafeRawPointer(bitPattern: UInt.randomPositive())!, 2)
+    let r3 = (r2.0, r2.1+1)
+
+    var p = AtomicTaggedRawPointer(r3)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    p.initialize((r3.0, r0.1))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r0.1, p.tag)
+
+    p.store(r1, order: .release)
+    XCTAssertEqual(r1.0, p.pointer)
+    XCTAssertEqual(r1.1, p.tag)
+
+    var j = p.swap(r2, order: .acqrel)
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    j = p.load(order: .acquire)
+    XCTAssertEqual(r2.0, j.0)
+    XCTAssertEqual(r2.1, j.1)
+
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    j = p.load(order: .relaxed)
+    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
+    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+  }
+
+  public func testAtomicTaggedOptionalRawPointer()
+  {
+    let r0 = (UnsafeRawPointer(bitPattern: UInt.randomPositive()), 0)
+    let r1 = (UnsafeRawPointer(bitPattern: UInt.randomPositive()), 1)
+    let r2 = (UnsafeRawPointer(bitPattern: UInt.randomPositive()), 2)
+    let r3 = (r2.0, r2.1+1)
+
+    var p = AtomicTaggedOptionalRawPointer(r3)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    p.initialize((r3.0, r0.1))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r0.1, p.tag)
+
+    p.store(r1, order: .release)
+    XCTAssertEqual(r1.0, p.pointer)
+    XCTAssertEqual(r1.1, p.tag)
+
+    var j = p.swap(r2, order: .acqrel)
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    j = p.load(order: .acquire)
+    XCTAssertEqual(r2.0, j.0)
+    XCTAssertEqual(r2.1, j.1)
+
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    j = p.load(order: .relaxed)
+    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
+    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+  }
+
+  public func testAtomicTaggedMutableRawPointer()
+  {
+    let r0 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, 0)
+    let r1 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, 1)
+    let r2 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!, 2)
+    let r3 = (r2.0, r2.1+1)
+
+    var p = AtomicTaggedMutableRawPointer(r3)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    p.initialize((r3.0, r0.1))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r0.1, p.tag)
+
+    p.store(r1, order: .release)
+    XCTAssertEqual(r1.0, p.pointer)
+    XCTAssertEqual(r1.1, p.tag)
+
+    var j = p.swap(r2, order: .acqrel)
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    j = p.load(order: .acquire)
+    XCTAssertEqual(r2.0, j.0)
+    XCTAssertEqual(r2.1, j.1)
+
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    j = p.load(order: .relaxed)
+    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
+    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+  }
+
+  public func testAtomicTaggedOptionalMutableRawPointer()
+  {
+    let r0 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), 0)
+    let r1 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), 1)
+    let r2 = (UnsafeMutableRawPointer(bitPattern: UInt.randomPositive()), 2)
+    let r3 = (r2.0, r2.1+1)
+
+    var p = AtomicTaggedOptionalMutableRawPointer(r3)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    p.initialize((r3.0, r0.1))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r0.1, p.tag)
+
+    p.store(r1, order: .release)
+    XCTAssertEqual(r1.0, p.pointer)
+    XCTAssertEqual(r1.1, p.tag)
+
+    var j = p.swap(r2, order: .acqrel)
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    j = p.load(order: .acquire)
+    XCTAssertEqual(r2.0, j.0)
+    XCTAssertEqual(r2.1, j.1)
+
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    j = p.load(order: .relaxed)
+    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
+    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertEqual(r1.0, j.0)
+    XCTAssertEqual(r1.1, j.1)
+    XCTAssertEqual(r3.0, p.pointer)
+    XCTAssertEqual(r3.1, p.tag)
+  }
 
   public func testBool()
   {
