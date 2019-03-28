@@ -12,7 +12,7 @@
 @_exported import enum CAtomics.StoreMemoryOrder
 @_exported import enum CAtomics.CASType
 import CAtomics
-% for Nullable in ['NonNull', 'Optional']:
+% for Nullable in ['', 'Optional']:
 % for Mutable in ['', 'Mutable']:
 % Pointer = 'Pointer<Pointee>?' if (Nullable == 'Optional') else 'Pointer<Pointee>'
 % optional = '?' if (Nullable == 'Optional') else ''
@@ -146,7 +146,7 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
 }
 % end
 % end
-% for (AtomicType, PointerType) in [('AtomicNonNullRawPointer', 'UnsafeRawPointer'), ('AtomicOptionalRawPointer', 'UnsafeRawPointer?'), ('AtomicNonNullMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOptionalMutableRawPointer', 'UnsafeMutableRawPointer?'), ('AtomicNonNullOpaquePointer', 'OpaquePointer'), ('AtomicOptionalOpaquePointer', 'OpaquePointer?')]:
+% for (AtomicType, PointerType) in [('AtomicRawPointer', 'UnsafeRawPointer'), ('AtomicOptionalRawPointer', 'UnsafeRawPointer?'), ('AtomicMutableRawPointer', 'UnsafeMutableRawPointer'), ('AtomicOptionalMutableRawPointer', 'UnsafeMutableRawPointer?'), ('AtomicOpaquePointer', 'OpaquePointer'), ('AtomicOptionalOpaquePointer', 'OpaquePointer?')]:
 
 @_exported import struct CAtomics.${AtomicType}
 
@@ -266,17 +266,17 @@ extension ${AtomicType}
 }
 % end
 
-@available(*, unavailable, renamed: "AtomicOptionalPointer")
-public typealias AtomicPointer<T> = AtomicOptionalPointer<T>
+@available(*, unavailable, renamed: "AtomicPointer")
+public typealias AtomicNonNullPointer<T> = AtomicPointer<T>
 
-@available(*, unavailable, renamed: "AtomicOptionalMutablePointer")
-public typealias AtomicMutablePointer<T> = AtomicOptionalMutablePointer<T>
+@available(*, unavailable, renamed: "AtomicMutablePointer")
+public typealias AtomicNonNullMutablePointer<T> = AtomicMutablePointer<T>
 
-@available(*, unavailable, renamed: "AtomicOptionalRawPointer")
-public typealias AtomicRawPointer = AtomicOptionalRawPointer
+@available(*, unavailable, renamed: "AtomicRawPointer")
+public typealias AtomicNonNullRawPointer = AtomicRawPointer
 
-@available(*, unavailable, renamed: "AtomicOptionalMutableRawPointer")
-public typealias AtomicMutableRawPointer = AtomicOptionalMutableRawPointer
+@available(*, unavailable, renamed: "AtomicMutableRawPointer")
+public typealias AtomicNonNullMutableRawPointer = AtomicMutableRawPointer
 
-@available(*, unavailable, renamed: "AtomicOptionalOpaquePointer")
-public typealias AtomicOpaquePointer = AtomicOptionalOpaquePointer
+@available(*, unavailable, renamed: "AtomicOpaquePointer")
+public typealias AtomicNonNullOpaquePointer = AtomicOpaquePointer
