@@ -16,6 +16,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = Int.randomPositive()
@@ -81,6 +83,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = UInt.randomPositive()
@@ -146,6 +150,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt8(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = Int8.randomPositive()
@@ -211,6 +217,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt8(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = UInt8.randomPositive()
@@ -276,6 +284,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt16(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = Int16.randomPositive()
@@ -341,6 +351,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt16(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = UInt16.randomPositive()
@@ -406,6 +418,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt32(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = Int32.randomPositive()
@@ -471,6 +485,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt32(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = UInt32.randomPositive()
@@ -536,6 +552,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt64(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = Int64.randomPositive()
@@ -601,6 +619,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt64(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = UInt64.randomPositive()
@@ -675,11 +695,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOptionalRawPointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -703,11 +726,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicNonNullRawPointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -734,11 +760,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOptionalMutableRawPointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -762,11 +791,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicNonNullMutableRawPointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -793,11 +825,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOptionalPointer<Int64>(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -821,11 +856,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicNonNullPointer<Int64>(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -852,11 +890,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOptionalMutablePointer<Int64>(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -880,11 +921,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicNonNullMutablePointer<Int64>(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -911,11 +955,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicOptionalOpaquePointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
@@ -939,11 +986,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = AtomicNonNullOpaquePointer(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)

@@ -19,6 +19,8 @@ public class AtomicsBasicTests: XCTestCase
   {
     var i = Atomic${i}(0)
     XCTAssert(i.value == 0)
+    i.initialize(1)
+    XCTAssert(i.value == 1)
 
 #if swift(>=4.0)
     let r1 = ${i}.randomPositive()
@@ -103,11 +105,14 @@ public class AtomicsBasicTests: XCTestCase
     var i = Atomic${nullability}${p}Pointer${pointee}(r0)
     XCTAssertEqual(i.pointer, r0)
 
-    i.store(r1)
-    XCTAssertEqual(r1, i.load())
+    i.initialize(r1)
+    XCTAssertEqual(i.pointer, r1)
+
+    i.store(r0)
+    XCTAssertEqual(r0, i.load())
 
     var j = i.swap(r2)
-    XCTAssertEqual(r1, j)
+    XCTAssertEqual(r0, j)
     XCTAssertEqual(r2, i.load())
 
     i.store(r1)
