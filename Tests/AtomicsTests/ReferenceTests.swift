@@ -51,7 +51,7 @@ public class ReferenceTests: XCTestCase
 #if swift(>=5.0)
     XCTAssert(a.storeIfNil(Witness(j)) == false)
 #else
-    XCTAssert(a.swapIfNil(Witness(j)) == false)
+    XCTAssert(a.swapIfNil(Witness(j), order: .release) == false)
 #endif
 
     weak var witnessi = a.load()
