@@ -91,27 +91,27 @@ public struct AtomicNonNullPointer<Pointee>
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafePointer<Pointee>>,
+  public mutating func loadCAS(current: inout UnsafePointer<Pointee>,
                                future: UnsafePointer<Pointee>,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeRawPointer).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeRawPointer(current)
+    defer { current = c.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafePointer<Pointee>>,
+  public mutating func loadCAS(current: inout UnsafePointer<Pointee>,
                                future: UnsafePointer<Pointee>,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeRawPointer).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeRawPointer(current)
+    defer { current = c.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
   }
 #endif
 
@@ -212,27 +212,27 @@ public struct AtomicNonNullMutablePointer<Pointee>
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutablePointer<Pointee>>,
+  public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>,
                                future: UnsafeMutablePointer<Pointee>,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeMutableRawPointer).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeMutableRawPointer(current)
+    defer { current = c.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutablePointer<Pointee>>,
+  public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>,
                                future: UnsafeMutablePointer<Pointee>,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeMutableRawPointer).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeMutableRawPointer(current)
+    defer { current = c.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
   }
 #endif
 
@@ -338,27 +338,27 @@ public struct AtomicOptionalPointer<Pointee>
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafePointer<Pointee>?>,
+  public mutating func loadCAS(current: inout UnsafePointer<Pointee>?,
                                future: UnsafePointer<Pointee>?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeRawPointer?).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeRawPointer(current)
+    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafePointer<Pointee>?>,
+  public mutating func loadCAS(current: inout UnsafePointer<Pointee>?,
                                future: UnsafePointer<Pointee>?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeRawPointer?).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeRawPointer(current)
+    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
   }
 #endif
 
@@ -464,27 +464,27 @@ public struct AtomicOptionalMutablePointer<Pointee>
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutablePointer<Pointee>?>,
+  public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>?,
                                future: UnsafeMutablePointer<Pointee>?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeMutableRawPointer?).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeMutableRawPointer(current)
+    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutablePointer<Pointee>?>,
+  public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>?,
                                future: UnsafeMutablePointer<Pointee>?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return current.withMemoryRebound(to: (UnsafeMutableRawPointer?).self, capacity: 1) {
-      CAtomicsCompareAndExchange(&ptr, $0, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
-    }
+    var c = UnsafeMutableRawPointer(current)
+    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
+    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
   }
 #endif
 
@@ -585,23 +585,23 @@ extension AtomicNonNullRawPointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer>,
+  public mutating func loadCAS(current: inout UnsafeRawPointer,
                                future: UnsafeRawPointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer>,
+  public mutating func loadCAS(current: inout UnsafeRawPointer,
                                future: UnsafeRawPointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -702,23 +702,23 @@ extension AtomicOptionalRawPointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer?>,
+  public mutating func loadCAS(current: inout UnsafeRawPointer?,
                                future: UnsafeRawPointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeRawPointer?>,
+  public mutating func loadCAS(current: inout UnsafeRawPointer?,
                                future: UnsafeRawPointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -819,23 +819,23 @@ extension AtomicNonNullMutableRawPointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer>,
+  public mutating func loadCAS(current: inout UnsafeMutableRawPointer,
                                future: UnsafeMutableRawPointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer>,
+  public mutating func loadCAS(current: inout UnsafeMutableRawPointer,
                                future: UnsafeMutableRawPointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -936,23 +936,23 @@ extension AtomicOptionalMutableRawPointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
+  public mutating func loadCAS(current: inout UnsafeMutableRawPointer?,
                                future: UnsafeMutableRawPointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UnsafeMutableRawPointer?>,
+  public mutating func loadCAS(current: inout UnsafeMutableRawPointer?,
                                future: UnsafeMutableRawPointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1053,23 +1053,23 @@ extension AtomicNonNullOpaquePointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer>,
+  public mutating func loadCAS(current: inout OpaquePointer,
                                future: OpaquePointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer>,
+  public mutating func loadCAS(current: inout OpaquePointer,
                                future: OpaquePointer,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1170,23 +1170,23 @@ extension AtomicOptionalOpaquePointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer?>,
+  public mutating func loadCAS(current: inout OpaquePointer?,
                                future: OpaquePointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<OpaquePointer?>,
+  public mutating func loadCAS(current: inout OpaquePointer?,
                                future: OpaquePointer?,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .sequential,
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 

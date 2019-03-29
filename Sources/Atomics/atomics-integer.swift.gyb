@@ -140,21 +140,21 @@ extension ${AtomicType}
 % end # if IntType == 'Bool'
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<${IntType}>, future: ${IntType},
+  public mutating func loadCAS(current: inout ${IntType}, future: ${IntType},
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<${IntType}>, future: ${IntType},
+  public mutating func loadCAS(current: inout ${IntType}, future: ${IntType},
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 

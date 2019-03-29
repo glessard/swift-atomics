@@ -185,21 +185,21 @@ extension AtomicInt
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int>, future: Int,
+  public mutating func loadCAS(current: inout Int, future: Int,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int>, future: Int,
+  public mutating func loadCAS(current: inout Int, future: Int,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -394,21 +394,21 @@ extension AtomicUInt
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt>, future: UInt,
+  public mutating func loadCAS(current: inout UInt, future: UInt,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt>, future: UInt,
+  public mutating func loadCAS(current: inout UInt, future: UInt,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -603,21 +603,21 @@ extension AtomicInt8
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int8>, future: Int8,
+  public mutating func loadCAS(current: inout Int8, future: Int8,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int8>, future: Int8,
+  public mutating func loadCAS(current: inout Int8, future: Int8,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -812,21 +812,21 @@ extension AtomicUInt8
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt8>, future: UInt8,
+  public mutating func loadCAS(current: inout UInt8, future: UInt8,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt8>, future: UInt8,
+  public mutating func loadCAS(current: inout UInt8, future: UInt8,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1021,21 +1021,21 @@ extension AtomicInt16
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int16>, future: Int16,
+  public mutating func loadCAS(current: inout Int16, future: Int16,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int16>, future: Int16,
+  public mutating func loadCAS(current: inout Int16, future: Int16,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1230,21 +1230,21 @@ extension AtomicUInt16
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt16>, future: UInt16,
+  public mutating func loadCAS(current: inout UInt16, future: UInt16,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt16>, future: UInt16,
+  public mutating func loadCAS(current: inout UInt16, future: UInt16,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1439,21 +1439,21 @@ extension AtomicInt32
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int32>, future: Int32,
+  public mutating func loadCAS(current: inout Int32, future: Int32,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int32>, future: Int32,
+  public mutating func loadCAS(current: inout Int32, future: Int32,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1648,21 +1648,21 @@ extension AtomicUInt32
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt32>, future: UInt32,
+  public mutating func loadCAS(current: inout UInt32, future: UInt32,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt32>, future: UInt32,
+  public mutating func loadCAS(current: inout UInt32, future: UInt32,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -1857,21 +1857,21 @@ extension AtomicInt64
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int64>, future: Int64,
+  public mutating func loadCAS(current: inout Int64, future: Int64,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Int64>, future: Int64,
+  public mutating func loadCAS(current: inout Int64, future: Int64,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -2066,21 +2066,21 @@ extension AtomicUInt64
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt64>, future: UInt64,
+  public mutating func loadCAS(current: inout UInt64, future: UInt64,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<UInt64>, future: UInt64,
+  public mutating func loadCAS(current: inout UInt64, future: UInt64,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -2219,21 +2219,21 @@ extension AtomicBool
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
+  public mutating func loadCAS(current: inout Bool, future: Bool,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func loadCAS(current: UnsafeMutablePointer<Bool>, future: Bool,
+  public mutating func loadCAS(current: inout Bool, future: Bool,
                                type: CASType = .weak,
                                orderSwap: MemoryOrder = .relaxed,
                                orderLoad: LoadMemoryOrder = .relaxed) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
   }
 #endif
 
