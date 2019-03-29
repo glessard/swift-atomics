@@ -28,7 +28,7 @@ then
   fi
 elif [[ "${COMPILER_MAJOR_VERSION}" = "5" ]]
 then
-  VERSIONS="4.2 4"
+  VERSIONS="4.2"
 fi
 
 for LANGUAGE_VERSION in $VERSIONS
