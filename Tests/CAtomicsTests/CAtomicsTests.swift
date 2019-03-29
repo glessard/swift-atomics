@@ -690,14 +690,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
 
-  public func testAtomicNonNullRawPointer()
+  public func testAtomicRawPointer()
   {
     let r0 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r1 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullRawPointer(r3)
+    var p = AtomicRawPointer(r3)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
     XCTAssert(CAtomicsIsLockFree(&p))
 
@@ -723,14 +723,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
 
-  public func testAtomicNonNullMutableRawPointer()
+  public func testAtomicMutableRawPointer()
   {
     let r0 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r1 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r2 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullMutableRawPointer(r3)
+    var p = AtomicMutableRawPointer(r3)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
     XCTAssert(CAtomicsIsLockFree(&p))
 
@@ -921,14 +921,14 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
 
-  public func testAtomicNonNullOpaquePointer()
+  public func testAtomicOpaquePointer()
   {
     let r0 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r1 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r2 = OpaquePointer(bitPattern: UInt.randomPositive())!
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
 
-    var p = AtomicNonNullOpaquePointer(r3)
+    var p = AtomicOpaquePointer(r3)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
     XCTAssert(CAtomicsIsLockFree(&p))
 

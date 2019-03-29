@@ -128,7 +128,7 @@ public class CAtomicsBasicTests: XCTestCase
   }
 }
 
-% pointers = ['AtomicOptionalRawPointer', 'AtomicNonNullRawPointer', 'AtomicNonNullMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicPaddedMutableRawPointer', 'AtomicPaddedOptionalMutableRawPointer', 'AtomicPaddedRawPointer', 'AtomicPaddedOptionalRawPointer', 'AtomicNonNullOpaquePointer', 'AtomicOptionalOpaquePointer']
+% pointers = ['AtomicOptionalRawPointer', 'AtomicRawPointer', 'AtomicMutableRawPointer', 'AtomicOptionalMutableRawPointer', 'AtomicPaddedMutableRawPointer', 'AtomicPaddedOptionalMutableRawPointer', 'AtomicPaddedRawPointer', 'AtomicPaddedOptionalRawPointer', 'AtomicOpaquePointer', 'AtomicOptionalOpaquePointer']
 extension CAtomicsBasicTests
 {
 % for type in pointers:

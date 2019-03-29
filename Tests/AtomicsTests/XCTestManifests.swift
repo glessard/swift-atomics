@@ -9,11 +9,7 @@ extension AtomicsBasicTests {
         ("testInt32", testInt32),
         ("testInt64", testInt64),
         ("testInt8", testInt8),
-        ("testNonNullOpaquePointer", testNonNullOpaquePointer),
-        ("testNonNullUnsafeMutablePointer", testNonNullUnsafeMutablePointer),
-        ("testNonNullUnsafeMutableRawPointer", testNonNullUnsafeMutableRawPointer),
-        ("testNonNullUnsafePointer", testNonNullUnsafePointer),
-        ("testNonNullUnsafeRawPointer", testNonNullUnsafeRawPointer),
+        ("testOpaquePointer", testOpaquePointer),
         ("testOptionalOpaquePointer", testOptionalOpaquePointer),
         ("testOptionalUnsafeMutablePointer", testOptionalUnsafeMutablePointer),
         ("testOptionalUnsafeMutableRawPointer", testOptionalUnsafeMutableRawPointer),
@@ -24,6 +20,10 @@ extension AtomicsBasicTests {
         ("testUInt32", testUInt32),
         ("testUInt64", testUInt64),
         ("testUInt8", testUInt8),
+        ("testUnsafeMutablePointer", testUnsafeMutablePointer),
+        ("testUnsafeMutableRawPointer", testUnsafeMutableRawPointer),
+        ("testUnsafePointer", testUnsafePointer),
+        ("testUnsafeRawPointer", testUnsafeRawPointer),
     ]
 }
 

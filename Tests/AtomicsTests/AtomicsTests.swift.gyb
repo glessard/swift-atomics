@@ -88,7 +88,7 @@ public class AtomicsBasicTests: XCTestCase
 % for optional in [True, False]:
 % unsafe = 'Unsafe' if p != 'Opaque' else ''
 % pointee = '<Int64>' if (p == '' or p == 'Mutable') else ''
-% nullability = 'Optional' if optional else 'NonNull'
+% nullability = 'Optional' if optional else ''
   public func test${nullability}${unsafe}${p}Pointer()
   {
 % if optional == True:

@@ -2,9 +2,8 @@ import XCTest
 
 extension CAtomicsBasicTests {
     static let __allTests = [
-        ("testAtomicNonNullMutableRawPointer", testAtomicNonNullMutableRawPointer),
-        ("testAtomicNonNullOpaquePointer", testAtomicNonNullOpaquePointer),
-        ("testAtomicNonNullRawPointer", testAtomicNonNullRawPointer),
+        ("testAtomicMutableRawPointer", testAtomicMutableRawPointer),
+        ("testAtomicOpaquePointer", testAtomicOpaquePointer),
         ("testAtomicOptionalMutableRawPointer", testAtomicOptionalMutableRawPointer),
         ("testAtomicOptionalOpaquePointer", testAtomicOptionalOpaquePointer),
         ("testAtomicOptionalRawPointer", testAtomicOptionalRawPointer),
@@ -16,6 +15,7 @@ extension CAtomicsBasicTests {
         ("testAtomicPaddedTaggedOptionalMutableRawPointer", testAtomicPaddedTaggedOptionalMutableRawPointer),
         ("testAtomicPaddedTaggedOptionalRawPointer", testAtomicPaddedTaggedOptionalRawPointer),
         ("testAtomicPaddedTaggedRawPointer", testAtomicPaddedTaggedRawPointer),
+        ("testAtomicRawPointer", testAtomicRawPointer),
         ("testAtomicTaggedMutableRawPointer", testAtomicTaggedMutableRawPointer),
         ("testAtomicTaggedOptionalMutableRawPointer", testAtomicTaggedOptionalMutableRawPointer),
         ("testAtomicTaggedOptionalRawPointer", testAtomicTaggedOptionalRawPointer),
