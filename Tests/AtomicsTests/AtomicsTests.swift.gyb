@@ -9,12 +9,10 @@
 import XCTest
 
 import Atomics
-% pointers = ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']
-% integers = ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']
 
 public class AtomicsBasicTests: XCTestCase
 {
-% for i in integers:
+% for i in ['Int', 'UInt', 'Int8', 'UInt8', 'Int16', 'UInt16', 'Int32', 'UInt32', 'Int64', 'UInt64']:
   public func test${i}()
   {
     var i = Atomic${i}(0)
@@ -84,15 +82,14 @@ public class AtomicsBasicTests: XCTestCase
   }
 
 % end
-% for p in pointers:
-% for optional in [True, False]:
+% for p in ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']:
+% for optional in ['Optional', '']:
 % unsafe = 'Unsafe' if p != 'Opaque' else ''
 % pointee = '<Int64>' if (p == '' or p == 'Mutable') else ''
-% nullability = 'Optional' if optional else ''
-  public func test${nullability}${unsafe}${p}Pointer()
+  public func test${optional}${unsafe}${p}Pointer()
   {
-% if optional == True:
-    var n = Atomic${nullability}${p}Pointer${pointee}()
+% if optional == 'Optional':
+    var n = Atomic${optional}${p}Pointer${pointee}()
     XCTAssertEqual(n.pointer, nil)
 
 % end
@@ -102,7 +99,7 @@ public class AtomicsBasicTests: XCTestCase
     let r2 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
     let r3 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
 
-    var i = Atomic${nullability}${p}Pointer${pointee}(r0)
+    var i = Atomic${optional}${p}Pointer${pointee}(r0)
     XCTAssertEqual(i.pointer, r0)
 
     i.initialize(r1)
