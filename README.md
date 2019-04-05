@@ -5,11 +5,11 @@ The atomic functions available in `/usr/include/libkern/OSAtomic.h` are quite li
 
 Clang, on the other hand, has an implementation of the C11 atomic functions built-in. They're also available on Linux.
 
-This project bridges a subset of Clang's C11 atomics support to Swift.
+This project bridges a subset of Clang's C11 atomics support to Swift, in two ways.
 
-The following Swift types are implemented:
+The first way is a `SwiftAtomics` module, where the following Swift types are implemented:
 - `AtomicPointer`, `AtomicMutablePointer`, `AtomicRawPointer`, `AtomicMutableRawPointer` and `AtomicOpaquePointer`;
-- `AtomicInt` and `AtomicUInt`, `AtomicInt32` and `AtomicUInt32`, `AtomicInt64` and `AtomicUInt64`;
+- `AtomicInt` and `AtomicUInt`, as well as versions signed and unsigned of the 8-bit, 16-bit, 32-bit and 64-bit integer types;
 - `AtomicBool`
 
 The pointer types have the following methods:

@@ -5,7 +5,7 @@
 
 import UIKit
 
-import Atomics
+import SwiftAtomics
 import CAtomics
 
 #if !swift(>=4.2)

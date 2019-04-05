@@ -8,7 +8,7 @@
 
 import XCTest
 
-import Atomics
+import SwiftAtomics
 
 public class AtomicsBasicTests: XCTestCase
 {

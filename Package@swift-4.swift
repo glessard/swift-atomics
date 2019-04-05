@@ -3,14 +3,14 @@
 import PackageDescription
 
 let package = Package(
-  name: "Atomics",
+  name: "SwiftAtomics",
   products: [
-    .library(name: "Atomics", type: .static, targets: ["Atomics"]),
+    .library(name: "SwiftAtomics", type: .static, targets: ["SwiftAtomics"]),
     .library(name: "CAtomics", type: .static, targets: ["CAtomics"]),
   ],
   targets: [
-    .target(name: "Atomics", dependencies: ["CAtomics"]),
-    .testTarget(name: "AtomicsTests", dependencies: ["Atomics"]),
+    .target(name: "SwiftAtomics", dependencies: ["CAtomics"]),
+    .testTarget(name: "SwiftAtomicsTests", dependencies: ["SwiftAtomics"]),
     .target(name: "CAtomics", dependencies: []),
     .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
   ],

@@ -9,7 +9,7 @@
 import XCTest
 import Dispatch
 
-import Atomics
+import SwiftAtomics
 
 private let iterations = 200_000//_000
 

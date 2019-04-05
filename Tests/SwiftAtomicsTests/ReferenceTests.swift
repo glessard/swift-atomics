@@ -9,7 +9,7 @@
 import XCTest
 import Dispatch
 
-import Atomics
+import SwiftAtomics
 
 private struct Point { var x = 0.0, y = 0.0, z = 0.0 }
 
