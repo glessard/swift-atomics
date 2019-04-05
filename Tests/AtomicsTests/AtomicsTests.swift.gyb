@@ -82,24 +82,24 @@ public class AtomicsBasicTests: XCTestCase
   }
 
 % end
-% for p in ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']:
-% for optional in ['Optional', '']:
-% unsafe = 'Unsafe' if p != 'Opaque' else ''
-% pointee = '<Int64>' if (p == '' or p == 'Mutable') else ''
-  public func test${optional}${unsafe}${p}Pointer()
+% for type in ['Raw', 'MutableRaw', '', 'Mutable', 'Opaque']:
+% for optional in ['', 'Optional']:
+% unsafe = 'Unsafe' if type != 'Opaque' else ''
+% pointee = '<Int64>' if (type == '' or type == 'Mutable') else ''
+  public func test${unsafe}${type}Pointer${optional}()
   {
 % if optional == 'Optional':
-    var n = Atomic${optional}${p}Pointer${pointee}()
+    var n = Atomic${optional}${type}Pointer${pointee}()
     XCTAssertEqual(n.pointer, nil)
 
 % end
 % bang = '' if optional else '!'
-    let r0 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
-    let r1 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
-    let r2 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
-    let r3 = ${unsafe}${p}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r0 = ${unsafe}${type}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r1 = ${unsafe}${type}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r2 = ${unsafe}${type}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
+    let r3 = ${unsafe}${type}Pointer${pointee}(bitPattern: UInt.randomPositive())${bang}
 
-    var i = Atomic${optional}${p}Pointer${pointee}(r0)
+    var i = Atomic${optional}${type}Pointer${pointee}(r0)
     XCTAssertEqual(i.pointer, r0)
 
     i.initialize(r1)
@@ -125,17 +125,17 @@ public class AtomicsBasicTests: XCTestCase
 
 % end
 % end
-% for p in ['Raw', 'MutableRaw']:
+% for type in ['Raw', 'MutableRaw']:
 % for optional in ['', 'Optional']:
-  public func testAtomicTagged${optional}${p}Pointer()
+  public func testTagged${optional}${type}Pointer()
   {
 % bang = '' if optional else '!'
-    let r0 = (Unsafe${p}Pointer(bitPattern: UInt.randomPositive())${bang}, 0)
-    let r1 = (Unsafe${p}Pointer(bitPattern: UInt.randomPositive())${bang}, 1)
-    let r2 = (Unsafe${p}Pointer(bitPattern: UInt.randomPositive())${bang}, 2)
+    let r0 = (Unsafe${type}Pointer(bitPattern: UInt.randomPositive())${bang}, 0)
+    let r1 = (Unsafe${type}Pointer(bitPattern: UInt.randomPositive())${bang}, 1)
+    let r2 = (Unsafe${type}Pointer(bitPattern: UInt.randomPositive())${bang}, 2)
     let r3 = (r2.0, r2.1+1)
 
-    var p = AtomicTagged${optional}${p}Pointer(r3)
+    var p = AtomicTagged${optional}${type}Pointer(r3)
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 

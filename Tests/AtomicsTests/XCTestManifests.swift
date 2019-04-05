@@ -2,10 +2,6 @@ import XCTest
 
 extension AtomicsBasicTests {
     static let __allTests = [
-        ("testAtomicTaggedMutableRawPointer", testAtomicTaggedMutableRawPointer),
-        ("testAtomicTaggedOptionalMutableRawPointer", testAtomicTaggedOptionalMutableRawPointer),
-        ("testAtomicTaggedOptionalRawPointer", testAtomicTaggedOptionalRawPointer),
-        ("testAtomicTaggedRawPointer", testAtomicTaggedRawPointer),
         ("testBool", testBool),
         ("testFence", testFence),
         ("testInt", testInt),
@@ -14,20 +10,24 @@ extension AtomicsBasicTests {
         ("testInt64", testInt64),
         ("testInt8", testInt8),
         ("testOpaquePointer", testOpaquePointer),
-        ("testOptionalOpaquePointer", testOptionalOpaquePointer),
-        ("testOptionalUnsafeMutablePointer", testOptionalUnsafeMutablePointer),
-        ("testOptionalUnsafeMutableRawPointer", testOptionalUnsafeMutableRawPointer),
-        ("testOptionalUnsafePointer", testOptionalUnsafePointer),
-        ("testOptionalUnsafeRawPointer", testOptionalUnsafeRawPointer),
+        ("testOpaquePointerOptional", testOpaquePointerOptional),
+        ("testTaggedMutableRawPointer", testTaggedMutableRawPointer),
+        ("testTaggedOptionalMutableRawPointer", testTaggedOptionalMutableRawPointer),
+        ("testTaggedOptionalRawPointer", testTaggedOptionalRawPointer),
+        ("testTaggedRawPointer", testTaggedRawPointer),
         ("testUInt", testUInt),
         ("testUInt16", testUInt16),
         ("testUInt32", testUInt32),
         ("testUInt64", testUInt64),
         ("testUInt8", testUInt8),
         ("testUnsafeMutablePointer", testUnsafeMutablePointer),
+        ("testUnsafeMutablePointerOptional", testUnsafeMutablePointerOptional),
         ("testUnsafeMutableRawPointer", testUnsafeMutableRawPointer),
+        ("testUnsafeMutableRawPointerOptional", testUnsafeMutableRawPointerOptional),
         ("testUnsafePointer", testUnsafePointer),
+        ("testUnsafePointerOptional", testUnsafePointerOptional),
         ("testUnsafeRawPointer", testUnsafeRawPointer),
+        ("testUnsafeRawPointerOptional", testUnsafeRawPointerOptional),
     ]
 }
 
