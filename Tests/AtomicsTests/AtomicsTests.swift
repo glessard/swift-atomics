@@ -1033,7 +1033,7 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 
@@ -1074,7 +1074,7 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 
@@ -1115,7 +1115,7 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 
@@ -1156,7 +1156,7 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong, order: .relaxed))
+    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 

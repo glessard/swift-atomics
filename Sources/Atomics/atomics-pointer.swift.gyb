@@ -330,14 +330,14 @@ extension AtomicTagged${optional}${type}Pointer
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func load(order: LoadMemoryOrder) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsLoad(&self, order)
     return (t.ptr, t.tag)
   }
 #else
   @inline(__always)
-  public mutating func load(order: LoadMemoryOrder) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
+  public mutating func load(order: LoadMemoryOrder = .sequential) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsLoad(&self, order)
     return (t.ptr, t.tag)
@@ -346,13 +346,13 @@ extension AtomicTagged${optional}${type}Pointer
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder)
+  public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder = .sequential)
   {
     CAtomicsStore(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
   }
 #else
   @inline(__always)
-  public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder)
+  public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder = .sequential)
   {
     CAtomicsStore(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
   }
@@ -360,14 +360,14 @@ extension AtomicTagged${optional}${type}Pointer
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
+  public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder = .sequential) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsExchange(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
     return (t.ptr, t.tag)
   }
 #else
   @inline(__always)
-  public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
+  public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder = .sequential) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsExchange(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
     return (t.ptr, t.tag)
@@ -376,8 +376,9 @@ extension AtomicTagged${optional}${type}Pointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int), future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType, orderSwap: MemoryOrder, orderLoad: LoadMemoryOrder) -> Bool
+  public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                               future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                               type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -387,8 +388,9 @@ extension AtomicTagged${optional}${type}Pointer
   }
 #else
   @inline(__always)
-  public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int), future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType, orderSwap: MemoryOrder, orderLoad: LoadMemoryOrder) -> Bool
+  public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                               future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                               type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -400,8 +402,9 @@ extension AtomicTagged${optional}${type}Pointer
 
 #if swift(>=4.2)
   @inlinable @discardableResult
-  public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int), future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           type: CASType, order: MemoryOrder) -> Bool
+  public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                           future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                           type: CASType, order: MemoryOrder = .sequential) -> Bool
   {
     let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -409,8 +412,9 @@ extension AtomicTagged${optional}${type}Pointer
   }
 #else
   @inline(__always) @discardableResult
-  public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int), future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           type: CASType, order: MemoryOrder) -> Bool
+  public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                           future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
+                           type: CASType, order: MemoryOrder = .sequential) -> Bool
   {
     let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
