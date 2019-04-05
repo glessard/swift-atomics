@@ -24,4 +24,4 @@ The integer types also have a `value` property, as a convenient way to perform a
 
 These types should be used as members of reference types, or captured by closures. They are implemented as `struct`s so that using them does not automatically incur additional memory allocation. They should not be used members of another `struct`, since that would result in violations the law-of-exclusivity.
 
-This library requires Swift 3.0 or later. On Linux, it also requires Clang 3.6 or later.
+This library requires Swift 3.1 or later. On Linux, it also requires Clang 3.6 or later.
