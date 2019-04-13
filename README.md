@@ -42,6 +42,8 @@ Atomic types are useful as synchronization points between threads, and therefore
 In order to use atomics in a way that is acceptable to the thread sanitizer; you must allocate memory for atomic variables on the heap using `UnsafeMutablePointer`, and then pass that pointer to the `CAtomics` functions as needed. Unfortunately I have not found a way to use the swift-style wrappers in a way that doesn't trigger the thread sanitizer.
 
 ```swift
+import CAtomics
+
 class Example {
   private var state = UnsafeMutablePointer<AtomicInt>.allocate(capacity: 1)
   init() {
