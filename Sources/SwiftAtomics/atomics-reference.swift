@@ -156,9 +156,9 @@ extension AtomicReference
   /// the others operations will spin until a `load` operation is complete,
   /// but are otherwise atomic.
   @inlinable
-  public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
+  public mutating func load() -> T?
   {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, order)
+    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
       assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
@@ -182,9 +182,9 @@ extension AtomicReference
   /// the others operations will spin until a `load` operation is complete,
   /// but are otherwise atomic.
   @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .sequential) -> T?
+  public mutating func load() -> T?
   {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, order)
+    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
       assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
