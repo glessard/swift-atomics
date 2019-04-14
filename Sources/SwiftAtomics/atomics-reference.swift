@@ -14,8 +14,7 @@ import CAtomics
 
 import struct CAtomics.OpaqueUnmanagedHelper
 
-#if swift(>=3.2)
-#else
+#if !swift(>=3.2)
 extension MemoryOrder
 {
   @_versioned init(order: LoadMemoryOrder)
