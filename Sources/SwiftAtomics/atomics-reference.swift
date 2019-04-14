@@ -44,8 +44,8 @@ public struct AtomicReference<T: AnyObject>
 
   mutating public func initialize(_ reference: T?)
   {
-    let u = reference.map(Unmanaged.passRetained)
-    CAtomicsInitialize(&ptr, u?.toOpaque())
+    let u = reference.map { Unmanaged.passRetained($0).toOpaque() }
+    CAtomicsInitialize(&ptr, u)
   }
 }
 
@@ -55,19 +55,19 @@ extension AtomicReference
   @inlinable
   public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
   {
-    let u = reference.map(Unmanaged.passRetained)?.toOpaque()
+    let u = reference.map { Unmanaged.passRetained($0).toOpaque() }
 
     let pointer = CAtomicsExchange(&ptr, u, order)
-    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #else
   @inline(__always)
   public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
   {
-    let u = reference.map(Unmanaged.passRetained)?.toOpaque()
+    let u = reference.map { Unmanaged.passRetained($0).toOpaque() }
 
     let pointer = CAtomicsExchange(&ptr, u, order)
-    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #endif
 
@@ -125,21 +125,21 @@ extension AtomicReference
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
-    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #elseif swift(>=3.2)
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
-    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #else // swift 3.1
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(order: order))
-    return pointer.map(Unmanaged.fromOpaque)?.takeRetainedValue()
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #endif
 
