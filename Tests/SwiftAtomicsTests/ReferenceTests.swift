@@ -141,8 +141,8 @@ public class ReferenceRaceTests: XCTestCase
 
     for _ in 1...iterations
     {
-      let b = ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 })
-      var r = AtomicReference(b)
+      var r = AtomicReference(ManagedBuffer<Int, Int>.create(minimumCapacity: 1, makingHeaderWith: { _ in 1 }))
+
       let closure = {
         while true
         {
