@@ -164,6 +164,7 @@ extension AtomicReference
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
+      CAtomicsThreadFence(.release)
       CAtomicsStore(&ptr, pointer, .release)
       return unmanaged.takeRetainedValue()
     }
@@ -190,6 +191,7 @@ extension AtomicReference
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
+      CAtomicsThreadFence(.release)
       CAtomicsStore(&ptr, pointer, .release)
       return unmanaged.takeRetainedValue()
     }
