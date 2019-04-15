@@ -330,4 +330,66 @@ public class UnmanagedRaceTests: XCTestCase
 
     q.sync(flags: .barrier) {}
   }
+
+  public func testRaceLoadVersusDeinit()
+  {
+    let q = DispatchQueue(label: "", attributes: .concurrent)
+
+    for _ in 1...iterations
+    {
+      let a = UnsafeMutablePointer<OpaqueUnmanagedHelper>.allocate(capacity: 1)
+      CAtomicsInitialize(a, Unmanaged.passRetained(Thing(.randomPositive())).toOpaque())
+
+      let closure = {
+        (b: Bool) -> () -> Void in
+        return {
+          () -> Void in
+          var c = b
+          while true
+          {
+            if c
+            {
+              if let t = CAtomicsUnmanagedLockAndLoad(a, .acquire)
+              {
+                let u = Unmanaged<Thing>.fromOpaque(t).retain()
+                CAtomicsStore(a, t, .release)
+                let thing = u.takeRetainedValue()
+                XCTAssertNotEqual(thing.id, 0)
+              }
+              else
+              {
+                return
+              }
+            }
+            else
+            {
+              if let t = CAtomicsExchange(a, nil, .acquire)
+              {
+                let u = Unmanaged<Thing>.fromOpaque(t).retain()
+                let thing = u.takeRetainedValue()
+                XCTAssertNotEqual(thing.id, 0)
+              }
+              else
+              {
+                return
+              }
+            }
+            c = !c
+          }
+        }
+      }
+
+      q.async(execute: closure(true))
+      q.async(execute: closure(false))
+      q.async(flags: .barrier) {
+#if swift(>=4.1)
+        a.deallocate()
+#else
+        a.deallocate(capacity: 1)
+#endif
+      }
+    }
+
+    q.sync(flags: .barrier, execute: {})
+  }
 }
