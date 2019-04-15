@@ -498,7 +498,7 @@ const void *_Nullable CAtomicsExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
   c = 0;
 #endif
   uintptr_t pointer;
-  pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_RELAXED);
+  pointer = atomic_load_explicit(&(atomic->a), order);
   do { // don't fruitlessly invalidate the cache line if the value is locked
     while (pointer == __OPAQUE_UNMANAGED_LOCKED)
     {
@@ -508,9 +508,9 @@ const void *_Nullable CAtomicsExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
       c += 1;
       if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
-      pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_RELAXED);
+      pointer = atomic_load_explicit(&(atomic->a), order);
     }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)value, order, __ATOMIC_RELAXED));
+  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)value, order, order));
 
   return (void*) pointer;
 }

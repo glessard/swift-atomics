@@ -59,6 +59,7 @@ extension MemoryOrderTests {
 extension UnmanagedRaceTests {
     static let __allTests = [
         ("testRaceAtomickishUnmanaged", testRaceAtomickishUnmanaged),
+        ("testRaceLoadVersusDeinit", testRaceLoadVersusDeinit),
     ]
 }
 
