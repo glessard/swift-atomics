@@ -137,7 +137,6 @@
 		031CA3B020DC404F00F4B44B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = XCTestManifests.swift; path = ../Tests/SwiftAtomicsTests/XCTestManifests.swift; sourceTree = SOURCE_ROOT; };
 		031CA3BB20DC442300F4B44B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		031CA3BC20DC445100F4B44B /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
-		03431C0B2256DBB600F4B44B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		03431C0C2256DBBE00F4B44B /* Package@swift-4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Package@swift-4.swift"; path = "../Package@swift-4.swift"; sourceTree = "<group>"; };
 		0382B62620DC4A2B00F4B44B /* AtomicsTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicsTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0382B62820DC4A2B00F4B44B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -214,7 +213,6 @@
 				031CA3BB20DC442300F4B44B /* Package.swift */,
 				03431C0C2256DBBE00F4B44B /* Package@swift-4.swift */,
 				031CA3BC20DC445100F4B44B /* .travis.yml */,
-				03431C0B2256DBB600F4B44B /* README.md */,
 				0391B85121B9E05300F4B44B /* Scripts */,
 				031CA34020DBDC0400F4B44B /* SwiftAtomics */,
 				031CA34B20DBDC0400F4B44B /* SwiftAtomicsTests */,
