@@ -92,7 +92,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
   }
@@ -117,7 +117,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsLoad(&a, .relaxed) == nil)
   }
@@ -143,7 +143,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -172,7 +172,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, nil, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -207,7 +207,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -238,7 +238,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 0.2)
+    waitForExpectations(timeout: 1.0)
 
     XCTAssert(CAtomicsExchange(&a, nil, .acquire) != nil)
     XCTAssert(CAtomicsLoad(&a, .relaxed) == nil)
