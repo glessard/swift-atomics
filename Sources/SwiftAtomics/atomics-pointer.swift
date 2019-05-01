@@ -35,14 +35,14 @@ public struct AtomicPointer<Pointee>
   public var pointer: UnsafePointer<Pointee> {
     @inlinable
     mutating get {
-      return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self)
     }
   }
 #else
   public var pointer: UnsafePointer<Pointee> {
     @inline(__always)
     mutating get {
-      return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self)
     }
   }
 #endif
@@ -51,13 +51,13 @@ public struct AtomicPointer<Pointee>
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -79,13 +79,13 @@ public struct AtomicPointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return UnsafePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return UnsafePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -156,14 +156,14 @@ public struct AtomicMutablePointer<Pointee>
   public var pointer: UnsafeMutablePointer<Pointee> {
     @inlinable
     mutating get {
-      return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self)
     }
   }
 #else
   public var pointer: UnsafeMutablePointer<Pointee> {
     @inline(__always)
     mutating get {
-      return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed).assumingMemoryBound(to: Pointee.self)
     }
   }
 #endif
@@ -172,13 +172,13 @@ public struct AtomicMutablePointer<Pointee>
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -200,13 +200,13 @@ public struct AtomicMutablePointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -282,14 +282,14 @@ public struct AtomicOptionalPointer<Pointee>
   public var pointer: UnsafePointer<Pointee>? {
     @inlinable
     mutating get {
-      return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
   }
 #else
   public var pointer: UnsafePointer<Pointee>? {
     @inline(__always)
     mutating get {
-      return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
   }
 #endif
@@ -298,13 +298,13 @@ public struct AtomicOptionalPointer<Pointee>
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer<Pointee>(CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -326,13 +326,13 @@ public struct AtomicOptionalPointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return UnsafePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -408,14 +408,14 @@ public struct AtomicOptionalMutablePointer<Pointee>
   public var pointer: UnsafeMutablePointer<Pointee>? {
     @inlinable
     mutating get {
-      return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
   }
 #else
   public var pointer: UnsafeMutablePointer<Pointee>? {
     @inline(__always)
     mutating get {
-      return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self))
+      return CAtomicsLoad(&ptr, .relaxed)?.assumingMemoryBound(to: Pointee.self)
     }
   }
 #endif
@@ -424,13 +424,13 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inlinable
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func load(order: LoadMemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsLoad(&ptr, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -452,13 +452,13 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return UnsafeMutablePointer<Pointee>(CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self))
+    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
