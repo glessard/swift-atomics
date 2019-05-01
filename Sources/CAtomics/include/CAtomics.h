@@ -82,18 +82,6 @@ SWIFT_ENUM(CASType, closed)
 # define SWIFT_NAME(_name)
 #endif
 
-#if defined(__x86_64__)
-#define __CACHE_LINE_WIDTH 64
-#elif defined(__arm64__)
-#define __CACHE_LINE_WIDTH 64
-#elif defined(__arm__)
-#define __CACHE_LINE_WIDTH 64
-#elif defined(__i386__)
-#define __CACHE_LINE_WIDTH 64
-#else
-// define __CACHE_LINE_WIDTH appropriately as needed
-#endif
-
 #if !defined(__x86_64__) && !defined(__arm64__)
 #define __has32bitPointer__
 #endif
@@ -212,12 +200,6 @@ CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Ali
 
 CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool))
 
-#ifdef __CACHE_LINE_WIDTH
-CLANG_ATOMICS_INT_GENERATE(AtomicPaddedInt, atomic_intptr_t, intptr_t, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_INT_GENERATE(AtomicPaddedUInt, atomic_uintptr_t, uintptr_t, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_BOOL_GENERATE(AtomicPaddedBool, atomic_bool, _Bool, __CACHE_LINE_WIDTH)
-#endif
-
 // pointer atomics
 
 #define CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
@@ -289,13 +271,6 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalMutableRawPointer, atomic_uintptr_t
 
 CLANG_ATOMICS_POINTER_GENERATE(AtomicRawPointer, atomic_uintptr_t, const void*, _Nonnull, _Alignof(atomic_uintptr_t))
 CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalRawPointer, atomic_uintptr_t, const void*, _Nullable, _Alignof(atomic_uintptr_t))
-
-#ifdef __CACHE_LINE_WIDTH
-CLANG_ATOMICS_POINTER_GENERATE(AtomicPaddedMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_POINTER_GENERATE(AtomicPaddedOptionalMutableRawPointer, atomic_uintptr_t, void*, _Nullable, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_POINTER_GENERATE(AtomicPaddedRawPointer, atomic_uintptr_t, const void*, _Nonnull, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_POINTER_GENERATE(AtomicPaddedOptionalRawPointer, atomic_uintptr_t, const void*, _Nullable, __CACHE_LINE_WIDTH)
-#endif
 
 struct opaque;
 
@@ -414,29 +389,6 @@ CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicTaggedMutableRawPointer, Tagg
 
 CLANG_ATOMICS_TAGGED_POINTER_GENERATE(TaggedOptionalMutableRawPointer, void*, _Nullable)
 CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicTaggedOptionalMutableRawPointer, TaggedOptionalMutableRawPointer, _Alignof(_Atomic(__UNION_TYPE)))
-
-#ifdef __CACHE_LINE_WIDTH
-CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicPaddedTaggedRawPointer, TaggedRawPointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicPaddedTaggedOptionalRawPointer, TaggedOptionalRawPointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicPaddedTaggedMutableRawPointer, TaggedMutableRawPointer, __CACHE_LINE_WIDTH)
-CLANG_ATOMICS_ATOMIC_TAGGED_POINTER_GENERATE(AtomicPaddedTaggedOptionalMutableRawPointer, TaggedOptionalMutableRawPointer, __CACHE_LINE_WIDTH)
-#endif
-
-// non-atomic padded pointer wrappers
-
-#ifdef __CACHE_LINE_WIDTH
-#define CLANG_ATOMICS_ALIGNED_POINTER_CREATE(swiftType, pointerType, nullability) \
-        CLANG_ATOMICS_STRUCT(swiftType, pointerType nullability, pointer, __CACHE_LINE_WIDTH) \
-        static __inline__ __attribute__((__always_inline__)) \
-        SWIFT_NAME(swiftType.init(_:)) \
-        swiftType swiftType##Create(pointerType nullability p) \
-        { swiftType s; s.pointer = p; return s; }
-
-CLANG_ATOMICS_ALIGNED_POINTER_CREATE(PaddedRawPointer, const void*, _Nonnull)
-CLANG_ATOMICS_ALIGNED_POINTER_CREATE(PaddedOptionalRawPointer, const void*, _Nullable)
-CLANG_ATOMICS_ALIGNED_POINTER_CREATE(PaddedMutableRawPointer, void *, _Nonnull)
-CLANG_ATOMICS_ALIGNED_POINTER_CREATE(PaddedOptionalMutableRawPointer, void *, _Nullable)
-#endif
 
 // fence
 
