@@ -23,12 +23,12 @@ public struct AtomicPointer<Pointee>
 
   public init(_ pointer: UnsafePointer<Pointee>)
   {
-    CAtomicsInitialize(&ptr, UnsafeRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
   public mutating func initialize(_ pointer: UnsafePointer<Pointee>)
   {
-    CAtomicsInitialize(&ptr, UnsafeRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
 #if swift(>=4.2)
@@ -65,13 +65,13 @@ public struct AtomicPointer<Pointee>
   @inlinable
   public mutating func store(_ pointer: UnsafePointer<Pointee>, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ pointer: UnsafePointer<Pointee>, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #endif
 
@@ -79,13 +79,13 @@ public struct AtomicPointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>
   {
-    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -99,7 +99,7 @@ public struct AtomicPointer<Pointee>
   {
     var c = UnsafeRawPointer(current)
     defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -111,7 +111,7 @@ public struct AtomicPointer<Pointee>
   {
     var c = UnsafeRawPointer(current)
     defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -144,12 +144,12 @@ public struct AtomicMutablePointer<Pointee>
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>)
   {
-    CAtomicsInitialize(&ptr, UnsafeMutableRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
   public mutating func initialize(_ pointer: UnsafeMutablePointer<Pointee>)
   {
-    CAtomicsInitialize(&ptr, UnsafeMutableRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
 #if swift(>=4.2)
@@ -186,13 +186,13 @@ public struct AtomicMutablePointer<Pointee>
   @inlinable
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeMutableRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeMutableRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #endif
 
@@ -200,13 +200,13 @@ public struct AtomicMutablePointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order).assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>
   {
-    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order).assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order).assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -220,7 +220,7 @@ public struct AtomicMutablePointer<Pointee>
   {
     var c = UnsafeMutableRawPointer(current)
     defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -232,7 +232,7 @@ public struct AtomicMutablePointer<Pointee>
   {
     var c = UnsafeMutableRawPointer(current)
     defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -270,12 +270,12 @@ public struct AtomicOptionalPointer<Pointee>
 
   public init(_ pointer: UnsafePointer<Pointee>?)
   {
-    CAtomicsInitialize(&ptr, UnsafeRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
   public mutating func initialize(_ pointer: UnsafePointer<Pointee>?)
   {
-    CAtomicsInitialize(&ptr, UnsafeRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
 #if swift(>=4.2)
@@ -312,13 +312,13 @@ public struct AtomicOptionalPointer<Pointee>
   @inlinable
   public mutating func store(_ pointer: UnsafePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ pointer: UnsafePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #endif
 
@@ -326,13 +326,13 @@ public struct AtomicOptionalPointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafePointer<Pointee>?
   {
-    return CAtomicsExchange(&ptr, UnsafeRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -346,7 +346,7 @@ public struct AtomicOptionalPointer<Pointee>
   {
     var c = UnsafeRawPointer(current)
     defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -358,7 +358,7 @@ public struct AtomicOptionalPointer<Pointee>
   {
     var c = UnsafeRawPointer(current)
     defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #endif
 
@@ -396,12 +396,12 @@ public struct AtomicOptionalMutablePointer<Pointee>
 
   public init(_ pointer: UnsafeMutablePointer<Pointee>?)
   {
-    CAtomicsInitialize(&ptr, UnsafeMutableRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
   public mutating func initialize(_ pointer: UnsafeMutablePointer<Pointee>?)
   {
-    CAtomicsInitialize(&ptr, UnsafeMutableRawPointer(pointer))
+    CAtomicsInitialize(&ptr, pointer)
   }
 
 #if swift(>=4.2)
@@ -438,13 +438,13 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inlinable
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeMutableRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #else
   @inline(__always)
   public mutating func store(_ pointer: UnsafeMutablePointer<Pointee>?, order: StoreMemoryOrder = .sequential)
   {
-    CAtomicsStore(&ptr, UnsafeMutableRawPointer(pointer), order)
+    CAtomicsStore(&ptr, pointer, order)
   }
 #endif
 
@@ -452,13 +452,13 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inlinable
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #else
   @inline(__always)
   public mutating func swap(_ pointer: UnsafeMutablePointer<Pointee>?, order: MemoryOrder = .sequential) -> UnsafeMutablePointer<Pointee>?
   {
-    return CAtomicsExchange(&ptr, UnsafeMutableRawPointer(pointer), order)?.assumingMemoryBound(to: Pointee.self)
+    return CAtomicsExchange(&ptr, pointer, order)?.assumingMemoryBound(to: Pointee.self)
   }
 #endif
 
@@ -472,7 +472,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
   {
     var c = UnsafeMutableRawPointer(current)
     defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #else
   @inline(__always) @discardableResult
@@ -484,7 +484,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
   {
     var c = UnsafeMutableRawPointer(current)
     defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, UnsafeMutableRawPointer(future), type, orderSwap, orderLoad)
+    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
   }
 #endif
 
