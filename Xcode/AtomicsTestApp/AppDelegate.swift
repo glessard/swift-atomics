@@ -19,15 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
   {
-    var padded = AtomicPaddedOptionalRawPointer()
-    assert(MemoryLayout<AtomicPaddedOptionalRawPointer>.alignment == MemoryLayout<UnsafeRawPointer>.alignment)
-    assert(MemoryLayout<AtomicPaddedOptionalRawPointer>.stride == 64)
-    let p = UnsafeRawPointer(bitPattern: 1013)
-    CAtomicsInitialize(&padded, p)
-    assert(CAtomicsLoad(&padded, .relaxed) != nil)
-    let q = CAtomicsExchange(&padded, nil, .sequential)
+    var o = AtomicOptionalRawPointer()
+    let p = UnsafeRawPointer(bitPattern: 0x1013)!
+    CAtomicsInitialize(&o, p)
+    assert(CAtomicsLoad(&o, .relaxed) != nil)
+    let q = CAtomicsExchange(&o, nil, .sequential)
     assert(q == p)
-    assert(CAtomicsLoad(&padded, .relaxed) == nil)
+    assert(CAtomicsLoad(&o, .relaxed) == nil)
 
     var tagged = AtomicTaggedRawPointer()
     assert(MemoryLayout<TaggedRawPointer>.size == 2*MemoryLayout<UnsafeRawPointer>.size)
