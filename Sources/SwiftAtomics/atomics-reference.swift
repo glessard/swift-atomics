@@ -200,7 +200,7 @@ extension AtomicReference
 #endif
     
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func CAS(current: T?, future: T?,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool

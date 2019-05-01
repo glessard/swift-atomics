@@ -90,7 +90,7 @@ public struct AtomicPointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>,
                                future: UnsafePointer<Pointee>,
                                type: CASType = .weak,
@@ -116,7 +116,7 @@ public struct AtomicPointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func CAS(current: UnsafePointer<Pointee>, future: UnsafePointer<Pointee>,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
@@ -211,7 +211,7 @@ public struct AtomicMutablePointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>,
                                future: UnsafeMutablePointer<Pointee>,
                                type: CASType = .weak,
@@ -237,7 +237,7 @@ public struct AtomicMutablePointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func CAS(current: UnsafeMutablePointer<Pointee>, future: UnsafeMutablePointer<Pointee>,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
@@ -337,7 +337,7 @@ public struct AtomicOptionalPointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>?,
                                future: UnsafePointer<Pointee>?,
                                type: CASType = .weak,
@@ -363,7 +363,7 @@ public struct AtomicOptionalPointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func CAS(current: UnsafePointer<Pointee>?, future: UnsafePointer<Pointee>?,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
@@ -463,7 +463,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>?,
                                future: UnsafeMutablePointer<Pointee>?,
                                type: CASType = .weak,
@@ -489,7 +489,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
 #endif
 
 #if swift(>=4.2)
-  @inlinable
+  @inlinable @discardableResult
   public mutating func CAS(current: UnsafeMutablePointer<Pointee>?, future: UnsafeMutablePointer<Pointee>?,
                            type: CASType = .strong,
                            order: MemoryOrder = .sequential) -> Bool
@@ -1323,7 +1323,7 @@ extension AtomicTaggedRawPointer
     return s
   }
 #else
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer, tag: Int),
                                future: (pointer: UnsafeRawPointer, tag: Int),
                                type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
@@ -1473,7 +1473,7 @@ extension AtomicTaggedOptionalRawPointer
     return s
   }
 #else
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer?, tag: Int),
                                future: (pointer: UnsafeRawPointer?, tag: Int),
                                type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
@@ -1623,7 +1623,7 @@ extension AtomicTaggedMutableRawPointer
     return s
   }
 #else
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer, tag: Int),
                                type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
@@ -1773,7 +1773,7 @@ extension AtomicTaggedOptionalMutableRawPointer
     return s
   }
 #else
-  @inline(__always)
+  @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer?, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer?, tag: Int),
                                type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
