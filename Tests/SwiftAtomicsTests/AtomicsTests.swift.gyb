@@ -154,15 +154,15 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
+    XCTAssertTrue(p.CAS(current: r2, future: r3))
     XCTAssertEqual(r3.0, p.pointer)
     XCTAssertEqual(r3.1, p.tag)
 
-    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
-    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
+    XCTAssertTrue(p.CAS(current: r3, future: r2))
     j = p.load(order: .relaxed)
-    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
-    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertTrue(p.CAS(current: r2, future: r1))
+    while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
     XCTAssertEqual(r3.0, p.pointer)

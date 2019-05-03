@@ -378,7 +378,9 @@ extension AtomicTagged${optional}${type}Pointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                                future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -390,7 +392,9 @@ extension AtomicTagged${optional}${type}Pointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                                future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType, orderSwap: MemoryOrder = .sequential, orderLoad: LoadMemoryOrder = .sequential) -> Bool
+                               type: CASType = .weak,
+                               orderSwap: MemoryOrder = .sequential,
+                               orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -404,7 +408,8 @@ extension AtomicTagged${optional}${type}Pointer
   @inlinable @discardableResult
   public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                            future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           type: CASType, order: MemoryOrder = .sequential) -> Bool
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
   {
     let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
@@ -414,7 +419,8 @@ extension AtomicTagged${optional}${type}Pointer
   @inline(__always) @discardableResult
   public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                            future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           type: CASType, order: MemoryOrder = .sequential) -> Bool
+                           type: CASType = .strong,
+                           order: MemoryOrder = .sequential) -> Bool
   {
     let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
