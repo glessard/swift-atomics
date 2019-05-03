@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var t = tagged.load(order: .relaxed)
     let u = (UnsafeRawPointer(bitPattern: 0x1013)!, 1837)
     let success = tagged.loadCAS(current: &t, future: u, type: .strong, orderSwap: .relaxed, orderLoad: .relaxed)
-    assert(tagged.pointer == u.0)
+    assert(tagged.value.pointer == u.0)
     assert(success)
 
     var bool = AtomicBool()

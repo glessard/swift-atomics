@@ -1015,16 +1015,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1033,19 +1033,19 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertTrue(p.CAS(current: r2, future: r3))
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
-    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
-    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
+    XCTAssertTrue(p.CAS(current: r3, future: r2))
     j = p.load(order: .relaxed)
-    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
-    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertTrue(p.CAS(current: r2, future: r1))
+    while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedOptionalRawPointer()
@@ -1056,16 +1056,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedOptionalRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1074,19 +1074,19 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertTrue(p.CAS(current: r2, future: r3))
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
-    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
-    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
+    XCTAssertTrue(p.CAS(current: r3, future: r2))
     j = p.load(order: .relaxed)
-    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
-    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertTrue(p.CAS(current: r2, future: r1))
+    while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedMutableRawPointer()
@@ -1097,16 +1097,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedMutableRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1115,19 +1115,19 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertTrue(p.CAS(current: r2, future: r3))
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
-    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
-    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
+    XCTAssertTrue(p.CAS(current: r3, future: r2))
     j = p.load(order: .relaxed)
-    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
-    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertTrue(p.CAS(current: r2, future: r1))
+    while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedOptionalMutableRawPointer()
@@ -1138,16 +1138,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedOptionalMutableRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1156,19 +1156,19 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.0, j.0)
     XCTAssertEqual(r2.1, j.1)
 
-    XCTAssertTrue(p.CAS(current: r2, future: r3, type: .strong))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertTrue(p.CAS(current: r2, future: r3))
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
-    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak, order: .relaxed))
-    XCTAssertTrue(p.CAS(current: r3, future: r2, type: .strong, order: .relaxed))
+    XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
+    XCTAssertTrue(p.CAS(current: r3, future: r2))
     j = p.load(order: .relaxed)
-    XCTAssertTrue(p.CAS(current: r2, future: r1, type: .strong, order: .relaxed))
-    while !p.loadCAS(current: &j, future: r3, type: .weak, orderSwap: .relaxed, orderLoad: .relaxed) {}
+    XCTAssertTrue(p.CAS(current: r2, future: r1))
+    while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testBool()
@@ -1210,12 +1210,14 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssert(boolean.swap(true) == false)
 
     boolean.CAS(current: true, future: false)
-    if boolean.CAS(current: false, future: true, type: .strong)
-    {
-      XCTAssert(boolean.CAS(current: true, future: false, type: .strong))
-      XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong) == false)
-      XCTAssert(boolean.CAS(current: old, future: true, type: .strong))
-    }
+    XCTAssert(boolean.value == false)
+
+    XCTAssert(boolean.CAS(current: false, future: true, type: .strong))
+    XCTAssert(boolean.value == old)
+    XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong))
+
+    while !boolean.loadCAS(current: &old, future: true, type: .weak) {}
+    while !boolean.CAS(current: !old, future: false, type: .weak) {}
   }
 
   public func testFence()
