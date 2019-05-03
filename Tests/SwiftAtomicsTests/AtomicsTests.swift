@@ -1015,16 +1015,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1034,8 +1034,8 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.1, j.1)
 
     XCTAssertTrue(p.CAS(current: r2, future: r3))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
     XCTAssertTrue(p.CAS(current: r3, future: r2))
@@ -1044,8 +1044,8 @@ public class AtomicsBasicTests: XCTestCase
     while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedOptionalRawPointer()
@@ -1056,16 +1056,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedOptionalRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1075,8 +1075,8 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.1, j.1)
 
     XCTAssertTrue(p.CAS(current: r2, future: r3))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
     XCTAssertTrue(p.CAS(current: r3, future: r2))
@@ -1085,8 +1085,8 @@ public class AtomicsBasicTests: XCTestCase
     while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedMutableRawPointer()
@@ -1097,16 +1097,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedMutableRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1116,8 +1116,8 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.1, j.1)
 
     XCTAssertTrue(p.CAS(current: r2, future: r3))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
     XCTAssertTrue(p.CAS(current: r3, future: r2))
@@ -1126,8 +1126,8 @@ public class AtomicsBasicTests: XCTestCase
     while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testTaggedOptionalMutableRawPointer()
@@ -1138,16 +1138,16 @@ public class AtomicsBasicTests: XCTestCase
     let r3 = (r2.0, r2.1+1)
 
     var p = AtomicTaggedOptionalMutableRawPointer(r3)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     p.initialize((r3.0, r0.1))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r0.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r0.1, p.value.tag)
 
     p.store(r1, order: .release)
-    XCTAssertEqual(r1.0, p.pointer)
-    XCTAssertEqual(r1.1, p.tag)
+    XCTAssertEqual(r1.0, p.value.pointer)
+    XCTAssertEqual(r1.1, p.value.tag)
 
     var j = p.swap(r2, order: .acqrel)
     XCTAssertEqual(r1.0, j.0)
@@ -1157,8 +1157,8 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssertEqual(r2.1, j.1)
 
     XCTAssertTrue(p.CAS(current: r2, future: r3))
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
 
     XCTAssertFalse(p.CAS(current: j, future: r2, type: .weak))
     XCTAssertTrue(p.CAS(current: r3, future: r2))
@@ -1167,8 +1167,8 @@ public class AtomicsBasicTests: XCTestCase
     while !p.loadCAS(current: &j, future: r3) {}
     XCTAssertEqual(r1.0, j.0)
     XCTAssertEqual(r1.1, j.1)
-    XCTAssertEqual(r3.0, p.pointer)
-    XCTAssertEqual(r3.1, p.tag)
+    XCTAssertEqual(r3.0, p.value.pointer)
+    XCTAssertEqual(r3.1, p.value.tag)
   }
 
   public func testBool()

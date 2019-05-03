@@ -283,33 +283,19 @@ extension AtomicTagged${optional}${type}Pointer
   }
 
 #if swift(>=4.2)
-  public var pointer: Unsafe${type}Pointer${opt} {
+  public var value: (pointer: Unsafe${type}Pointer${opt}, tag: Int) {
     @inlinable
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #else
-  public var pointer: Unsafe${type}Pointer${opt} {
+  public var value: (pointer: Unsafe${type}Pointer${opt}, tag: Int) {
     @inline(__always)
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
-    }
-  }
-#endif
-
-#if swift(>=4.2)
-  public var tag: Int {
-    @inlinable
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
-    }
-  }
-#else
-  public var tag: Int {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #endif

@@ -1219,33 +1219,19 @@ extension AtomicTaggedRawPointer
   }
 
 #if swift(>=4.2)
-  public var pointer: UnsafeRawPointer {
+  public var value: (pointer: UnsafeRawPointer, tag: Int) {
     @inlinable
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #else
-  public var pointer: UnsafeRawPointer {
+  public var value: (pointer: UnsafeRawPointer, tag: Int) {
     @inline(__always)
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
-    }
-  }
-#endif
-
-#if swift(>=4.2)
-  public var tag: Int {
-    @inlinable
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
-    }
-  }
-#else
-  public var tag: Int {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #endif
@@ -1375,33 +1361,19 @@ extension AtomicTaggedOptionalRawPointer
   }
 
 #if swift(>=4.2)
-  public var pointer: UnsafeRawPointer? {
+  public var value: (pointer: UnsafeRawPointer?, tag: Int) {
     @inlinable
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #else
-  public var pointer: UnsafeRawPointer? {
+  public var value: (pointer: UnsafeRawPointer?, tag: Int) {
     @inline(__always)
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
-    }
-  }
-#endif
-
-#if swift(>=4.2)
-  public var tag: Int {
-    @inlinable
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
-    }
-  }
-#else
-  public var tag: Int {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #endif
@@ -1531,33 +1503,19 @@ extension AtomicTaggedMutableRawPointer
   }
 
 #if swift(>=4.2)
-  public var pointer: UnsafeMutableRawPointer {
+  public var value: (pointer: UnsafeMutableRawPointer, tag: Int) {
     @inlinable
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #else
-  public var pointer: UnsafeMutableRawPointer {
+  public var value: (pointer: UnsafeMutableRawPointer, tag: Int) {
     @inline(__always)
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
-    }
-  }
-#endif
-
-#if swift(>=4.2)
-  public var tag: Int {
-    @inlinable
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
-    }
-  }
-#else
-  public var tag: Int {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #endif
@@ -1687,33 +1645,19 @@ extension AtomicTaggedOptionalMutableRawPointer
   }
 
 #if swift(>=4.2)
-  public var pointer: UnsafeMutableRawPointer? {
+  public var value: (pointer: UnsafeMutableRawPointer?, tag: Int) {
     @inlinable
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #else
-  public var pointer: UnsafeMutableRawPointer? {
+  public var value: (pointer: UnsafeMutableRawPointer?, tag: Int) {
     @inline(__always)
     mutating get {
-      return CAtomicsLoad(&self, .relaxed).ptr
-    }
-  }
-#endif
-
-#if swift(>=4.2)
-  public var tag: Int {
-    @inlinable
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
-    }
-  }
-#else
-  public var tag: Int {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .relaxed).tag
+      let t = CAtomicsLoad(&self, .relaxed)
+      return (t.ptr, t.tag)
     }
   }
 #endif
