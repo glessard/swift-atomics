@@ -210,12 +210,14 @@ public class AtomicsBasicTests: XCTestCase
     XCTAssert(boolean.swap(true) == false)
 
     boolean.CAS(current: true, future: false)
-    if boolean.CAS(current: false, future: true, type: .strong)
-    {
-      XCTAssert(boolean.CAS(current: true, future: false, type: .strong))
-      XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong) == false)
-      XCTAssert(boolean.CAS(current: old, future: true, type: .strong))
-    }
+    XCTAssert(boolean.value == false)
+
+    XCTAssert(boolean.CAS(current: false, future: true, type: .strong))
+    XCTAssert(boolean.value == old)
+    XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong))
+
+    while !boolean.loadCAS(current: &old, future: true, type: .weak) {}
+    while !boolean.CAS(current: !old, future: false, type: .weak) {}
   }
 
   public func testFence()

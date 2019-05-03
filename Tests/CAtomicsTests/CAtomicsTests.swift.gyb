@@ -116,15 +116,11 @@ public class CAtomicsBasicTests: XCTestCase
     var current = true
     XCTAssert(CAtomicsLoad(&b, .relaxed) == current)
     CAtomicsCompareAndExchange(&b, &current, false, .strong, .relaxed, .relaxed)
-    current = CAtomicsLoad(&b, .relaxed)
-    XCTAssert(current == false)
-    if CAtomicsCompareAndExchange(&b, &current, true, .strong, .relaxed, .relaxed)
-    {
-      current = !current
-      XCTAssert(CAtomicsCompareAndExchange(&b, &current, false, .weak, .relaxed, .relaxed))
-      current = !current
-      XCTAssert(CAtomicsCompareAndExchange(&b, &current, true, .weak, .relaxed, .relaxed))
-    }
+    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+
+    XCTAssert(CAtomicsCompareAndExchange(&b, false, true, .strong, .relaxed))
+    while !CAtomicsCompareAndExchange(&b, &current, false, .weak, .relaxed, .relaxed) {}
+    while !CAtomicsCompareAndExchange(&b, !current, true, .weak, .relaxed) {}
   }
 }
 
