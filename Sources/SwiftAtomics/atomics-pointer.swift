@@ -98,8 +98,9 @@ public struct AtomicPointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeRawPointer(current)
-    defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #else
   @inline(__always) @discardableResult
@@ -110,8 +111,9 @@ public struct AtomicPointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeRawPointer(current)
-    defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #endif
 
@@ -219,8 +221,9 @@ public struct AtomicMutablePointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeMutableRawPointer(current)
-    defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #else
   @inline(__always) @discardableResult
@@ -231,8 +234,9 @@ public struct AtomicMutablePointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeMutableRawPointer(current)
-    defer { current = c.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #endif
 
@@ -345,8 +349,9 @@ public struct AtomicOptionalPointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeRawPointer(current)
-    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c?.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #else
   @inline(__always) @discardableResult
@@ -357,8 +362,9 @@ public struct AtomicOptionalPointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeRawPointer(current)
-    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c?.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #endif
 
@@ -471,8 +477,9 @@ public struct AtomicOptionalMutablePointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeMutableRawPointer(current)
-    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c?.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #else
   @inline(__always) @discardableResult
@@ -483,8 +490,9 @@ public struct AtomicOptionalMutablePointer<Pointee>
                                orderLoad: LoadMemoryOrder = .sequential) -> Bool
   {
     var c = UnsafeMutableRawPointer(current)
-    defer { current = c?.assumingMemoryBound(to: Pointee.self) }
-    return CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    current = c?.assumingMemoryBound(to: Pointee.self)
+    return s
   }
 #endif
 
