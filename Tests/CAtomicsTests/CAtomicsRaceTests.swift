@@ -225,7 +225,6 @@ public class CAtomicsRaceTests: XCTestCase
     }
 
     q.sync(flags: .barrier) {}
-    print(CAtomicsLoad(&biggest, .relaxed))
   }
 }
 
