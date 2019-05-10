@@ -40,7 +40,7 @@ My experimentation has shown that the types defined in `SwiftAtomics` are compat
 
 Atomic types are useful as synchronization points between threads, and therefore have an interesting relationship with Swift's exclusivity checking. Firstly, they should be used as members of reference types, or directly captured by closures. They are `struct` types, so as to be not incur additional memory allocation, but that feature means that if you use the thread sanitizer, it will warn about them.
 
-In order to use atomics in a way that is acceptable to the thread sanitizer, one must have allocated memory for atomic variables on the heap using `UnsafeMutablePointer`. Then, pass that pointer to the functions defined in the `CAtomics` module, as needed. I haven't found a way to use the swift-style wrappers in a way that doesn't trigger the thread sanitizer.
+In order to use atomics in a way that is acceptable to the thread sanitizer, one must have allocated memory for atomic variables on the heap using `UnsafeMutablePointer`. Then, pass that pointer to the functions defined in the `CAtomics` module, as needed.
 
 ```swift
 import CAtomics
@@ -60,6 +60,28 @@ class Example {
   }
 }
 ```
+
+#### A method for silencing Thread Sanitizer race condition false-positives:
+
+Note that Thread Sanitizer already slows application performance in order to analyze the system and that using this method slows Thread Sanitizer even more. Use this method to de-noise your race condition log, understanding that this slow down applies only to Thread-Sanitizer-in-the-Simulator scenarios. The upside is that CAtomics usage will not trigger race condition warnings or breakpoints.
+
+The method is documented [https://github.com/google/sanitizers/wiki/ThreadSanitizerSuppressions here] and described below. 
+
+Step 0. Baseline - Enable Thread Sanitizer in a project that uses SwiftAtomics/CAtomics, run in the Simulator, and verify that Xcode generates warnings for race conditions.
+
+Step 1. Add a file to your project named, “tsan.supp” (the name of the file is not important). Remove target membership. Contents of file:
+```
+race:CAtomic
+```
+
+Step 2. Add the TSAN_OPTIONS environment variable to your project’s scheme, giving the suppression file path:
+```
+Name:  TSAN_OPTIONS
+Value: suppressions="$(PROJECT_DIR)/tsan.supp"
+```
+
+Step 3. Re-run the app in the Simulator. Thread Sanitizer warnings are suppressed.
+
 
 #### Requirements
 
