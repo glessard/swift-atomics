@@ -22,6 +22,10 @@ matrix:
       osx_image: xcode10.2
       env: SWIFT=5.0.1
 
+    - os: osx
+      osx_image: xcode11
+      env: SWIFT=5.1
+
     - os: linux
       dist: xenial
       language: generic
@@ -45,7 +49,7 @@ matrix:
     - os: linux
       dist: xenial
       language: generic
-      env: SWIFT=5.0.1
+      env: SWIFT=5.0.2
 
 before_install:
   - clang --version
