@@ -154,7 +154,7 @@ public class UnmanagedTests: XCTestCase
     else { throw TestError.value(j) }
   }
 
-  public func testSafeStoreSuccess() throws
+  public func testStrongCASSuccess() throws
   {
     let i = UInt.randomPositive()
     var a = OpaqueUnmanagedHelper()
@@ -166,8 +166,10 @@ public class UnmanagedTests: XCTestCase
     let j = UInt.randomPositive()
     let e = expectation(description: "succeed at swapping for nil")
     DispatchQueue.global().async {
-      let stored = CAtomicsCompareAndExchange(&a, nil, Unmanaged.passRetained(Thing(j)).toOpaque(), .strong, .relaxed)
-      XCTAssert(stored)
+      let f = Unmanaged.passRetained(Thing(j)).toOpaque()
+      XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
+      XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, f, .strong, .relaxed), true)
+      XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(f))
       e.fulfill()
     }
 
@@ -189,7 +191,7 @@ public class UnmanagedTests: XCTestCase
     else { throw TestError.value(i) }
   }
 
-  public func testSafeStoreFailure() throws
+  public func testStrongCASFailure() throws
   {
     let i = UInt.randomPositive()
     var a = OpaqueUnmanagedHelper()
@@ -201,8 +203,10 @@ public class UnmanagedTests: XCTestCase
     let t = Thing(0)
     let e = expectation(description: "failure to swap for nil")
     DispatchQueue.global().async {
-      let stored = CAtomicsCompareAndExchange(&a, nil, Unmanaged.passUnretained(t).toOpaque(), .strong, .relaxed)
-      XCTAssert(!stored)
+      let f = Unmanaged.passUnretained(t).toOpaque()
+      XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
+      XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, f, .strong, .relaxed), false)
+      XCTAssertNotEqual(CAtomicsLoad(&a, .relaxed), nil)
       e.fulfill()
     }
 
@@ -218,7 +222,7 @@ public class UnmanagedTests: XCTestCase
     else { throw TestError.value(i) }
   }
 
-  public func testCasBlocked() throws
+  public func testWeakCasBlocked() throws
   {
     let i = UInt.randomPositive()
     let j = UInt.randomPositive()
@@ -228,12 +232,12 @@ public class UnmanagedTests: XCTestCase
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
     XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
 
-    let e = expectation(description: "succeed at strong CAS")
+    let e = expectation(description: "succeed at weak CAS")
     DispatchQueue.global().async {
       let f = Unmanaged.passRetained(Thing(j)).toOpaque()
-      XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+      XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
       while !CAtomicsCompareAndExchange(&a, p, f, .weak, .sequential) {}
-      XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(f))
+      XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(f))
       e.fulfill()
     }
 
