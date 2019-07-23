@@ -34,28 +34,28 @@ public class ReferenceTests: XCTestCase
     do {
       let r1 = a.swap(.none)
       print("Will release \(i)")
-      XCTAssert(r1 != nil)
-      XCTAssert(a.load() == nil)
+      XCTAssertNotNil(r1)
+      XCTAssertNil(a.load())
     }
 
     i = UInt.randomPositive()
-    XCTAssert(a.swap(Witness(i)) == nil)
+    XCTAssertNil(a.swap(Witness(i)))
     print("Releasing    \(i)")
-    XCTAssert(a.swap(nil) != nil)
+    XCTAssertNotNil(a.swap(nil))
 
     i = UInt.randomPositive()
-    XCTAssert(a.storeIfNil(Witness(i)) == true)
+    XCTAssertEqual(a.storeIfNil(Witness(i)), true)
     var j = UInt.randomPositive()
     print("Will drop    \(j)")
     // a compiler warning is expected for the next line
 #if swift(>=5.0)
-    XCTAssert(a.storeIfNil(Witness(j)) == false)
+    XCTAssertEqual(a.storeIfNil(Witness(j)), false)
 #else
-    XCTAssert(a.swapIfNil(Witness(j), order: .release) == false)
+    XCTAssertEqual(a.swapIfNil(Witness(j), order: .release), false)
 #endif
 
     weak var witnessi = a.load()
-    XCTAssert(witnessi?.id == i)
+    XCTAssertEqual(witnessi?.id, i)
 
     j = UInt.randomPositive()
     var witnessj = Optional(Witness(j))
@@ -67,8 +67,8 @@ public class ReferenceTests: XCTestCase
     witnessj = nil
 
     print("Will release \(j)")
-    XCTAssert(a.take() != nil)
-    XCTAssert(a.take() == nil)
+    XCTAssertNotNil(a.take())
+    XCTAssertNil(a.take())
   }
 }
 
@@ -148,7 +148,7 @@ public class ReferenceRaceTests: XCTestCase
         {
           if let buffer = r.take()
           {
-            XCTAssert(buffer.header == 1)
+            XCTAssertEqual(buffer.header, 1)
           }
           else
           {

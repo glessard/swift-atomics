@@ -16,8 +16,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = Int.randomPositive()
@@ -75,8 +75,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = UInt.randomPositive()
@@ -134,8 +134,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt8()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = Int8.randomPositive()
@@ -193,8 +193,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt8()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = UInt8.randomPositive()
@@ -252,8 +252,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt16()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = Int16.randomPositive()
@@ -311,8 +311,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt16()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = UInt16.randomPositive()
@@ -370,8 +370,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt32()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = Int32.randomPositive()
@@ -429,8 +429,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt32()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = UInt32.randomPositive()
@@ -488,8 +488,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicInt64()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = Int64.randomPositive()
@@ -547,8 +547,8 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var i = AtomicUInt64()
     CAtomicsInitialize(&i, 0)
-    XCTAssertEqual(0, CAtomicsLoad(&i, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&i))
+    XCTAssertEqual(CAtomicsLoad(&i, .relaxed), 0)
+    XCTAssertEqual(CAtomicsIsLockFree(&i), true)
 
 #if swift(>=4.0)
     let r1 = UInt64.randomPositive()
@@ -606,46 +606,46 @@ public class CAtomicsBasicTests: XCTestCase
   {
     var b = AtomicBool()
     CAtomicsInitialize(&b, false)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
-    XCTAssert(CAtomicsIsLockFree(&b))
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
+    XCTAssertEqual(CAtomicsIsLockFree(&b), true)
 
     CAtomicsStore(&b, false, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
 
     CAtomicsStore(&b, true, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == true)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), true)
 
     CAtomicsStore(&b, false, .relaxed)
     CAtomicsOr(&b, true, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == true)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), true)
     CAtomicsOr(&b, false, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == true)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), true)
     CAtomicsStore(&b, false, .relaxed)
     CAtomicsOr(&b, false, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
     CAtomicsOr(&b, true, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == true)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), true)
 
     CAtomicsAnd(&b, false, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
     CAtomicsAnd(&b, true, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
 
     CAtomicsXor(&b, false, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
     CAtomicsXor(&b, true, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == true)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), true)
 
     let old = CAtomicsExchange(&b, false, .relaxed)
-    XCTAssert(old == true)
-    XCTAssert(CAtomicsExchange(&b, true, .relaxed) == false)
+    XCTAssertEqual(old, true)
+    XCTAssertEqual(CAtomicsExchange(&b, true, .relaxed), false)
 
     var current = true
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == current)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), current)
     CAtomicsCompareAndExchange(&b, &current, false, .strong, .relaxed, .relaxed)
-    XCTAssert(CAtomicsLoad(&b, .relaxed) == false)
+    XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
 
-    XCTAssert(CAtomicsCompareAndExchange(&b, false, true, .strong, .relaxed))
+    XCTAssertEqual(CAtomicsCompareAndExchange(&b, false, true, .strong, .relaxed), true)
     while !CAtomicsCompareAndExchange(&b, &current, false, .weak, .relaxed, .relaxed) {}
     while !CAtomicsCompareAndExchange(&b, !current, true, .weak, .relaxed) {}
   }
@@ -661,8 +661,8 @@ extension CAtomicsBasicTests
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())
 
     var p = AtomicOptionalRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -694,8 +694,8 @@ extension CAtomicsBasicTests
     let r3 = UnsafeRawPointer(bitPattern: UInt.randomPositive())!
 
     var p = AtomicRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -727,8 +727,8 @@ extension CAtomicsBasicTests
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())!
 
     var p = AtomicMutableRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -760,8 +760,8 @@ extension CAtomicsBasicTests
     let r3 = UnsafeMutableRawPointer(bitPattern: UInt.randomPositive())
 
     var p = AtomicOptionalMutableRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -793,8 +793,8 @@ extension CAtomicsBasicTests
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())!
 
     var p = AtomicOpaquePointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -826,8 +826,8 @@ extension CAtomicsBasicTests
     let r3 = OpaquePointer(bitPattern: UInt.randomPositive())
 
     var p = AtomicOptionalOpaquePointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -934,8 +934,8 @@ extension CAtomicsBasicTests
     let r3 = r2.incremented()
 
     var p = AtomicTaggedRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -998,8 +998,8 @@ extension CAtomicsBasicTests
     let r3 = r2.incremented()
 
     var p = AtomicTaggedMutableRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -1062,8 +1062,8 @@ extension CAtomicsBasicTests
     let r3 = r2.incremented()
 
     var p = AtomicTaggedOptionalRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
@@ -1126,8 +1126,8 @@ extension CAtomicsBasicTests
     let r3 = r2.incremented()
 
     var p = AtomicTaggedOptionalMutableRawPointer(r3)
-    XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
-    XCTAssert(CAtomicsIsLockFree(&p))
+    XCTAssertEqual(CAtomicsLoad(&p, .relaxed), r3)
+    XCTAssertEqual(CAtomicsIsLockFree(&p), true)
 
     CAtomicsInitialize(&p, r0)
     XCTAssertEqual(r0, CAtomicsLoad(&p, .relaxed))
