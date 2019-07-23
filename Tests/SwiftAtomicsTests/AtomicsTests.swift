@@ -15,9 +15,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testInt()
   {
     var i = AtomicInt(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = Int.randomPositive()
@@ -30,7 +30,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -82,9 +82,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testUInt()
   {
     var i = AtomicUInt(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = UInt.randomPositive()
@@ -97,7 +97,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -149,9 +149,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testInt8()
   {
     var i = AtomicInt8(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = Int8.randomPositive()
@@ -164,7 +164,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -216,9 +216,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testUInt8()
   {
     var i = AtomicUInt8(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = UInt8.randomPositive()
@@ -231,7 +231,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -283,9 +283,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testInt16()
   {
     var i = AtomicInt16(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = Int16.randomPositive()
@@ -298,7 +298,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -350,9 +350,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testUInt16()
   {
     var i = AtomicUInt16(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = UInt16.randomPositive()
@@ -365,7 +365,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -417,9 +417,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testInt32()
   {
     var i = AtomicInt32(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = Int32.randomPositive()
@@ -432,7 +432,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -484,9 +484,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testUInt32()
   {
     var i = AtomicUInt32(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = UInt32.randomPositive()
@@ -499,7 +499,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -551,9 +551,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testInt64()
   {
     var i = AtomicInt64(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = Int64.randomPositive()
@@ -566,7 +566,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -618,9 +618,9 @@ public class AtomicsBasicTests: XCTestCase
   public func testUInt64()
   {
     var i = AtomicUInt64(0)
-    XCTAssert(i.value == 0)
+    XCTAssertEqual(i.value, 0)
     i.initialize(1)
-    XCTAssert(i.value == 1)
+    XCTAssertEqual(i.value, 1)
 
 #if swift(>=4.0)
     let r1 = UInt64.randomPositive()
@@ -633,7 +633,7 @@ public class AtomicsBasicTests: XCTestCase
 #endif
 
     i.store(r1)
-    XCTAssert(r1 == i.load())
+    XCTAssertEqual(r1, i.load())
 
     var j = i.swap(r2)
     XCTAssertEqual(r1, j)
@@ -1175,46 +1175,46 @@ public class AtomicsBasicTests: XCTestCase
   {
     var boolean = AtomicBool()
     boolean.initialize(false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
 
     boolean.store(false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
 
     boolean.store(true)
-    XCTAssert(boolean.value == true)
-    XCTAssert(boolean.value == boolean.load())
+    XCTAssertEqual(boolean.value, true)
+    XCTAssertEqual(boolean.value, boolean.load())
 
     boolean.store(true)
     boolean.or(true)
-    XCTAssert(boolean.value == true)
+    XCTAssertEqual(boolean.value, true)
     boolean.or(false)
-    XCTAssert(boolean.value == true)
+    XCTAssertEqual(boolean.value, true)
     boolean.store(false)
     boolean.or(false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
     boolean.or(true)
-    XCTAssert(boolean.value == true)
+    XCTAssertEqual(boolean.value, true)
 
     boolean.and(false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
     boolean.and(true)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
 
     boolean.xor(false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
     boolean.xor(true)
-    XCTAssert(boolean.value == true)
+    XCTAssertEqual(boolean.value, true)
 
     var old = boolean.swap(false)
-    XCTAssert(old == true)
-    XCTAssert(boolean.swap(true) == false)
+    XCTAssertEqual(old, true)
+    XCTAssertEqual(boolean.swap(true), false)
 
     boolean.CAS(current: true, future: false)
-    XCTAssert(boolean.value == false)
+    XCTAssertEqual(boolean.value, false)
 
-    XCTAssert(boolean.CAS(current: false, future: true, type: .strong))
-    XCTAssert(boolean.value == old)
-    XCTAssert(boolean.loadCAS(current: &old, future: false, type: .strong))
+    XCTAssertEqual(boolean.CAS(current: false, future: true, type: .strong), true)
+    XCTAssertEqual(boolean.value, old)
+    XCTAssertEqual(boolean.loadCAS(current: &old, future: false, type: .strong), true)
 
     while !boolean.loadCAS(current: &old, future: true, type: .weak) {}
     while !boolean.CAS(current: !old, future: false, type: .weak) {}
