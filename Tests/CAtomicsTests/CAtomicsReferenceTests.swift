@@ -36,29 +36,29 @@ public class UnmanagedTests: XCTestCase
     do {
       let p = CAtomicsExchange(&a, nil, .relaxed)
       print("Releasing \(i)")
-      XCTAssert(p != nil)
+      XCTAssertNotNil(p)
       let r = p.map(Unmanaged<Witness>.fromOpaque)?.takeRetainedValue()
-      XCTAssert(r != nil)
+      XCTAssertNotNil(r)
     }
-    XCTAssert(CAtomicsIsLockFree(&a))
+    XCTAssertEqual(CAtomicsIsLockFree(&a), true)
 
     i = UInt.randomPositive()
     u = Unmanaged.passRetained(Witness(i))
-    XCTAssert(CAtomicsExchange(&a, u.toOpaque(), .release) == nil)
+    XCTAssertNil(CAtomicsExchange(&a, u.toOpaque(), .release))
     print("Releasing \(i)")
     let p = CAtomicsExchange(&a, nil, .acquire)
-    XCTAssert(p != nil)
+    XCTAssertNotNil(p)
     _ = p.map(Unmanaged<Witness>.fromOpaque)?.takeRetainedValue()
 
     i = UInt.randomPositive()
     u = Unmanaged.passRetained(Witness(i))
-    XCTAssertTrue( CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .strong, .release))
-    XCTAssertFalse(CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .weak, .relaxed))
+    XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .strong, .release), true)
+    XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .weak, .relaxed), false)
 
     let v = CAtomicsUnmanagedLockAndLoad(&a, .acquire)
-    XCTAssert(v != nil)
-    XCTAssert(v == UnsafeRawPointer(u.toOpaque()))
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertNotNil(v)
+    XCTAssertEqual(v, UnsafeRawPointer(u.toOpaque()))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
     CAtomicsStore(&a, v, .release)
 
     let j = UInt.randomPositive()
@@ -79,14 +79,14 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "load and relock after unlock")
     DispatchQueue.global().async {
       if let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-        XCTAssert(t.id == i)
+        XCTAssertEqual(t.id, i)
         e.fulfill()
       }
     }
@@ -94,7 +94,7 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
   }
 
   public func testSpinTake()
@@ -104,14 +104,14 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "swap-to-nil after unlock")
     DispatchQueue.global().async {
       if let p = CAtomicsExchange(&a, nil, .relaxed)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-        XCTAssert(t.id == i)
+        XCTAssertEqual(t.id, i)
         e.fulfill()
       }
     }
@@ -119,7 +119,7 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == nil)
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), nil)
   }
 
   public func testSpinSwap() throws
@@ -129,7 +129,7 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
     let e = expectation(description: "arbitrary swap after unlock")
@@ -137,7 +137,7 @@ public class UnmanagedTests: XCTestCase
       if let p = CAtomicsExchange(&a, Unmanaged.passRetained(Thing(j)).toOpaque(), .relaxed)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-        XCTAssert(t.id == i)
+        XCTAssertEqual(t.id, i)
         e.fulfill()
       }
     }
@@ -145,11 +145,11 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
+    XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-      XCTAssert(t.id == j)
+      XCTAssertEqual(t.id, j)
     }
     else { throw TestError.value(j) }
   }
@@ -161,7 +161,7 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
     let e = expectation(description: "succeed at swapping for nil")
@@ -176,17 +176,17 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, nil, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
+    XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-      XCTAssert(t.id == j)
+      XCTAssertEqual(t.id, j)
     }
     else { throw TestError.value(j) }
     if let p = p
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-      XCTAssert(t.id == i)
+      XCTAssertEqual(t.id, i)
     }
     else { throw TestError.value(i) }
   }
@@ -198,7 +198,7 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let t = Thing(0)
     let e = expectation(description: "failure to swap for nil")
@@ -213,11 +213,11 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsLoad(&a, .relaxed) != nil)
+    XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
     {
       let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
-      XCTAssert(t.id == i)
+      XCTAssertEqual(t.id, i)
     }
     else { throw TestError.value(i) }
   }
@@ -230,7 +230,7 @@ public class UnmanagedTests: XCTestCase
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
     let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == UnsafeRawPointer(bitPattern: 0x7))
+    XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "succeed at weak CAS")
     DispatchQueue.global().async {
@@ -244,8 +244,8 @@ public class UnmanagedTests: XCTestCase
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
     waitForExpectations(timeout: 1.0)
 
-    XCTAssert(CAtomicsExchange(&a, nil, .acquire) != nil)
-    XCTAssert(CAtomicsLoad(&a, .relaxed) == nil)
+    XCTAssertNotNil(CAtomicsExchange(&a, nil, .acquire))
+    XCTAssertNil(CAtomicsLoad(&a, .relaxed))
   }
 
   public func testDemonstrateWhyLockIsNecessary() throws
@@ -273,7 +273,7 @@ public class UnmanagedTests: XCTestCase
     Unmanaged<Witness>.fromOpaque(pointerB).release()
     // mock thread B is done
 
-    XCTAssert(CAtomicsLoad(&atomic, .relaxed) == nil)
+    XCTAssertNil(CAtomicsLoad(&atomic, .relaxed))
     XCTAssertEqual(pointerA, pointerB)
 
     // mock thread A resumes execution
@@ -318,11 +318,11 @@ public class UnmanagedRaceTests: XCTestCase
           if let p = CAtomicsExchange(&r, nil, .relaxed)
           {
             let buffer = Unmanaged<ManagedBuffer<Int, Int>>.fromOpaque(p).takeRetainedValue()
-            XCTAssert(buffer.header == 1)
+            XCTAssertEqual(buffer.header, 1)
           }
           else
           {
-            XCTAssert(CAtomicsLoad(&r, .relaxed) == nil)
+            XCTAssertNil(CAtomicsLoad(&r, .relaxed))
             break
           }
         }

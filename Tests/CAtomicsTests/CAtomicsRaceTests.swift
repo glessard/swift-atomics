@@ -175,7 +175,7 @@ public class CAtomicsRaceTests: XCTestCase
 
     var t = AtomicTaggedMutableRawPointer()
     CAtomicsInitialize(&t, TaggedMutableRawPointer(fakePointer, tag: 0))
-    XCTAssert(CAtomicsIsLockFree(&t))
+    XCTAssertEqual(CAtomicsIsLockFree(&t), true)
 
     for _ in 1...iterations
     {
