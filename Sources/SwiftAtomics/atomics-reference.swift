@@ -161,6 +161,7 @@ extension AtomicReference
     if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
       assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      CAtomicsThreadFence(.acquire)
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
@@ -188,6 +189,7 @@ extension AtomicReference
     if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
       assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      CAtomicsThreadFence(.acquire)
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
       // by performing our store operation with StoreMemoryOrder.release
