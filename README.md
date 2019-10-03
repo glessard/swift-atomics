@@ -1,5 +1,5 @@
 # swift-atomics [![Build Status](https://travis-ci.org/glessard/swift-atomics.svg?branch=master)](https://travis-ci.org/glessard/swift-atomics)
-Some atomic functions made available to Swift thanks to Clang
+Some atomic functions made available to Swift 3.1 and up, thanks to Clang
 
 The atomic functions available in `/usr/include/libkern/OSAtomic.h` are quite limiting in Swift, due to the type system. Furthermore, some simple things such as a synchronized load or a synchronized store are not immediately available. On top of that, they have now been deprecated.
 
@@ -12,7 +12,7 @@ This project bridges a subset of Clang's C11 atomics support to Swift, as two mo
 `SwiftAtomics` has a swift-style interface to provide access to atomic operations.
 `SwiftAtomics` implements the following types:
 - `AtomicPointer`, `AtomicMutablePointer`, `AtomicRawPointer`, `AtomicMutableRawPointer` and `AtomicOpaquePointer`;
-- `AtomicInt` and `AtomicUInt`, as well as versions signed and unsigned of the 8-bit, 16-bit, 32-bit and 64-bit integer types;
+- `AtomicInt` and `AtomicUInt`, as well as signed and unsigned versions of the 8-bit, 16-bit, 32-bit and 64-bit integer types;
 - `AtomicBool`
 
 The pointer types have the following methods:
