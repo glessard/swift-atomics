@@ -51,6 +51,11 @@ matrix:
       language: generic
       env: SWIFT=5.0.3
 
+    - os: linux
+      dist: xenial
+      language: generic
+      env: SWIFT=5.1
+
 before_install:
   - clang --version
   - chmod u+x Tests/install-swift.sh
