@@ -92,7 +92,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
   }
@@ -117,7 +117,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), nil)
   }
@@ -143,7 +143,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -174,7 +174,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, nil, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -211,7 +211,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertNotNil(CAtomicsLoad(&a, .relaxed))
     if let p = CAtomicsLoad(&a, .relaxed)
@@ -242,7 +242,7 @@ public class UnmanagedTests: XCTestCase
     }
 
     DispatchQueue.global().asyncAfter(deadline: .now()+0.1, execute: { CAtomicsStore(&a, p, .release) })
-    waitForExpectations(timeout: 1.0)
+    waitForExpectations(timeout: 10.0)
 
     XCTAssertNotNil(CAtomicsExchange(&a, nil, .acquire))
     XCTAssertNil(CAtomicsLoad(&a, .relaxed))
