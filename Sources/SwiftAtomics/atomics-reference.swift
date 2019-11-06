@@ -38,7 +38,7 @@ extension AtomicReference
 {
 #if swift(>=4.2)
   @inlinable
-  public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
+  public mutating func swap(_ reference: T?, order: MemoryOrder = .acqrel) -> T?
   {
     let u = reference.map { Unmanaged.passRetained($0).toOpaque() }
 
@@ -47,7 +47,7 @@ extension AtomicReference
   }
 #else
   @inline(__always)
-  public mutating func swap(_ reference: T?, order: MemoryOrder = .sequential) -> T?
+  public mutating func swap(_ reference: T?, order: MemoryOrder = .acqrel) -> T?
   {
     let u = reference.map { Unmanaged.passRetained($0).toOpaque() }
 
@@ -69,7 +69,7 @@ extension AtomicReference
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
@@ -81,7 +81,7 @@ extension AtomicReference
   }
 #else
   @inline(__always)
-  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
@@ -95,14 +95,14 @@ extension AtomicReference
 
 #if swift(>=4.2)
   @inlinable
-  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
+  public mutating func take(order: LoadMemoryOrder = .acquire) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #else
   @inline(__always)
-  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
+  public mutating func take(order: LoadMemoryOrder = .acquire) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
@@ -126,7 +126,7 @@ extension AtomicReference
   {
     if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
-      assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
       CAtomicsThreadFence(.acquire)
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
@@ -154,7 +154,7 @@ extension AtomicReference
   {
     if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
     {
-      assert(CAtomicsLoad(&ptr, .sequential) == UnsafeRawPointer(bitPattern: 0x7))
+      assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
       CAtomicsThreadFence(.acquire)
       let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
       // ensure the reference counting operation has occurred before unlocking,
@@ -171,7 +171,7 @@ extension AtomicReference
   @inlinable @discardableResult
   public mutating func CAS(current: T?, future: T?,
                            type: CASType = .strong,
-                           order: MemoryOrder = .sequential) -> Bool
+                           order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
     let f = future.map(Unmanaged.passUnretained)
@@ -186,7 +186,7 @@ extension AtomicReference
   @inline(__always) @discardableResult
   public mutating func CAS(current: T?, future: T?,
                            type: CASType = .strong,
-                           order: MemoryOrder = .sequential) -> Bool
+                           order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
     let f = future.map(Unmanaged.passUnretained)
