@@ -124,7 +124,7 @@ extension AtomicReference
   @inlinable
   public mutating func load() -> T?
   {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
+    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr)
     {
       assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
       CAtomicsThreadFence(.acquire)
@@ -152,7 +152,7 @@ extension AtomicReference
   @inline(__always)
   public mutating func load() -> T?
   {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr, .acquire)
+    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr)
     {
       assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
       CAtomicsThreadFence(.acquire)
