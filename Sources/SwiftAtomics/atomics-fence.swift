@@ -10,7 +10,7 @@
 import func CAtomics.CAtomicsThreadFence
 @_exported import enum CAtomics.MemoryOrder
 
-public func threadFence(order: MemoryOrder = .sequential)
+public func threadFence(order: MemoryOrder = .acqrel)
 {
   CAtomicsThreadFence(order)
 }
