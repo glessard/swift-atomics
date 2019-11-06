@@ -1,0 +1,20 @@
+diff --git a/Tests/CAtomicsTests/XCTestManifests.swift b/Tests/CAtomicsTests/XCTestManifests.swift
+index 8056d19..55ef748 100644
+--- a/Tests/CAtomicsTests/XCTestManifests.swift
++++ b/Tests/CAtomicsTests/XCTestManifests.swift
+@@ -1,4 +1,4 @@
+-#if !canImport(ObjectiveC)
++#if !(os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
+ import XCTest
+ 
+ extension CAtomicsBasicTests {
+diff --git a/Tests/SwiftAtomicsTests/XCTestManifests.swift b/Tests/SwiftAtomicsTests/XCTestManifests.swift
+index b2cd3de..c870da3 100644
+--- a/Tests/SwiftAtomicsTests/XCTestManifests.swift
++++ b/Tests/SwiftAtomicsTests/XCTestManifests.swift
+@@ -1,4 +1,4 @@
+-#if !canImport(ObjectiveC)
++#if !(os(macOS) || os(iOS) || os(tvOS) || os(watchOS))
+ import XCTest
+ 
+ extension AtomicsBasicTests {

@@ -29,6 +29,8 @@ then
     /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
     echo "Regenerating test manifests"
     /usr/bin/swift test --generate-linuxmain
+    cd "${PROJECT_DIR}/../"
+    /usr/bin/git apply "Utilities/test-compatibility.diff"
   else
     echo "This version of the toolchain does not support automatic generation of XCTestManifests files"
   fi
