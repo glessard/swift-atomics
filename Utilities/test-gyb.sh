@@ -1,12 +1,16 @@
 #!/bin/bash
-set -e
 
 # This script will fail if a `gyb` file and the file it generates are out of sync.
 
-INPUT_LIST=`find Sources -name "*.gyb"`
+INPUT_LIST=`find Sources Tests -name "*.gyb"`
 [[ -z $INPUT_LIST ]] && exit 0
 
-GYB="${TRAVIS_BUILD_DIR}/Utilities/gyb.py"
+GYB="Utilities/gyb.py"
+if [ -n "${TRAVIS_BUILD_DIR}" ];
+then
+  GYB="${TRAVIS_BUILD_DIR}/${GYB}"
+fi
+
 if [[ ! -x ${GYB} ]]
 then
   GITHUB=https://raw.githubusercontent.com/apple/swift/master/utils/gyb.py
@@ -24,9 +28,14 @@ do
   OUTPUT_TMP="/tmp/${INPUT_FILE_BASE}"
   OUT_TARGET="${INPUT_FILE_PATH}/${INPUT_FILE_BASE}"
 
-  echo "Generating ${OUTPUT_TMP}"
+  # echo "Generating ${OUTPUT_TMP}"
   ${GYB} --line-directive="" "${INPUT_FILE}" -o "${OUTPUT_TMP}"
-  echo "Comparing ${OUT_TARGET} with ${OUTPUT_TMP}"
-  /usr/bin/diff "${OUTPUT_TMP}" "${OUT_TARGET}"
+  # echo "Comparing ${OUT_TARGET} with ${OUTPUT_TMP}"
+  DIFF=`/usr/bin/diff -q "${OUTPUT_TMP}" "${OUT_TARGET}"`
+  if [ $? -ne 0 ]
+  then
+    echo "${INPUT_FILE_BASE} differs from generated output of ${INPUT_FILE_NAME} in ${INPUT_FILE_PATH}"
+    exit 1
+  fi
   /bin/rm -f "${OUTPUT_TMP}"
 done
