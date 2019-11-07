@@ -14,5 +14,5 @@ let package = Package(
     .target(name: "CAtomics", dependencies: []),
     .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
   ],
-  swiftLanguageVersions: [3,4,5]
+  swiftLanguageVersions: [3, 4, 5]
 )
