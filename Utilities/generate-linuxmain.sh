@@ -1,9 +1,15 @@
 #!/bin/sh
 
 manifest="XCTestManifests.swift"
-testspath="${PROJECT_DIR}/../Tests"
 
-testdirs="AtomicsTests CAtomicsTests"
+if [[ -z ${PROJECT_DIR} ]]
+then
+  testspath="${PWD}/Tests"
+else
+  testspath="${PROJECT_DIR}/../Tests"
+fi
+
+testdirs="CAtomicsTests SwiftAtomicsTests"
 
 for testdir in ${testdirs}
 do
@@ -24,16 +30,13 @@ done
 
 if /bin/test "${generate}"
 then
-  if /bin/test "${XCODE_VERSION_ACTUAL}" -ge "0930"
-  then
-    /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
-    echo "Regenerating test manifests"
-    /usr/bin/swift test --generate-linuxmain
-    cd "${PROJECT_DIR}/../"
-    /usr/bin/git apply "Utilities/test-compatibility.diff"
-  else
-    echo "This version of the toolchain does not support automatic generation of XCTestManifests files"
-  fi
+  /usr/bin/find "${testspath}" -name "${manifest}" -exec rm -f {} \;
+  echo "Regenerating test manifests"
+  /usr/bin/swift test --generate-linuxmain
+  prev="${PWD}"
+  cd "${testspath}/../"
+  /usr/bin/git apply "Utilities/test-compatibility.diff"
+  cd "${prev}"
 else
   echo "No need to regenerate test manifests"
 fi

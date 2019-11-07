@@ -153,7 +153,7 @@
 		0391B85221B9E06C00F4B44B /* install-swift.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "install-swift.sh"; path = "../Tests/install-swift.sh"; sourceTree = "<group>"; };
 		0391B85321B9E06C00F4B44B /* test-script.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "test-script.sh"; path = "../Tests/test-script.sh"; sourceTree = "<group>"; };
 		0391B85421B9E06C00F4B44B /* test-gyb.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "test-gyb.sh"; path = "../Tests/test-gyb.sh"; sourceTree = "<group>"; };
-		0391B85521B9E09F00F4B44B /* generate.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = generate.sh; path = ../Utilities/generate.sh; sourceTree = "<group>"; };
+		0391B85521B9E09F00F4B44B /* generate-swift.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "generate-swift.sh"; path = "../Utilities/generate-swift.sh"; sourceTree = "<group>"; };
 		0391B85621B9E09F00F4B44B /* generate-linuxmain.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "generate-linuxmain.sh"; path = "../Utilities/generate-linuxmain.sh"; sourceTree = "<group>"; };
 		03DD246E216EA05800F4B44B /* CAtomicsReferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CAtomicsReferenceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsReferenceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -322,7 +322,7 @@
 		0391B85121B9E05300F4B44B /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
-				0391B85521B9E09F00F4B44B /* generate.sh */,
+				0391B85521B9E09F00F4B44B /* generate-swift.sh */,
 				0391B85621B9E09F00F4B44B /* generate-linuxmain.sh */,
 				0391B85221B9E06C00F4B44B /* install-swift.sh */,
 				0391B85421B9E06C00F4B44B /* test-gyb.sh */,
@@ -584,7 +584,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-swift.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
 			showEnvVarsInLog = 0;
 		};
 		031CA39B20DC3F5F00F4B44B /* ShellScript */ = {
@@ -598,7 +598,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n";
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-swift.sh\n";
 			showEnvVarsInLog = 0;
 		};
 		031CA39C20DC3F7C00F4B44B /* ShellScript */ = {
@@ -612,7 +612,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
+			shellScript = "set -e\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-swift.sh\n/bin/bash ${PROJECT_DIR}/../Utilities/generate-linuxmain.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
