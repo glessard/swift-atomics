@@ -49,8 +49,7 @@ matrix:
 
 before_install:
   - clang --version
-  - chmod u+x Tests/install-swift.sh
-  - . Tests/install-swift.sh
+  - . Utilities/install-swift.sh
 
 script:
   - /bin/bash Utilities/test-gyb.sh
