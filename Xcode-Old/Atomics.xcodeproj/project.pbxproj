@@ -150,9 +150,9 @@
 		038CB66020DC75A400F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../Tests/SwiftAtomicsTests/RandomPositive.swift; sourceTree = SOURCE_ROOT; };
 		038CB66420DCB0C700F4B44B /* RandomPositive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RandomPositive.swift; path = ../../Tests/CAtomicsTests/RandomPositive.swift; sourceTree = "<group>"; };
 		038F0034216D010800F4B44B /* ReferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ReferenceTests.swift; path = ../Tests/SwiftAtomicsTests/ReferenceTests.swift; sourceTree = SOURCE_ROOT; };
-		0391B85221B9E06C00F4B44B /* install-swift.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "install-swift.sh"; path = "../Tests/install-swift.sh"; sourceTree = "<group>"; };
+		0391B85221B9E06C00F4B44B /* install-swift.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "install-swift.sh"; path = "../Utilities/install-swift.sh"; sourceTree = "<group>"; };
 		0391B85321B9E06C00F4B44B /* test-script.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "test-script.sh"; path = "../Tests/test-script.sh"; sourceTree = "<group>"; };
-		0391B85421B9E06C00F4B44B /* test-gyb.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "test-gyb.sh"; path = "../Tests/test-gyb.sh"; sourceTree = "<group>"; };
+		0391B85421B9E06C00F4B44B /* validate-gybbed-files.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "validate-gybbed-files.sh"; path = "../Utilities/validate-gybbed-files.sh"; sourceTree = "<group>"; };
 		0391B85521B9E09F00F4B44B /* generate-swift.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "generate-swift.sh"; path = "../Utilities/generate-swift.sh"; sourceTree = "<group>"; };
 		0391B85621B9E09F00F4B44B /* generate-linuxmain.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = "generate-linuxmain.sh"; path = "../Utilities/generate-linuxmain.sh"; sourceTree = "<group>"; };
 		03DD246E216EA05800F4B44B /* CAtomicsReferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CAtomicsReferenceTests.swift; path = ../../Tests/CAtomicsTests/CAtomicsReferenceTests.swift; sourceTree = "<group>"; };
@@ -325,7 +325,7 @@
 				0391B85521B9E09F00F4B44B /* generate-swift.sh */,
 				0391B85621B9E09F00F4B44B /* generate-linuxmain.sh */,
 				0391B85221B9E06C00F4B44B /* install-swift.sh */,
-				0391B85421B9E06C00F4B44B /* test-gyb.sh */,
+				0391B85421B9E06C00F4B44B /* validate-gybbed-files.sh */,
 				0391B85321B9E06C00F4B44B /* test-script.sh */,
 			);
 			name = Scripts;
