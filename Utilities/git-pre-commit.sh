@@ -15,7 +15,7 @@ fi
 # Redirect output to stderr.
 exec 1>&2
 
-sh ./Utilities/test-gyb.sh
+sh ./Utilities/validate-gybbed-files.sh
 if [ $? -ne 0 ]
 then
   exit 1

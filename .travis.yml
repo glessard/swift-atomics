@@ -52,5 +52,5 @@ before_install:
   - . Utilities/install-swift.sh
 
 script:
-  - /bin/bash Utilities/test-gyb.sh
+  - /bin/bash Utilities/validate-gybbed-files.sh
   - /bin/bash Tests/test-script.sh
