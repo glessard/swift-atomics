@@ -55,7 +55,7 @@ public class UnmanagedTests: XCTestCase
     XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .strong, .release), true)
     XCTAssertEqual(CAtomicsCompareAndExchange(&a, nil, u.toOpaque(), .weak, .relaxed), false)
 
-    let v = CAtomicsUnmanagedLockAndLoad(&a, .acquire)
+    let v = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertNotNil(v)
     XCTAssertEqual(v, UnsafeRawPointer(u.toOpaque()))
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
@@ -78,12 +78,12 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "load and relock after unlock")
     DispatchQueue.global().async {
-      if let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+      if let p = CAtomicsUnmanagedLockAndLoad(&a)
       {
         let t = Unmanaged<Thing>.fromOpaque(p).takeRetainedValue()
         XCTAssertEqual(t.id, i)
@@ -103,7 +103,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "swap-to-nil after unlock")
@@ -128,7 +128,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
@@ -160,7 +160,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let j = UInt.randomPositive()
@@ -197,7 +197,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let t = Thing(0)
@@ -229,7 +229,7 @@ public class UnmanagedTests: XCTestCase
     var a = OpaqueUnmanagedHelper()
     CAtomicsInitialize(&a, Unmanaged.passRetained(Thing(i)).toOpaque())
 
-    let p = CAtomicsUnmanagedLockAndLoad(&a, .relaxed)
+    let p = CAtomicsUnmanagedLockAndLoad(&a)
     XCTAssertEqual(CAtomicsLoad(&a, .relaxed), UnsafeRawPointer(bitPattern: 0x7))
 
     let e = expectation(description: "succeed at weak CAS")
@@ -353,7 +353,7 @@ public class UnmanagedRaceTests: XCTestCase
           {
             if c
             {
-              if let t = CAtomicsUnmanagedLockAndLoad(a, .acquire)
+              if let t = CAtomicsUnmanagedLockAndLoad(a)
               {
                 let u = Unmanaged<Thing>.fromOpaque(t).retain()
                 CAtomicsStore(a, t, .release)

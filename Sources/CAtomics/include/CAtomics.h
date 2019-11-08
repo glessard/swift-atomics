@@ -414,14 +414,14 @@ CLANG_ATOMICS_POINTER_STORE(OpaqueUnmanagedHelper, const void*, _Nullable)
 CLANG_ATOMICS_POINTER_LOAD(OpaqueUnmanagedHelper, const void*, _Nullable)
 
 static __inline__ __attribute__((__always_inline__)) \
-const void *_Nullable CAtomicsUnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnull atomic, enum LoadMemoryOrder order)
+const void *_Nullable CAtomicsUnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnull atomic)
 { // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
 #ifndef __SSE2__
   char c;
   c = 0;
 #endif
   uintptr_t pointer;
-  pointer = atomic_load_explicit(&(atomic->a), order);
+  pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_ACQUIRE);
   do { // don't fruitlessly invalidate the cache line if the value is locked
     while (pointer == __OPAQUE_UNMANAGED_LOCKED)
     {
@@ -431,11 +431,11 @@ const void *_Nullable CAtomicsUnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnu
       c += 1;
       if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
 #endif
-      pointer = atomic_load_explicit(&(atomic->a), order);
+      pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_ACQUIRE);
     }
     // return immediately if pointer is NULL (importantly: without locking)
     if (pointer == (uintptr_t) NULL) { return NULL; }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, order, order));
+  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE));
 
   return (void*) pointer;
 }
