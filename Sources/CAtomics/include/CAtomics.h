@@ -446,7 +446,7 @@ const void *_Nullable CAtomicsUnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnu
     }
     // return immediately if pointer is NULL (importantly: without locking)
     if (pointer == (uintptr_t) NULL) { return NULL; }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE));
+  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, __ATOMIC_ACQUIRE, __ATOMIC_ACQUIRE));
 
   return (void*) pointer;
 }
