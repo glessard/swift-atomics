@@ -18,12 +18,7 @@
 #endif
 
 #if !__has_feature(nullability)
-#ifndef _Nullable
-#define _Nullable
-#endif
-#ifndef _Nonnull
-#define _Nonnull
-#endif
+#error This module relies on compiler support for the nullability attribute
 #endif
 
 #include <stdatomic.h>
