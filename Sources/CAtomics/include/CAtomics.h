@@ -13,6 +13,10 @@
 #ifndef c_atomics_h
 #define c_atomics_h
 
+#if !__has_include(<stdatomic.h>) || !__has_extension(c_atomic)
+#error This compiler is missing required features to bridge C atomics into Swift
+#endif
+
 #if !__has_feature(nullability)
 #ifndef _Nullable
 #define _Nullable
