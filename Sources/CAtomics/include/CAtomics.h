@@ -42,6 +42,16 @@
 #define SWIFT_ENUM(_name,extensibility) enum _name
 #endif
 
+#if __has_attribute(swift_name)
+#define SWIFT_NAME(_name) __attribute__((swift_name(#_name)))
+#else
+#define SWIFT_NAME(_name)
+#endif
+
+#if !defined(__x86_64__) && !defined(__arm64__)
+#define __has32bitPointer__
+#endif
+
 // memory order
 
 SWIFT_ENUM(MemoryOrder, open)
@@ -80,15 +90,6 @@ SWIFT_ENUM(CASType, closed)
   CASType_weak =   __ATOMIC_CAS_TYPE_WEAK
 };
 
-#if __has_attribute(swift_name)
-# define SWIFT_NAME(_name) __attribute__((swift_name(#_name)))
-#else
-# define SWIFT_NAME(_name)
-#endif
-
-#if !defined(__x86_64__) && !defined(__arm64__)
-#define __has32bitPointer__
-#endif
 
 // atomic integer generation
 
@@ -510,5 +511,4 @@ _Bool CAtomicsCompareAndExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
   }
 }
 
-#undef __CACHE_LINE_WIDTH
 #endif
