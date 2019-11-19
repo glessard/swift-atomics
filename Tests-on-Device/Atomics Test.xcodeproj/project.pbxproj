@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		031F70512374A7AC0086343E /* SwiftAtomics in Frameworks */ = {isa = PBXBuildFile; productRef = 031F70502374A7AC0086343E /* SwiftAtomics */; };
-		031F70532374A7AC0086343E /* CAtomics in Frameworks */ = {isa = PBXBuildFile; productRef = 031F70522374A7AC0086343E /* CAtomics */; };
 		031F70642374A8DA0086343E /* AtomicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031F705A2374A8B10086343E /* AtomicsTests.swift */; };
 		031F70652374A8DA0086343E /* AtomicsRaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031F70582374A8B10086343E /* AtomicsRaceTests.swift */; };
 		031F70662374A8DA0086343E /* ReferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031F70572374A8B10086343E /* ReferenceTests.swift */; };
@@ -23,6 +21,8 @@
 		0382B62E20DC4A2B00F4B44B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0382B62C20DC4A2B00F4B44B /* Main.storyboard */; };
 		0382B63020DC4A2D00F4B44B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0382B62F20DC4A2D00F4B44B /* Assets.xcassets */; };
 		0382B63320DC4A2D00F4B44B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0382B63120DC4A2D00F4B44B /* LaunchScreen.storyboard */; };
+		0388884F2384546F0086343E /* CAtomics in Frameworks */ = {isa = PBXBuildFile; productRef = 0388884E2384546F0086343E /* CAtomics */; };
+		038888512384546F0086343E /* SwiftAtomics in Frameworks */ = {isa = PBXBuildFile; productRef = 038888502384546F0086343E /* SwiftAtomics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +67,7 @@
 		0382B63420DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0382B63920DC4A2D00F4B44B /* AtomicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AtomicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0382B63F20DC4A2D00F4B44B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0388884D2384541D0086343E /* swift-atomics */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "swift-atomics"; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +75,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				031F70512374A7AC0086343E /* SwiftAtomics in Frameworks */,
-				031F70532374A7AC0086343E /* CAtomics in Frameworks */,
+				0388884F2384546F0086343E /* CAtomics in Frameworks */,
+				038888512384546F0086343E /* SwiftAtomics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +93,7 @@
 		031CA33420DBDC0400F4B44B = {
 			isa = PBXGroup;
 			children = (
+				0388884D2384541D0086343E /* swift-atomics */,
 				0382B62720DC4A2B00F4B44B /* AtomicsApp */,
 				0382B63C20DC4A2D00F4B44B /* AtomicsTests */,
 				031CA33F20DBDC0400F4B44B /* Products */,
@@ -163,8 +165,8 @@
 			);
 			name = Atomics;
 			packageProductDependencies = (
-				031F70502374A7AC0086343E /* SwiftAtomics */,
-				031F70522374A7AC0086343E /* CAtomics */,
+				0388884E2384546F0086343E /* CAtomics */,
+				038888502384546F0086343E /* SwiftAtomics */,
 			);
 			productName = AtomicsTestApp;
 			productReference = 0382B62620DC4A2B00F4B44B /* Atomics.app */;
@@ -207,7 +209,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics" */;
+			buildConfigurationList = 031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics Test" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -217,7 +219,6 @@
 			);
 			mainGroup = 031CA33420DBDC0400F4B44B;
 			packageReferences = (
-				031F704F2374A7AC0086343E /* XCRemoteSwiftPackageReference "swift-atomics" */,
 			);
 			productRefGroup = 031CA33F20DBDC0400F4B44B /* Products */;
 			projectDirPath = "";
@@ -522,7 +523,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics" */ = {
+		031CA33820DBDC0400F4B44B /* Build configuration list for PBXProject "Atomics Test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				031CA35020DBDC0400F4B44B /* Debug */,
@@ -551,27 +552,14 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		031F704F2374A7AC0086343E /* XCRemoteSwiftPackageReference "swift-atomics" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/glessard/swift-atomics.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		031F70502374A7AC0086343E /* SwiftAtomics */ = {
+		0388884E2384546F0086343E /* CAtomics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 031F704F2374A7AC0086343E /* XCRemoteSwiftPackageReference "swift-atomics" */;
-			productName = SwiftAtomics;
-		};
-		031F70522374A7AC0086343E /* CAtomics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 031F704F2374A7AC0086343E /* XCRemoteSwiftPackageReference "swift-atomics" */;
 			productName = CAtomics;
+		};
+		038888502384546F0086343E /* SwiftAtomics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftAtomics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
