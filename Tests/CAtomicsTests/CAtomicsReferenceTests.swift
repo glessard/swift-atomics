@@ -367,7 +367,7 @@ public class UnmanagedRaceTests: XCTestCase
             }
             else
             {
-              if let t = CAtomicsExchange(a, nil, .acquire)
+              if let t = CAtomicsExchange(a, nil, .acqrel)
               {
                 let u = Unmanaged<Thing>.fromOpaque(t).retain()
                 let thing = u.takeRetainedValue()

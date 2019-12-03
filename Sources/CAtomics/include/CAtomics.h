@@ -456,6 +456,13 @@ __attribute__((overloadable)) \
 const void *_Nullable CAtomicsExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
                                        const void *_Nullable value, enum MemoryOrder order)
 { // swap the pointer with `value`, spinning until the lock becomes unlocked if necessary
+  memory_order order_f;
+  switch(order)
+  {
+    case memory_order_acq_rel: order_f = memory_order_acquire;
+    case memory_order_release: order_f = memory_order_relaxed;
+    default:                   order_f = (memory_order)order;
+  }
 #ifndef __SSE2__
   char c;
   c = 0;
@@ -473,7 +480,7 @@ const void *_Nullable CAtomicsExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
 #endif
       pointer = atomic_load_explicit(&(atomic->a), order);
     }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)value, order, order));
+  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)value, order, order_f));
 
   return (void*) pointer;
 }
