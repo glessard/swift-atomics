@@ -14,6 +14,21 @@ import CAtomics
 
 import struct CAtomics.OpaqueUnmanagedHelper
 
+#if !swift(>=3.2)
+extension MemoryOrder
+{
+  @_versioned init(order: LoadMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+
+  @_versioned init(order: StoreMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+}
+#endif
+
 public struct AtomicReference<T: AnyObject>
 {
 #if swift(>=4.2)
@@ -79,12 +94,24 @@ extension AtomicReference
     }
     return false
   }
-#else
+#elseif swift(>=3.2)
   @inline(__always)
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
+    {
+      _ = u.retain()
+      return true
+    }
+    return false
+  }
+#else
+  @inline(__always)
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  {
+    let u = Unmanaged.passUnretained(reference)
+    if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(order: order))
     {
       _ = u.retain()
       return true
@@ -100,11 +127,18 @@ extension AtomicReference
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
-#else
+#elseif swift(>=3.2)
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .acquire) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
+  }
+#else // swift 3.1
+  @inline(__always)
+  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
+  {
+    let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(order: order))
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #endif
