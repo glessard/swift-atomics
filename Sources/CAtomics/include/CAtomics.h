@@ -409,81 +409,15 @@ void CAtomicsThreadFence(enum MemoryOrder order)
   atomic_thread_fence(order);
 }
 
-// define struct + functions for nearly-atomic handling of Swift.Unmanaged
-
-#define __OPAQUE_UNMANAGED_LOCKED   (uintptr_t)0x7
-#define __OPAQUE_UNMANAGED_SPINMASK (char)0xc0
+// define struct + functions for handling of Swift.Unmanaged
 
 CLANG_ATOMICS_STRUCT(OpaqueUnmanagedHelper, atomic_uintptr_t, a, _Alignof(atomic_uintptr_t))
 CLANG_ATOMICS_IS_LOCK_FREE(OpaqueUnmanagedHelper)
 CLANG_ATOMICS_POINTER_INITIALIZE(OpaqueUnmanagedHelper, const void*, _Nullable)
-
-// this should only be used for unlocking
-CLANG_ATOMICS_POINTER_STORE(OpaqueUnmanagedHelper, const void*, _Nullable)
+CLANG_ATOMICS_POINTER_SWAP(OpaqueUnmanagedHelper, const void*, _Nullable)
 
 // this should only be used for debugging and testing
 CLANG_ATOMICS_POINTER_LOAD(OpaqueUnmanagedHelper, const void*, _Nullable)
-
-static __inline__ __attribute__((__always_inline__)) \
-const void *_Nullable CAtomicsUnmanagedLockAndLoad(OpaqueUnmanagedHelper *_Nonnull atomic)
-{ // load the pointer value, and leave the pointer either LOCKED or NULL; spin for the lock if necessary
-#ifndef __SSE2__
-  char c;
-  c = 0;
-#endif
-  uintptr_t pointer;
-  pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_ACQUIRE);
-  do { // don't fruitlessly invalidate the cache line if the value is locked
-    while (pointer == __OPAQUE_UNMANAGED_LOCKED)
-    {
-#ifdef __SSE2__
-      _mm_pause();
-#else
-      c += 1;
-      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
-#endif
-      pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_ACQUIRE);
-    }
-    // return immediately if pointer is NULL (importantly: without locking)
-    if (pointer == (uintptr_t) NULL) { return NULL; }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, __OPAQUE_UNMANAGED_LOCKED, __ATOMIC_ACQUIRE, __ATOMIC_ACQUIRE));
-
-  return (void*) pointer;
-}
-
-static __inline__ __attribute__((__always_inline__)) \
-__attribute__((overloadable)) \
-const void *_Nullable CAtomicsExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
-                                       const void *_Nullable value, enum MemoryOrder order)
-{ // swap the pointer with `value`, spinning until the lock becomes unlocked if necessary
-  memory_order order_f;
-  switch(order)
-  {
-    case memory_order_acq_rel: order_f = memory_order_acquire;
-    case memory_order_release: order_f = memory_order_relaxed;
-    default:                   order_f = (memory_order)order;
-  }
-#ifndef __SSE2__
-  char c;
-  c = 0;
-#endif
-  uintptr_t pointer;
-  pointer = atomic_load_explicit(&(atomic->a), order);
-  do { // don't fruitlessly invalidate the cache line if the value is locked
-    while (pointer == __OPAQUE_UNMANAGED_LOCKED)
-    {
-#ifdef __SSE2__
-      _mm_pause();
-#else
-      c += 1;
-      if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
-#endif
-      pointer = atomic_load_explicit(&(atomic->a), order);
-    }
-  } while(!atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)value, order, order_f));
-
-  return (void*) pointer;
-}
 
 static __inline__ __attribute__((__always_inline__)) \
 __attribute__((overloadable)) \
@@ -491,37 +425,11 @@ _Bool CAtomicsCompareAndExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
                                  const void *_Nullable current, const void *_Nullable future,
                                  enum CASType type, enum MemoryOrder order)
 {
+  uintptr_t pointer = (uintptr_t) current;
   if(type == __ATOMIC_CAS_TYPE_WEAK)
-  {
-    uintptr_t pointer = (uintptr_t) current;
     return atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
-  }
   else
-  { // we should consider that __OPAQUE_UNMANAGED_LOCKED is a spurious value
-#ifndef __SSE2__
-    char c;
-    c = 0;
-#endif
-    _Bool success;
-    while (true)
-    {
-      uintptr_t pointer = (uintptr_t) current;
-      success = atomic_compare_exchange_strong_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
-      if (pointer != __OPAQUE_UNMANAGED_LOCKED) { break; }
-
-      while (pointer == __OPAQUE_UNMANAGED_LOCKED)
-      { // don't fruitlessly invalidate the cache line if the value is locked
-#ifdef __SSE2__
-        _mm_pause();
-#else
-        c += 1;
-        if ((c&__OPAQUE_UNMANAGED_SPINMASK) != 0) { sched_yield(); }
-#endif
-        pointer = atomic_load_explicit(&(atomic->a), __ATOMIC_RELAXED);
-      }
-    }
-    return success;
-  }
+    return atomic_compare_exchange_strong_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
 }
 
 #endif
