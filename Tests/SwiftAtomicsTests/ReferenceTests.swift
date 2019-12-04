@@ -35,7 +35,7 @@ public class ReferenceTests: XCTestCase
       let r1 = a.swap(.none)
       print("Will release \(i)")
       XCTAssertNotNil(r1)
-      XCTAssertNil(a.load())
+      XCTAssertNil(a.swap(nil))
     }
 
     i = UInt.randomPositive()
@@ -54,7 +54,13 @@ public class ReferenceTests: XCTestCase
     XCTAssertEqual(a.swapIfNil(Witness(j), order: .release), false)
 #endif
 
-    weak var witnessi = a.load()
+    weak var witnessi: Witness? = {
+      let w = a.swap(nil)
+      XCTAssertNotNil(w)
+      XCTAssertTrue(a.storeIfNil(w!))
+      return w
+    }()
+    XCTAssertNotNil(witnessi)
     XCTAssertEqual(witnessi?.id, i)
 
     j = UInt.randomPositive()
@@ -105,35 +111,6 @@ public class ReferenceRaceTests: XCTestCase
     q.sync(flags: .barrier) {}
   }
 #endif
-
-  public func testRaceLoadVersusDeinit()
-  {
-    let q = DispatchQueue(label: #function, attributes: .concurrent)
-
-    for _ in 1...iterations
-    {
-      var r = AtomicReference(Thing())
-
-      let closure = {
-        (b: Bool) -> () -> Void in
-        return {
-          () -> Void in
-          var c = b
-          while true
-          {
-            let thing = c ? r.load() : r.swap(nil)
-            if thing == nil { return }
-            c = !c
-          }
-        }
-      }
-
-      q.async(execute: closure(true))
-      q.async(execute: closure(false))
-    }
-
-    q.sync(flags: .barrier) {}
-  }
 
   public func testRaceAtomicReference()
   {

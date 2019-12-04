@@ -54,7 +54,6 @@ extension ReferenceRaceTests {
     // to regenerate.
     static let __allTests__ReferenceRaceTests = [
         ("testRaceAtomicReference", testRaceAtomicReference),
-        ("testRaceLoadVersusDeinit", testRaceLoadVersusDeinit),
     ]
 }
 
