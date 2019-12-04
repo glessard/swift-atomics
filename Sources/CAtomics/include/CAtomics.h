@@ -13,13 +13,12 @@
 #ifndef c_atomics_h
 #define c_atomics_h
 
+#if !__has_include(<stdatomic.h>) || !__has_extension(c_atomic)
+#error This compiler is missing required features to bridge C atomics into Swift
+#endif
+
 #if !__has_feature(nullability)
-#ifndef _Nullable
-#define _Nullable
-#endif
-#ifndef _Nonnull
-#define _Nonnull
-#endif
+#error This module relies on compiler support for the nullability attribute
 #endif
 
 #include <stdatomic.h>
@@ -36,6 +35,16 @@
 #define SWIFT_ENUM(_name,extensibility) enum __attribute__((enum_extensibility(extensibility))) _name
 #else
 #define SWIFT_ENUM(_name,extensibility) enum _name
+#endif
+
+#if __has_attribute(swift_name)
+#define SWIFT_NAME(_name) __attribute__((swift_name(#_name)))
+#else
+#define SWIFT_NAME(_name)
+#endif
+
+#if !defined(__x86_64__) && !defined(__arm64__)
+#define __has32bitPointer__
 #endif
 
 // memory order
@@ -76,20 +85,12 @@ SWIFT_ENUM(CASType, closed)
   CASType_weak =   __ATOMIC_CAS_TYPE_WEAK
 };
 
-#if __has_attribute(swift_name)
-# define SWIFT_NAME(_name) __attribute__((swift_name(#_name)))
-#else
-# define SWIFT_NAME(_name)
-#endif
-
-#if !defined(__x86_64__) && !defined(__arm64__)
-#define __has32bitPointer__
-#endif
-
-// atomic integer generation
+// macro for atomic type generation
 
 #define CLANG_ATOMICS_STRUCT(swiftType, atomicType, atomName, alignment) \
         typedef struct { volatile atomicType atomName; atomic_uchar padding[alignment-sizeof(atomicType)]; } swiftType;
+
+// macros for atomic function generation
 
 #define CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -155,6 +156,8 @@ SWIFT_ENUM(CASType, closed)
           return CAtomicsCompareAndExchange(atomic, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
+// macro to generate atomic struct + functions
+
 #define CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, a, alignment) \
         CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
@@ -165,6 +168,8 @@ SWIFT_ENUM(CASType, closed)
         CLANG_ATOMICS_SWAP(swiftType, parameterType) \
         CLANG_ATOMICS_CAS(swiftType, parameterType)
 
+// macro to generate atomic struct + functions for integer types
+
 #define CLANG_ATOMICS_INT_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_RMW(swiftType, parameterType, increment, fetch_add, Add) \
@@ -173,7 +178,7 @@ SWIFT_ENUM(CASType, closed)
         CLANG_ATOMICS_RMW(swiftType, parameterType, bits, fetch_xor, BitwiseXor) \
         CLANG_ATOMICS_RMW(swiftType, parameterType, bits, fetch_and, BitwiseAnd)
 
-// integer atomics
+// generate atomic integer types + functions
 
 CLANG_ATOMICS_INT_GENERATE(AtomicInt, atomic_intptr_t, intptr_t, _Alignof(atomic_intptr_t))
 CLANG_ATOMICS_INT_GENERATE(AtomicUInt, atomic_uintptr_t, uintptr_t, _Alignof(atomic_uintptr_t))
@@ -190,7 +195,7 @@ CLANG_ATOMICS_INT_GENERATE(AtomicUInt32, atomic_uint, unsigned int, _Alignof(ato
 CLANG_ATOMICS_INT_GENERATE(AtomicInt64, atomic_llong, long long, _Alignof(atomic_llong))
 CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Alignof(atomic_ullong))
 
-// bool atomics
+// generate atomic boolean type + functions
 
 #define CLANG_ATOMICS_BOOL_GENERATE(swiftType, atomicType, parameterType, alignment) \
         CLANG_ATOMICS_GENERATE(swiftType, atomicType, parameterType, alignment) \
@@ -200,7 +205,7 @@ CLANG_ATOMICS_INT_GENERATE(AtomicUInt64, atomic_ullong, unsigned long long, _Ali
 
 CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool))
 
-// pointer atomics
+// macros for atomic function generation, specific to pointer types
 
 #define CLANG_ATOMICS_POINTER_INITIALIZE(swiftType, parameterType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
@@ -256,6 +261,8 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool
           return CAtomicsCompareAndExchange(atomic, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
+// macro to generate atomic struct + functions for pointer types
+
 #define CLANG_ATOMICS_POINTER_GENERATE(swiftType, atomicType, parameterType, nullability, alignment) \
         CLANG_ATOMICS_STRUCT(swiftType, atomicType, a, alignment) \
         CLANG_ATOMICS_IS_LOCK_FREE(swiftType) \
@@ -265,6 +272,8 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool
         CLANG_ATOMICS_POINTER_STORE(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_SWAP(swiftType, parameterType, nullability) \
         CLANG_ATOMICS_POINTER_CAS(swiftType, parameterType, nullability)
+
+// generate atomic pointer types + functions
 
 CLANG_ATOMICS_POINTER_GENERATE(AtomicMutableRawPointer, atomic_uintptr_t, void*, _Nonnull, _Alignof(atomic_uintptr_t))
 CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalMutableRawPointer, atomic_uintptr_t, void*, _Nullable, _Alignof(atomic_uintptr_t))
@@ -358,6 +367,8 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
           return CAtomicsCompareAndExchange(atomic, &expect, future, type, order, LoadMemoryOrder_relaxed); \
         }
 
+// macros to generate atomic struct + functions for tagged pointer types
+
 #if defined(__has32bitPointer__)
 #define __UNION_TYPE long long
 #else
@@ -398,7 +409,7 @@ void CAtomicsThreadFence(enum MemoryOrder order)
   atomic_thread_fence(order);
 }
 
-// unmanaged
+// define struct + functions for nearly-atomic handling of Swift.Unmanaged
 
 #define __OPAQUE_UNMANAGED_LOCKED   (uintptr_t)0x7
 #define __OPAQUE_UNMANAGED_SPINMASK (char)0xc0
@@ -506,5 +517,4 @@ _Bool CAtomicsCompareAndExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
   }
 }
 
-#undef __CACHE_LINE_WIDTH
 #endif
