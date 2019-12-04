@@ -1,5 +1,5 @@
 # swift-atomics [![Build Status](https://travis-ci.org/glessard/swift-atomics.svg?branch=master)](https://travis-ci.org/glessard/swift-atomics)
-Some atomic functions made available to Swift 3.2 and up, thanks to Clang
+Some atomic functions made available to Swift 3.1 and up, thanks to Clang
 
 The atomic functions available in `/usr/include/libkern/OSAtomic.h` are quite limiting in Swift, due to impedance mismatches between the type systems of Swift and C. Furthermore, some simple things such as a synchronized load or a synchronized store are not immediately available. On top of that, they have now been deprecated.
 

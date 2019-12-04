@@ -14,6 +14,21 @@ import CAtomics
 
 import struct CAtomics.OpaqueUnmanagedHelper
 
+#if !swift(>=3.2)
+extension MemoryOrder
+{
+  @_versioned init(order: LoadMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+
+  @_versioned init(order: StoreMemoryOrder)
+  {
+    self = MemoryOrder.init(rawValue: order.rawValue) ?? .sequential
+  }
+}
+#endif
+
 public struct AtomicReference<T: AnyObject>
 {
 #if swift(>=4.2)
@@ -79,12 +94,24 @@ extension AtomicReference
     }
     return false
   }
-#else
+#elseif swift(>=3.2)
   @inline(__always)
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
     let u = Unmanaged.passUnretained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
+    {
+      _ = u.retain()
+      return true
+    }
+    return false
+  }
+#else
+  @inline(__always)
+  public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
+  {
+    let u = Unmanaged.passUnretained(reference)
+    if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(order: order))
     {
       _ = u.retain()
       return true
@@ -100,70 +127,19 @@ extension AtomicReference
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
-#else
+#elseif swift(>=3.2)
   @inline(__always)
   public mutating func take(order: LoadMemoryOrder = .acquire) -> T?
   {
     let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(rawValue: order.rawValue)!)
     return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
-#endif
-
-#if swift(>=4.2)
-  /// load the reference currently stored in this AtomicReference
-  ///
-  /// This is *not* an atomic operation if the reference is non-nil.
-  /// In order to ensure the integrity of the automatic reference
-  /// counting, the AtomicReference gets locked (internally) until the
-  /// reference count has been incremented. The critical section
-  /// protected by the lock is extremely short (nanoseconds), but necessary.
-  ///
-  /// This is the only AtomicReference operation that needs a lock;
-  /// the others operations will spin until a `load` operation is complete,
-  /// but are otherwise atomic.
-  @inlinable
-  public mutating func load() -> T?
-  {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr)
-    {
-      assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
-      CAtomicsThreadFence(.acquire)
-      let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
-      // ensure the reference counting operation has occurred before unlocking,
-      // by performing our store operation with StoreMemoryOrder.release
-      CAtomicsThreadFence(.release)
-      CAtomicsStore(&ptr, pointer, .release)
-      return unmanaged.takeRetainedValue()
-    }
-    return nil
-  }
-#else
-  /// load the reference currently stored in this AtomicReference
-  ///
-  /// This is *not* an atomic operation if the reference is non-nil.
-  /// In order to ensure the integrity of the automatic reference
-  /// counting, the AtomicReference gets locked (internally) until the
-  /// reference count has been incremented. The critical section
-  /// protected by the lock is extremely short (nanoseconds), but necessary.
-  ///
-  /// This is the only AtomicReference operation that needs a lock;
-  /// the others operations will spin until a `load` operation is complete,
-  /// but are otherwise atomic.
+#else // swift 3.1
   @inline(__always)
-  public mutating func load() -> T?
+  public mutating func take(order: LoadMemoryOrder = .sequential) -> T?
   {
-    if let pointer = CAtomicsUnmanagedLockAndLoad(&ptr)
-    {
-      assert(CAtomicsLoad(&ptr, .acquire) == UnsafeRawPointer(bitPattern: 0x7))
-      CAtomicsThreadFence(.acquire)
-      let unmanaged = Unmanaged<T>.fromOpaque(pointer).retain()
-      // ensure the reference counting operation has occurred before unlocking,
-      // by performing our store operation with StoreMemoryOrder.release
-      CAtomicsThreadFence(.release)
-      CAtomicsStore(&ptr, pointer, .release)
-      return unmanaged.takeRetainedValue()
-    }
-    return nil
+    let pointer = CAtomicsExchange(&ptr, nil, MemoryOrder(order: order))
+    return pointer.map { Unmanaged.fromOpaque($0).takeRetainedValue() }
   }
 #endif
     

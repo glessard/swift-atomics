@@ -62,8 +62,7 @@ extension UnmanagedRaceTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__UnmanagedRaceTests = [
-        ("testRaceAtomickishUnmanaged", testRaceAtomickishUnmanaged),
-        ("testRaceLoadVersusDeinit", testRaceLoadVersusDeinit),
+        ("testRaceAtomicUnmanaged", testRaceAtomicUnmanaged),
     ]
 }
 
@@ -72,14 +71,7 @@ extension UnmanagedTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__UnmanagedTests = [
-        ("testDemonstrateWhyLockIsNecessary", testDemonstrateWhyLockIsNecessary),
-        ("testSpinLoad", testSpinLoad),
-        ("testSpinSwap", testSpinSwap),
-        ("testSpinTake", testSpinTake),
-        ("testStrongCASFailure", testStrongCASFailure),
-        ("testStrongCASSuccess", testStrongCASSuccess),
         ("testUnmanaged", testUnmanaged),
-        ("testWeakCasBlocked", testWeakCasBlocked),
     ]
 }
 
