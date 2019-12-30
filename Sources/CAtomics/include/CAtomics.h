@@ -293,14 +293,14 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
           unionType tag_ptr; \
           struct { \
             pointerType nullability ptr; \
-            long tag; \
+            size_t tag; \
           }; \
         } swiftType;
 
 #define CLANG_ATOMICS_TAGGED_POINTER_CREATE(swiftType, pointerType, nullability) \
         static __inline__ __attribute__((__always_inline__)) \
         SWIFT_NAME(swiftType.init(_:tag:)) \
-        swiftType swiftType##Create(pointerType nullability p, long tag) \
+        swiftType swiftType##Create(pointerType nullability p, size_t tag) \
         { swiftType s; s.tag = tag; s.ptr = p; return s; }
 
 #define CLANG_ATOMICS_TAGGED_POINTER_INCREMENT(swiftType, pointerType, nullability) \
