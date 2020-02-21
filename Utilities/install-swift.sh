@@ -11,11 +11,22 @@ then
 
   if [[ "$TRAVIS_OS_NAME" == "linux" ]]
   then
-    PLATFORM="ubuntu1604"
-    BASENAME="${COMPILER}-ubuntu16.04"
+    if [[ "$TRAVIS_DIST" == "bionic" ]]
+    then
+      PLATFORM="ubuntu1804"
+      BASENAME="${COMPILER}-ubuntu18.04"
+    elif [[ "$TRAVIS_DIST" == "xenial" ]]
+    then
+      PLATFORM="ubuntu1604"
+      BASENAME="${COMPILER}-ubuntu16.04"
+    else
+      echo "Unknown linux distribution in use"
+      exit 1
+    fi
 
     # install swift
     cd ..
+    echo "Getting ${URLBASE}/${PLATFORM}/${COMPILER}/${BASENAME}.tar.gz"
     curl -s -O ${URLBASE}/${PLATFORM}/${COMPILER}/${BASENAME}.tar.gz
     tar xzf ${BASENAME}.tar.gz
     export PATH="${PWD}/${BASENAME}/usr/bin:${PATH}"
