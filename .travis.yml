@@ -43,7 +43,7 @@ jobs:
       env: SWIFT=5.0.3
 
     - dist: bionic
-      env: SWIFT=5.1.4
+      env: SWIFT=5.1.5
 
 before_install:
   - . Utilities/install-swift.sh
