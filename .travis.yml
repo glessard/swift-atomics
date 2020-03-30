@@ -43,7 +43,7 @@ jobs:
 
     - env: SWIFT=5.1.5
 
-    - env: SWIFT=5.2
+    - env: SWIFT=5.2.1
 
 before_install:
   - . Utilities/install-swift.sh
