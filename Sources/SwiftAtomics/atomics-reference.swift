@@ -143,7 +143,6 @@ extension AtomicReference
 #if swift(>=4.2)
   @inlinable @discardableResult
   public mutating func CAS(current: T?, future: T?,
-                           type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
@@ -161,7 +160,6 @@ extension AtomicReference
 #else
   @inline(__always) @discardableResult
   public mutating func CAS(current: T?, future: T?,
-                           type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
@@ -177,4 +175,10 @@ extension AtomicReference
     return false
   }
 #endif
+
+  @available(*, deprecated, renamed: "CAS(current:future:order:)")
+  public mutating func CAS(current: T?, future: T?, type: CASType, order: MemoryOrder = .acqrel) -> Bool
+  {
+    return CAS(current: current, future: future, order: order)
+  }
 }
