@@ -86,36 +86,33 @@ extension AtomicReference
   @inlinable
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
-    let u = Unmanaged.passUnretained(reference)
+    let u = Unmanaged.passRetained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
-    {
-      _ = u.retain()
-      return true
-    }
+    { return true }
+
+    u.release()
     return false
   }
 #elseif swift(>=3.2)
   @inline(__always)
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .release) -> Bool
   {
-    let u = Unmanaged.passUnretained(reference)
+    let u = Unmanaged.passRetained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(rawValue: order.rawValue)!)
-    {
-      _ = u.retain()
-      return true
-    }
+    { return true }
+
+    u.release()
     return false
   }
 #else
   @inline(__always)
   public mutating func storeIfNil(_ reference: T, order: StoreMemoryOrder = .sequential) -> Bool
   {
-    let u = Unmanaged.passUnretained(reference)
+    let u = Unmanaged.passRetained(reference)
     if CAtomicsCompareAndExchange(&ptr, nil, u.toOpaque(), .strong, MemoryOrder(order: order))
-    {
-      _ = u.retain()
-      return true
-    }
+    { return true }
+
+    u.release()
     return false
   }
 #endif
@@ -146,32 +143,42 @@ extension AtomicReference
 #if swift(>=4.2)
   @inlinable @discardableResult
   public mutating func CAS(current: T?, future: T?,
-                           type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
-    let f = future.map(Unmanaged.passUnretained)
+    let f = future.map(Unmanaged.passRetained)
 
-    guard CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), type, order)
-      else { return false }
-    _ = f?.retain()
-    c?.release()
-    return true
+    if CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), .strong, order)
+    {
+      c?.release()
+      return true
+    }
+
+    f?.release()
+    return false
   }
 #else
   @inline(__always) @discardableResult
   public mutating func CAS(current: T?, future: T?,
-                           type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
     let c = current.map(Unmanaged.passUnretained)
-    let f = future.map(Unmanaged.passUnretained)
+    let f = future.map(Unmanaged.passRetained)
 
-    guard CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), type, order)
-      else { return false }
-    _ = f?.retain()
-    c?.release()
-    return true
+    if CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), .strong, order)
+    {
+      c?.release()
+      return true
+    }
+
+    f?.release()
+    return false
   }
 #endif
+
+  @available(*, deprecated, renamed: "CAS(current:future:order:)")
+  public mutating func CAS(current: T?, future: T?, type: CASType, order: MemoryOrder = .acqrel) -> Bool
+  {
+    return CAS(current: current, future: future, order: order)
+  }
 }
