@@ -20,10 +20,12 @@ import CAtomics
 public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
 {
 #if swift(>=4.2)
-  @usableFromInline var ptr = Atomic${Nullable}${Mutable}RawPointer()
-#else
-  @_versioned var ptr = Atomic${Nullable}${Mutable}RawPointer()
-#endif
+% for inlinable in ['@inlinable', '@inline(__always)']:
+% usableFromInline = '@usableFromInline' if inlinable == '@inlinable' else '@_versioned'
+% end = '#else' if inlinable == '@inlinable' else '#endif'
+  ${usableFromInline} var ptr = Atomic${Nullable}${Mutable}RawPointer()
+${end}
+% end # inlinable
 
 % if Nullable == 'Optional':
   public init()
@@ -43,108 +45,60 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
   }
 
 #if swift(>=4.2)
+% for inlinable in ['@inlinable', '@inline(__always)']:
+% usableFromInline = '@usableFromInline' if inlinable == '@inlinable' else '@_versioned'
+% end = '#else' if inlinable == '@inlinable' else '#endif'
   public var pointer: Unsafe${Mutable}${Pointer} {
-    @inlinable
+    ${inlinable}
     mutating get {
       return CAtomicsLoad(&ptr, .acquire)${optional}.assumingMemoryBound(to: Pointee.self)
     }
   }
-#else
-  public var pointer: Unsafe${Mutable}${Pointer} {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&ptr, .acquire)${optional}.assumingMemoryBound(to: Pointee.self)
-    }
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func load(order: LoadMemoryOrder = .acquire) -> Unsafe${Mutable}${Pointer}
   {
     return CAtomicsLoad(&ptr, order)${optional}.assumingMemoryBound(to: Pointee.self)
   }
-#else
-  @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .acquire) -> Unsafe${Mutable}${Pointer}
-  {
-    return CAtomicsLoad(&ptr, order)${optional}.assumingMemoryBound(to: Pointee.self)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func store(_ pointer: Unsafe${Mutable}${Pointer}, order: StoreMemoryOrder = .release)
   {
     CAtomicsStore(&ptr, pointer, order)
   }
-#else
-  @inline(__always)
-  public mutating func store(_ pointer: Unsafe${Mutable}${Pointer}, order: StoreMemoryOrder = .release)
-  {
-    CAtomicsStore(&ptr, pointer, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func swap(_ pointer: Unsafe${Mutable}${Pointer}, order: MemoryOrder = .acqrel) -> Unsafe${Mutable}${Pointer}
   {
     return CAtomicsExchange(&ptr, pointer, order)${optional}.assumingMemoryBound(to: Pointee.self)
   }
-#else
-  @inline(__always)
-  public mutating func swap(_ pointer: Unsafe${Mutable}${Pointer}, order: MemoryOrder = .acqrel) -> Unsafe${Mutable}${Pointer}
-  {
-    return CAtomicsExchange(&ptr, pointer, order)${optional}.assumingMemoryBound(to: Pointee.self)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout Unsafe${Mutable}${Pointer},
                                future: Unsafe${Mutable}${Pointer},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
     var c = Unsafe${Mutable}RawPointer(current)
-    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
+    let s = (type == .weak)
+            ? CAtomicsCompareAndExchangeWeak(&ptr, &c, future, orderSwap, orderLoad)
+            : CAtomicsCompareAndExchangeStrong(&ptr, &c, future, orderSwap, orderLoad)
     current = c${optional}.assumingMemoryBound(to: Pointee.self)
     return s
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func loadCAS(current: inout Unsafe${Mutable}${Pointer},
-                               future: Unsafe${Mutable}${Pointer},
-                               type: CASType = .weak,
-                               orderSwap: MemoryOrder = .acqrel,
-                               orderLoad: LoadMemoryOrder = .acquire) -> Bool
-  {
-    var c = Unsafe${Mutable}RawPointer(current)
-    let s = CAtomicsCompareAndExchange(&ptr, &c, future, type, orderSwap, orderLoad)
-    current = c${optional}.assumingMemoryBound(to: Pointee.self)
-    return s
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func CAS(current: Unsafe${Mutable}${Pointer}, future: Unsafe${Mutable}${Pointer},
                            type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
-    return CAtomicsCompareAndExchange(&ptr, current, future, type, order)
+    var current = current
+    return loadCAS(current: &current, future: future, type: type,
+                   orderSwap: order, orderLoad: order.asLoadOrdering())
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func CAS(current: Unsafe${Mutable}${Pointer}, future: Unsafe${Mutable}${Pointer},
-                           type: CASType = .strong,
-                           order: MemoryOrder = .acqrel) -> Bool
-  {
-    return CAtomicsCompareAndExchange(&ptr, current, future, type, order)
-  }
-#endif
+${end}
+% end # inlinable
 }
 % end
 % end
@@ -158,116 +112,63 @@ public struct Atomic${Nullable}${Mutable}Pointer<Pointee>
 extension Atomic${optional}${type}Pointer
 {
 #if swift(>=4.2)
+% for inlinable in ['@inlinable', '@inline(__always)']:
+% usableFromInline = '@usableFromInline' if inlinable == '@inlinable' else '@_versioned'
+% end = '#else' if inlinable == '@inlinable' else '#endif'
   public var pointer: ${prefix}${type}Pointer${opt} {
-    @inlinable
+    ${inlinable}
     mutating get {
       return CAtomicsLoad(&self, .acquire)
     }
   }
-#else
-  public var pointer: ${prefix}${type}Pointer${opt} {
-    @inline(__always)
-    mutating get {
-      return CAtomicsLoad(&self, .acquire)
-    }
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func initialize(_ pointer: ${prefix}${type}Pointer${opt})
   {
     CAtomicsInitialize(&self, pointer)
   }
-#else
-  @inline(__always)
-  public mutating func initialize(_ pointer: ${prefix}${type}Pointer${opt})
-  {
-    CAtomicsInitialize(&self, pointer)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func load(order: LoadMemoryOrder = .acquire) -> ${prefix}${type}Pointer${opt}
   {
     return CAtomicsLoad(&self, order)
   }
-#else
-  @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .acquire) -> ${prefix}${type}Pointer${opt}
-  {
-    return CAtomicsLoad(&self, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func store(_ pointer: ${prefix}${type}Pointer${opt}, order: StoreMemoryOrder = .release)
   {
     CAtomicsStore(&self, pointer, order)
   }
-#else
-  @inline(__always)
-  public mutating func store(_ pointer: ${prefix}${type}Pointer${opt}, order: StoreMemoryOrder = .release)
-  {
-    CAtomicsStore(&self, pointer, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func swap(_ pointer: ${prefix}${type}Pointer${opt}, order: MemoryOrder = .acqrel) -> ${prefix}${type}Pointer${opt}
   {
     return CAtomicsExchange(&self, pointer, order)
   }
-#else
-  @inline(__always)
-  public mutating func swap(_ pointer: ${prefix}${type}Pointer${opt}, order: MemoryOrder = .acqrel) -> ${prefix}${type}Pointer${opt}
-  {
-    return CAtomicsExchange(&self, pointer, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout ${prefix}${type}Pointer${opt},
                                future: ${prefix}${type}Pointer${opt},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
+    return type == .weak
+    ? CAtomicsCompareAndExchangeWeak(&self, &current, future, orderSwap, orderLoad)
+    : CAtomicsCompareAndExchangeStrong(&self, &current, future, orderSwap, orderLoad)
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func loadCAS(current: inout ${prefix}${type}Pointer${opt},
-                               future: ${prefix}${type}Pointer${opt},
-                               type: CASType = .weak,
-                               orderSwap: MemoryOrder = .acqrel,
-                               orderLoad: LoadMemoryOrder = .acquire) -> Bool
-  {
-    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func CAS(current: ${prefix}${type}Pointer${opt}, future: ${prefix}${type}Pointer${opt},
                            type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, order)
+    var current = current
+    return loadCAS(current: &current, future: future, type: type,
+                   orderSwap: order, orderLoad: order.asLoadOrdering())
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func CAS(current: ${prefix}${type}Pointer${opt}, future: ${prefix}${type}Pointer${opt},
-                           type: CASType = .strong,
-                           order: MemoryOrder = .acqrel) -> Bool
-  {
-    return CAtomicsCompareAndExchange(&self, current, future, type, order)
-  }
-#endif
+${end}
+% end # inlinable
 }
 % end
 % end
@@ -285,136 +186,71 @@ extension AtomicTagged${optional}${type}Pointer
   }
 
 #if swift(>=4.2)
+% for inlinable in ['@inlinable', '@inline(__always)']:
+% usableFromInline = '@usableFromInline' if inlinable == '@inlinable' else '@_versioned'
+% end = '#else' if inlinable == '@inlinable' else '#endif'
   public var value: (pointer: Unsafe${type}Pointer${opt}, tag: Int) {
-    @inlinable
+    ${inlinable}
     mutating get {
       let t = CAtomicsLoad(&self, .acquire)
       return (t.ptr, t.tag)
     }
   }
-#else
-  public var value: (pointer: Unsafe${type}Pointer${opt}, tag: Int) {
-    @inline(__always)
-    mutating get {
-      let t = CAtomicsLoad(&self, .acquire)
-      return (t.ptr, t.tag)
-    }
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func initialize(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int))
   {
     CAtomicsInitialize(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag))
   }
-#else
-  @inline(__always)
-  public mutating func initialize(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int))
-  {
-    CAtomicsInitialize(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag))
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func load(order: LoadMemoryOrder = .acquire) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsLoad(&self, order)
     return (t.ptr, t.tag)
   }
-#else
-  @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .acquire) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
-  {
-    let t = CAtomicsLoad(&self, order)
-    return (t.ptr, t.tag)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder = .release)
   {
     CAtomicsStore(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
   }
-#else
-  @inline(__always)
-  public mutating func store(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: StoreMemoryOrder = .release)
-  {
-    CAtomicsStore(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder = .acqrel) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
   {
     let t = CAtomicsExchange(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
     return (t.ptr, t.tag)
   }
-#else
-  @inline(__always)
-  public mutating func swap(_ p: (pointer: Unsafe${type}Pointer${opt}, tag: Int), order: MemoryOrder = .acqrel) -> (pointer: Unsafe${type}Pointer${opt}, tag: Int)
-  {
-    let t = CAtomicsExchange(&self, Tagged${optional}${type}Pointer(p.pointer, tag: p.tag), order)
-    return (t.ptr, t.tag)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                                future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
     var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
     let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
-    let s = CAtomicsCompareAndExchange(&self, &c, f, type, orderSwap, orderLoad)
+    let s = (type == .weak)
+            ? CAtomicsCompareAndExchangeWeak(&self, &c, f, orderSwap, orderLoad)
+            : CAtomicsCompareAndExchangeStrong(&self, &c, f, orderSwap, orderLoad)
     current = (c.ptr, c.tag)
     return s
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType = .weak,
-                               orderSwap: MemoryOrder = .acqrel,
-                               orderLoad: LoadMemoryOrder = .acquire) -> Bool
-  {
-    var c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
-    let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
-    let s = CAtomicsCompareAndExchange(&self, &c, f, type, orderSwap, orderLoad)
-    current = (c.ptr, c.tag)
-    return s
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                            future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                            type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
-    let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
-    let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
-    return CAtomicsCompareAndExchange(&self, c, f, type, order)
+    var current = current
+    return loadCAS(current: &current, future: future, type: type,
+                   orderSwap: order, orderLoad: order.asLoadOrdering())
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func CAS(current: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                           type: CASType = .strong,
-                           order: MemoryOrder = .acqrel) -> Bool
-  {
-    let c = Tagged${optional}${type}Pointer(current.0, tag: current.1)
-    let f = Tagged${optional}${type}Pointer(future.0, tag: future.1)
-    return CAtomicsCompareAndExchange(&self, c, f, type, order)
-  }
-#endif
+${end}
+% end # inlinable
 }
 
 % end

@@ -20,160 +20,89 @@ import CAtomics
 extension ${AtomicType}
 {
 #if swift(>=4.2)
+% for inlinable in ['@inlinable', '@inline(__always)']:
+% usableFromInline = '@usableFromInline' if inlinable == '@inlinable' else '@_versioned'
+% end = '#else' if inlinable == '@inlinable' else '#endif'
   public var value: ${IntType} {
-    @inlinable
+    ${inlinable}
     mutating get { return CAtomicsLoad(&self, .relaxed) }
   }
-#else
-  public var value: ${IntType} {
-    @inline(__always)
-    mutating get { return CAtomicsLoad(&self, .relaxed) }
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func initialize(_ value: ${IntType})
   {
     CAtomicsInitialize(&self, value)
   }
-#else
-  @inline(__always)
-  public mutating func initialize(_ value: ${IntType})
-  {
-    CAtomicsInitialize(&self, value)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+
+  ${inlinable}
   public mutating func load(order: LoadMemoryOrder = .acquire) -> ${IntType}
   {
     return CAtomicsLoad(&self, order)
   }
-#else
-  @inline(__always)
-  public mutating func load(order: LoadMemoryOrder = .acquire) -> ${IntType}
-  {
-    return CAtomicsLoad(&self, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+  ${inlinable}
   public mutating func store(_ value: ${IntType}, order: StoreMemoryOrder = .release)
   {
     CAtomicsStore(&self, value, order)
   }
-#else
-  @inline(__always)
-  public mutating func store(_ value: ${IntType}, order: StoreMemoryOrder = .release)
-  {
-    CAtomicsStore(&self, value, order)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable
+
+  ${inlinable}
   public mutating func swap(_ value: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
   {
     return CAtomicsExchange(&self, value, order)
   }
-#else
-  @inline(__always)
-  public mutating func swap(_ value: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
-  {
-    return CAtomicsExchange(&self, value, order)
-  }
-#endif
 
 % if IntType == 'Bool':
 % for (rmwMethod, rmwFunc, rmwParam) in [('or', 'Or', 'value'), ('xor', 'Xor', 'value'), ('and', 'And', 'value')]:
-#if swift(>=4.2)
-  @inlinable @discardableResult
+
+  ${inlinable} @discardableResult
   public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
   {
     return CAtomics${rmwFunc}(&self, ${rmwParam}, order)
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
-  {
-    return CAtomics${rmwFunc}(&self, ${rmwParam}, order)
-  }
-#endif
 
 % end # for
 % else:
 % for (rmwMethod, rmwFunc, rmwParam) in [('add', 'Add', 'delta'), ('subtract', 'Subtract', 'delta'), ('bitwiseOr', 'BitwiseOr', 'bits'), ('bitwiseXor', 'BitwiseXor', 'bits'), ('bitwiseAnd', 'BitwiseAnd', 'bits')]:
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
   {
     return CAtomics${rmwFunc}(&self, ${rmwParam}, order)
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func ${rmwMethod}(_ ${rmwParam}: ${IntType}, order: MemoryOrder = .acqrel) -> ${IntType}
-  {
-    return CAtomics${rmwFunc}(&self, ${rmwParam}, order)
-  }
-#endif
 
 % end # for
 % for (inc, op) in [('increment', 'Add'), ('decrement', 'Subtract')]:
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func ${inc}(order: MemoryOrder = .acqrel) -> ${IntType}
   {
     return CAtomics${op}(&self, 1, order)
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func ${inc}(order: MemoryOrder = .acqrel) -> ${IntType}
-  {
-    return CAtomics${op}(&self, 1, order)
-  }
-#endif
 
 % end # for
 % end # if IntType == 'Bool'
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout ${IntType}, future: ${IntType},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
+    return type == .weak
+    ? CAtomicsCompareAndExchangeWeak(&self, &current, future, orderSwap, orderLoad)
+    : CAtomicsCompareAndExchangeStrong(&self, &current, future, orderSwap, orderLoad)
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func loadCAS(current: inout ${IntType}, future: ${IntType},
-                               type: CASType = .weak,
-                               orderSwap: MemoryOrder = .acqrel,
-                               orderLoad: LoadMemoryOrder = .acquire) -> Bool
-  {
-    return CAtomicsCompareAndExchange(&self, &current, future, type, orderSwap, orderLoad)
-  }
-#endif
 
-#if swift(>=4.2)
-  @inlinable @discardableResult
+  ${inlinable} @discardableResult
   public mutating func CAS(current: ${IntType}, future: ${IntType},
                            type: CASType = .strong,
                            order: MemoryOrder = .acqrel) -> Bool
   {
-    return CAtomicsCompareAndExchange(&self, current, future, type, order)
+    var current = current
+    return loadCAS(current: &current, future: future, type: type,
+                   orderSwap: order, orderLoad: order.asLoadOrdering())
   }
-#else
-  @inline(__always) @discardableResult
-  public mutating func CAS(current: ${IntType}, future: ${IntType},
-                           type: CASType = .strong,
-                           order: MemoryOrder = .acqrel) -> Bool
-  {
-    return CAtomicsCompareAndExchange(&self, current, future, type, order)
-  }
-#endif
+${end}
+% end # inlinable
 }
 % end # for AtomicType
