@@ -162,12 +162,10 @@ SWIFT_ENUM(CASType, closed)
         _Bool CAtomicsCompareAndExchange(swiftType *_Nonnull atomic, parameterType *_Nonnull current, parameterType future, \
                                          enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
-          assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
-          assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
           if(type == __ATOMIC_CAS_TYPE_STRONG) \
-            return atomic_compare_exchange_strong_explicit(&(atomic->a), current, future, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeStrong(atomic, current, future, orderSwap, orderLoad); \
           else \
-            return atomic_compare_exchange_weak_explicit(&(atomic->a), current, future, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeWeak(atomic, current, future, orderSwap, orderLoad); \
         } \
         static __inline__ __attribute__((__always_inline__)) \
         __attribute__((overloadable)) \
@@ -292,12 +290,10 @@ CLANG_ATOMICS_BOOL_GENERATE(AtomicBool, atomic_bool, _Bool, _Alignof(atomic_bool
                                          parameterType nullability* _Nonnull current, parameterType nullability future, \
                                          enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
-          assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
-          assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
           if(type == __ATOMIC_CAS_TYPE_STRONG) \
-            return atomic_compare_exchange_strong_explicit(&(atomic->a), (uintptr_t*)current, (uintptr_t)future, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeStrong(atomic, current, future, orderSwap, orderLoad); \
           else \
-            return atomic_compare_exchange_weak_explicit(&(atomic->a), (uintptr_t*)current, (uintptr_t)future, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeWeak(atomic, current, future, orderSwap, orderLoad); \
         } \
         static __inline__ __attribute__((__always_inline__)) \
         __attribute__((overloadable)) \
@@ -423,12 +419,10 @@ CLANG_ATOMICS_POINTER_GENERATE(AtomicOptionalOpaquePointer, atomic_uintptr_t, st
         _Bool CAtomicsCompareAndExchange(atomicType *_Nonnull atomic, structType *_Nonnull current, structType future, \
                                          enum CASType type, enum MemoryOrder orderSwap, enum LoadMemoryOrder orderLoad) \
         { \
-          assert((unsigned int)orderLoad <= (unsigned int)orderSwap); \
-          assert(orderSwap == __ATOMIC_RELEASE ? orderLoad == __ATOMIC_RELAXED : true); \
           if(type == __ATOMIC_CAS_TYPE_STRONG) \
-            return atomic_compare_exchange_strong_explicit(&(atomic->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeStrong(atomic, current, future, orderSwap, orderLoad); \
           else \
-            return atomic_compare_exchange_weak_explicit(&(atomic->a), &(current->tag_ptr), future.tag_ptr, orderSwap, orderLoad); \
+            return CAtomicsCompareAndExchangeWeak(atomic, current, future, orderSwap, orderLoad); \
         } \
         static __inline__ __attribute__((__always_inline__)) \
         __attribute__((overloadable)) \
