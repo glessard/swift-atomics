@@ -61,12 +61,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -120,12 +120,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -179,12 +179,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -238,12 +238,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -297,12 +297,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -356,12 +356,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -415,12 +415,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -474,12 +474,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -533,12 +533,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -592,12 +592,12 @@ public class CAtomicsBasicTests: XCTestCase
 
     j = r1
     CAtomicsStore(&i, r1, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&i, &j, r2, .strong, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&i, &j, r2, .relaxed, .relaxed))
     XCTAssertEqual(r2, CAtomicsLoad(&i, .relaxed))
 
     j = r2
     CAtomicsStore(&i, r1, .relaxed)
-    while(!CAtomicsCompareAndExchange(&i, &j, r3, .weak, .relaxed, .relaxed)) {}
+    while(!CAtomicsCompareAndExchangeWeak(&i, &j, r3, .relaxed, .relaxed)) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&i, .relaxed))
   }
@@ -642,12 +642,13 @@ public class CAtomicsBasicTests: XCTestCase
 
     var current = true
     XCTAssertEqual(CAtomicsLoad(&b, .relaxed), current)
-    CAtomicsCompareAndExchange(&b, &current, false, .strong, .relaxed, .relaxed)
+    CAtomicsCompareAndExchangeStrong(&b, &current, false, .relaxed, .relaxed)
     XCTAssertEqual(CAtomicsLoad(&b, .relaxed), false)
 
-    XCTAssertEqual(CAtomicsCompareAndExchange(&b, false, true, .strong, .relaxed), true)
-    while !CAtomicsCompareAndExchange(&b, &current, false, .weak, .relaxed, .relaxed) {}
-    while !CAtomicsCompareAndExchange(&b, !current, true, .weak, .relaxed) {}
+    current = false
+    XCTAssertEqual(CAtomicsCompareAndExchangeStrong(&b, &current, true, .relaxed, .relaxed), true)
+    while !CAtomicsCompareAndExchangeWeak(&b, &current, false, .relaxed, .relaxed) {}
+    while !CAtomicsCompareAndExchangeWeak(&b, &current, true, .relaxed, .relaxed) {}
   }
 }
 
@@ -674,14 +675,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -707,14 +710,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -740,14 +745,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -773,14 +780,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -806,14 +815,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -839,14 +850,16 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    j = r3
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -947,14 +960,15 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -1011,14 +1025,15 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -1075,14 +1090,15 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
@@ -1139,14 +1155,15 @@ extension CAtomicsBasicTests
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r2, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r3, .strong, .relaxed))
+    j = r2
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r3, .relaxed, .relaxed))
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
 
-    XCTAssertFalse(CAtomicsCompareAndExchange(&p, j, r2, .strong, .relaxed))
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r3, r2, .strong, .relaxed))
+    XCTAssertFalse(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r2, .relaxed, .relaxed))
     j = CAtomicsLoad(&p, .relaxed)
-    XCTAssertTrue(CAtomicsCompareAndExchange(&p, r2, r1, .strong, .relaxed))
-    while !CAtomicsCompareAndExchange(&p, &j, r3, .weak, .relaxed, .relaxed) {}
+    XCTAssertTrue(CAtomicsCompareAndExchangeStrong(&p, &j, r1, .relaxed, .relaxed))
+    while !CAtomicsCompareAndExchangeWeak(&p, &j, r3, .relaxed, .relaxed) {}
     XCTAssertEqual(r1, j)
     XCTAssertEqual(r3, CAtomicsLoad(&p, .relaxed))
   }
