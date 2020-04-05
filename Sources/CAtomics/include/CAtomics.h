@@ -495,15 +495,21 @@ CLANG_ATOMICS_POINTER_LOAD(OpaqueUnmanagedHelper, const void*, _Nullable)
 
 static __inline__ __attribute__((__always_inline__)) \
 __attribute__((overloadable)) \
+_Bool CAtomicsCompareAndExchangeStrong(OpaqueUnmanagedHelper *_Nonnull atomic,
+                                       const void *_Nullable current, const void *_Nullable future,
+                                       enum MemoryOrder order)
+{
+  uintptr_t pointer = (uintptr_t) current;
+  return atomic_compare_exchange_strong_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
+}
+
+static __inline__ __attribute__((__always_inline__)) \
+__attribute__((overloadable)) \
 _Bool CAtomicsCompareAndExchange(OpaqueUnmanagedHelper *_Nonnull atomic,
                                  const void *_Nullable current, const void *_Nullable future,
                                  enum CASType type, enum MemoryOrder order)
 {
-  uintptr_t pointer = (uintptr_t) current;
-  if(type == __ATOMIC_CAS_TYPE_WEAK)
-    return atomic_compare_exchange_weak_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
-  else
-    return atomic_compare_exchange_strong_explicit(&(atomic->a), &pointer, (uintptr_t)future, order, memory_order_relaxed);
+  return CAtomicsCompareAndExchangeStrong(atomic, current, future, order);
 }
 
 #endif

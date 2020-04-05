@@ -148,7 +148,7 @@ extension AtomicReference
     let c = current.map(Unmanaged.passUnretained)
     let f = future.map(Unmanaged.passRetained)
 
-    if CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), .strong, order)
+    if CAtomicsCompareAndExchangeStrong(&ptr, c?.toOpaque(), f?.toOpaque(), order)
     {
       c?.release()
       return true
@@ -165,7 +165,7 @@ extension AtomicReference
     let c = current.map(Unmanaged.passUnretained)
     let f = future.map(Unmanaged.passRetained)
 
-    if CAtomicsCompareAndExchange(&ptr, c?.toOpaque(), f?.toOpaque(), .strong, order)
+    if CAtomicsCompareAndExchangeStrong(&ptr, c?.toOpaque(), f?.toOpaque(), order)
     {
       c?.release()
       return true
