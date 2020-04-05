@@ -84,7 +84,7 @@ extension ${AtomicType}
 % end # if IntType == 'Bool'
   ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout ${IntType}, future: ${IntType},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {

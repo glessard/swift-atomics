@@ -60,7 +60,7 @@ public struct AtomicPointer<Pointee>
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>,
                                future: UnsafePointer<Pointee>,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -110,7 +110,7 @@ public struct AtomicPointer<Pointee>
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>,
                                future: UnsafePointer<Pointee>,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -181,7 +181,7 @@ public struct AtomicMutablePointer<Pointee>
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>,
                                future: UnsafeMutablePointer<Pointee>,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -231,7 +231,7 @@ public struct AtomicMutablePointer<Pointee>
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>,
                                future: UnsafeMutablePointer<Pointee>,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -307,7 +307,7 @@ public struct AtomicOptionalPointer<Pointee>
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>?,
                                future: UnsafePointer<Pointee>?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -357,7 +357,7 @@ public struct AtomicOptionalPointer<Pointee>
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafePointer<Pointee>?,
                                future: UnsafePointer<Pointee>?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -433,7 +433,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>?,
                                future: UnsafeMutablePointer<Pointee>?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -483,7 +483,7 @@ public struct AtomicOptionalMutablePointer<Pointee>
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutablePointer<Pointee>?,
                                future: UnsafeMutablePointer<Pointee>?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -546,7 +546,7 @@ extension AtomicRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeRawPointer,
                                future: UnsafeRawPointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -599,7 +599,7 @@ extension AtomicRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeRawPointer,
                                future: UnsafeRawPointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -659,7 +659,7 @@ extension AtomicOptionalRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeRawPointer?,
                                future: UnsafeRawPointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -712,7 +712,7 @@ extension AtomicOptionalRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeRawPointer?,
                                future: UnsafeRawPointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -772,7 +772,7 @@ extension AtomicMutableRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutableRawPointer,
                                future: UnsafeMutableRawPointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -825,7 +825,7 @@ extension AtomicMutableRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutableRawPointer,
                                future: UnsafeMutableRawPointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -885,7 +885,7 @@ extension AtomicOptionalMutableRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutableRawPointer?,
                                future: UnsafeMutableRawPointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -938,7 +938,7 @@ extension AtomicOptionalMutableRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UnsafeMutableRawPointer?,
                                future: UnsafeMutableRawPointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -998,7 +998,7 @@ extension AtomicOpaquePointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout OpaquePointer,
                                future: OpaquePointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1051,7 +1051,7 @@ extension AtomicOpaquePointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout OpaquePointer,
                                future: OpaquePointer,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1111,7 +1111,7 @@ extension AtomicOptionalOpaquePointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout OpaquePointer?,
                                future: OpaquePointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1164,7 +1164,7 @@ extension AtomicOptionalOpaquePointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout OpaquePointer?,
                                future: OpaquePointer?,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1232,7 +1232,7 @@ extension AtomicTaggedRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer, tag: Int),
                                future: (pointer: UnsafeRawPointer, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1293,7 +1293,7 @@ extension AtomicTaggedRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer, tag: Int),
                                future: (pointer: UnsafeRawPointer, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1366,7 +1366,7 @@ extension AtomicTaggedOptionalRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer?, tag: Int),
                                future: (pointer: UnsafeRawPointer?, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1427,7 +1427,7 @@ extension AtomicTaggedOptionalRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeRawPointer?, tag: Int),
                                future: (pointer: UnsafeRawPointer?, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1500,7 +1500,7 @@ extension AtomicTaggedMutableRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1561,7 +1561,7 @@ extension AtomicTaggedMutableRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1634,7 +1634,7 @@ extension AtomicTaggedOptionalMutableRawPointer
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer?, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer?, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1695,7 +1695,7 @@ extension AtomicTaggedOptionalMutableRawPointer
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout (pointer: UnsafeMutableRawPointer?, tag: Int),
                                future: (pointer: UnsafeMutableRawPointer?, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {

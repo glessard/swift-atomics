@@ -93,7 +93,7 @@ extension AtomicInt
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Int, future: Int,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -187,7 +187,7 @@ extension AtomicInt
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Int, future: Int,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -288,7 +288,7 @@ extension AtomicUInt
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UInt, future: UInt,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -382,7 +382,7 @@ extension AtomicUInt
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UInt, future: UInt,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -483,7 +483,7 @@ extension AtomicInt8
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Int8, future: Int8,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -577,7 +577,7 @@ extension AtomicInt8
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Int8, future: Int8,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -678,7 +678,7 @@ extension AtomicUInt8
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UInt8, future: UInt8,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -772,7 +772,7 @@ extension AtomicUInt8
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UInt8, future: UInt8,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -873,7 +873,7 @@ extension AtomicInt16
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Int16, future: Int16,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -967,7 +967,7 @@ extension AtomicInt16
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Int16, future: Int16,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1068,7 +1068,7 @@ extension AtomicUInt16
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UInt16, future: UInt16,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1162,7 +1162,7 @@ extension AtomicUInt16
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UInt16, future: UInt16,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1263,7 +1263,7 @@ extension AtomicInt32
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Int32, future: Int32,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1357,7 +1357,7 @@ extension AtomicInt32
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Int32, future: Int32,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1458,7 +1458,7 @@ extension AtomicUInt32
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UInt32, future: UInt32,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1552,7 +1552,7 @@ extension AtomicUInt32
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UInt32, future: UInt32,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1653,7 +1653,7 @@ extension AtomicInt64
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Int64, future: Int64,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1747,7 +1747,7 @@ extension AtomicInt64
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Int64, future: Int64,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1848,7 +1848,7 @@ extension AtomicUInt64
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout UInt64, future: UInt64,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -1942,7 +1942,7 @@ extension AtomicUInt64
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout UInt64, future: UInt64,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -2022,7 +2022,7 @@ extension AtomicBool
 
   @inlinable @discardableResult
   public mutating func loadCAS(current: inout Bool, future: Bool,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -2095,7 +2095,7 @@ extension AtomicBool
 
   @inline(__always) @discardableResult
   public mutating func loadCAS(current: inout Bool, future: Bool,
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {

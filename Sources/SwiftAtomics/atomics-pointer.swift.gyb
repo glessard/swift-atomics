@@ -76,7 +76,7 @@ ${end}
   ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout Unsafe${Mutable}${Pointer},
                                future: Unsafe${Mutable}${Pointer},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -149,7 +149,7 @@ extension Atomic${optional}${type}Pointer
   ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout ${prefix}${type}Pointer${opt},
                                future: ${prefix}${type}Pointer${opt},
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
@@ -226,7 +226,7 @@ extension AtomicTagged${optional}${type}Pointer
   ${inlinable} @discardableResult
   public mutating func loadCAS(current: inout (pointer: Unsafe${type}Pointer${opt}, tag: Int),
                                future: (pointer: Unsafe${type}Pointer${opt}, tag: Int),
-                               type: CASType = .weak,
+                               type: CASType = .strong,
                                orderSwap: MemoryOrder = .acqrel,
                                orderLoad: LoadMemoryOrder = .acquire) -> Bool
   {
