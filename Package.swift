@@ -7,8 +7,8 @@ import PackageDescription
 let package = Package(
   name: "SwiftAtomics",
   products: [
-    .library(name: "SwiftAtomics", type: .static, targets: ["SwiftAtomics"]),
-    .library(name: "CAtomics", type: .static, targets: ["CAtomics"]),
+    .library(name: "SwiftAtomics", targets: ["SwiftAtomics"]),
+    .library(name: "CAtomics", targets: ["CAtomics"]),
   ],
   targets: [
     .target(name: "SwiftAtomics", dependencies: ["CAtomics"]),
