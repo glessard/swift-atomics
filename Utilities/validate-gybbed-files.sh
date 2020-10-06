@@ -13,7 +13,7 @@ fi
 
 if [[ ! -x ${GYB} ]]
 then
-  GITHUB=https://raw.githubusercontent.com/apple/swift/master/utils/gyb.py
+  GITHUB=https://raw.githubusercontent.com/apple/swift/main/utils/gyb.py
   echo "Retrieving gyb.py from ${GITHUB}"
   /usr/bin/curl ${GITHUB} -o ${GYB}
   chmod u+x ${GYB}
