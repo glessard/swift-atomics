@@ -32,6 +32,10 @@ jobs:
       osx_image: xcode11.5
       env: SWIFT=5.2.4
 
+    - os: osx
+      osx_image: xcode12.1
+      env: SWIFT=5.3
+
     - dist: xenial
       env: SWIFT=3.1.1
 
@@ -48,6 +52,8 @@ jobs:
     - env: SWIFT=5.1.5
 
     - env: SWIFT=5.2.4
+
+    - env: SWIFT=5.3
 
 before_install:
   - . Utilities/install-swift.sh
