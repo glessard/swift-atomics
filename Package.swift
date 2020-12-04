@@ -8,13 +8,13 @@ let package = Package(
   name: "SwiftAtomics",
   products: [
     .library(name: "SwiftAtomics", targets: ["SwiftAtomics"]),
-    .library(name: "CAtomics", targets: ["CAtomics"]),
+  ],
+  dependencies: [
+    .package(url: "https://github.com/glessard/CAtomics", from: "6.5.0"),
   ],
   targets: [
     .target(name: "SwiftAtomics", dependencies: ["CAtomics"]),
     .testTarget(name: "SwiftAtomicsTests", dependencies: ["SwiftAtomics"]),
-    .target(name: "CAtomics", dependencies: []),
-    .testTarget(name: "CAtomicsTests", dependencies: ["CAtomics"]),
   ],
   swiftLanguageVersions: [.v3, .v4, .v4_2, .version("5")]
 )
