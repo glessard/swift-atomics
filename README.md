@@ -45,4 +45,4 @@ In order to use atomics in a way that is acceptable to the thread sanitizer, one
 
 #### Requirements
 
-This version of `SwiftAtomics` requires Swift 4.0 or later.
+This version of `SwiftAtomics` requires Swift 4.0 or later. On Linux, it also requires Clang 3.6 or later.
