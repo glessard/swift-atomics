@@ -6,3 +6,4 @@ xcuserdata
 gyb.py
 IDEWorkspaceChecks.plist
 .swift-version
+Package.resolved
