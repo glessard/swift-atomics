@@ -41,7 +41,7 @@ Atomic types are useful as synchronization points between threads, and therefore
 
 The types defined in `SwiftAtomics` work as expected with Swift 5's run-time exclusivity checking when used as members of class instances, but present difficulties when the thread sanitizer is enabled.
 
-In order to use atomics in a way that is acceptable to the thread sanitizer, one must have allocated memory for atomic variables on the heap using `UnsafeMutablePointer`. If you require compatibility with the thread sanitizer, it is best to use the underlying dependency [`CAtomics`](https://github.com/glessard/CAtomics) directly or, even better, the official [`SwiftAtomics`](https://github.com/apple/swift-atomics) atomics preview package.
+In order to use atomics in a way that is acceptable to the thread sanitizer, one must have allocated memory for atomic variables on the heap using `UnsafeMutablePointer`. If you require compatibility with the thread sanitizer, it is best to use the underlying dependency [`CAtomics`](https://github.com/glessard/CAtomics) directly or, even better, the official [Swift Atomics](https://github.com/apple/swift-atomics) atomics preview package.
 
 #### Requirements
 
