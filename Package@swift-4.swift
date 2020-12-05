@@ -8,7 +8,7 @@ let package = Package(
     .library(name: "SwiftAtomics", targets: ["SwiftAtomics"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/glessard/CAtomics", from: "6.5.0"),
+    .package(url: "https://github.com/glessard/CAtomics", from: "6.5.1"),
   ],
   targets: [
     .target(name: "SwiftAtomics", dependencies: ["CAtomics"]),

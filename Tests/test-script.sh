@@ -4,16 +4,6 @@ set -e
 COMPILER_MAJOR_VERSION=`echo ${COMPILER_VERSION} | awk -F . '{print $1}'`
 TEST_OPTIONS="-c release -Xcc -mcx16"
 
-if [[ "${COMPILER_MAJOR_VERSION}" = "3" ]]
-then
-  # this is version 3.1 of the swift compiler
-  # it doesn't handle SE-0151 right
-  swift package tools-version --set 3.1
-
-  # it doesn't handle testing in release configuration
-  TEST_OPTIONS="-Xcc -mcx16"
-fi
-
 swift --version
 swift test ${TEST_OPTIONS}
 
