@@ -10,6 +10,7 @@ Clang, of course, implements the C11 atomic functions &mdash; and they're availa
 This project bridges a subset of Clang's C11 atomics support to Swift, as two modules.
 
 The latest version (6.5.0) supports Swift 4.0 and up.
+
 Version 6.2.3 of this package supports versions of Swift as far back as 3.1.1
 
 ### Module SwiftAtomics
